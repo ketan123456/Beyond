@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { LanguageProvider } from "./i18n";
+import { MotionExperience } from "./motion-experience";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} antialiased`}>
-        <LanguageProvider>{children}<a className="floating-whatsapp" href="https://wa.me/918000012345?text=Hello%20Beyond%20Disability%2C%20I%20need%20assistance." target="_blank" rel="noreferrer" aria-label="Chat with Beyond Disability on WhatsApp"><img src="/whatsapp.svg" alt=""/></a></LanguageProvider>
+        <LanguageProvider><MotionExperience>{children}<a className="floating-whatsapp" href="https://wa.me/918000012345?text=Hello%20Beyond%20Disability%2C%20I%20need%20assistance." target="_blank" rel="noreferrer" aria-label="Chat with Beyond Disability on WhatsApp"><img src="/whatsapp.svg" alt=""/></a></MotionExperience></LanguageProvider>
       </body>
     </html>
   );
