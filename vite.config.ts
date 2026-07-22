@@ -1,5 +1,5 @@
 import vinext from "vinext";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import hostingConfig from "./.openai/hosting.json";
 import { sites } from "./build/sites-vite-plugin";
 
@@ -33,7 +33,15 @@ const localBindingConfig = {
     : [],
 };
 
-export default defineConfig(async () => {
+export default defineConfig(async ({ mode }) => {
+  const configuredEnv = loadEnv(mode, process.cwd(), "");
+  // Older copies of this project stored local credentials in .env.example.
+  // Keep that working locally, while preferring the standard .env.local file.
+  const legacyExampleEnv = loadEnv("example", process.cwd(), "");
+  const razorpayKeyId =
+    configuredEnv.RAZORPAY_KEY_ID || legacyExampleEnv.RAZORPAY_KEY_ID;
+  const razorpayKeySecret =
+    configuredEnv.RAZORPAY_KEY_SECRET || legacyExampleEnv.RAZORPAY_KEY_SECRET;
   // Keep Wrangler and Miniflare state project-local. These are non-secret tool
   // settings; application environment belongs in ignored `.env*` files.
   process.env.WRANGLER_WRITE_LOGS ??= "false";
@@ -52,7 +60,15 @@ export default defineConfig(async () => {
       sites(),
       cloudflare({
         viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
-        config: localBindingConfig,
+        config: {
+          ...localBindingConfig,
+          vars: {
+            ...(razorpayKeyId ? { RAZORPAY_KEY_ID: razorpayKeyId } : {}),
+            ...(razorpayKeySecret
+              ? { RAZORPAY_KEY_SECRET: razorpayKeySecret }
+              : {}),
+          },
+        },
       }),
     ],
   };
