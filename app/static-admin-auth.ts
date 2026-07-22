@@ -3,7 +3,9 @@ import { redirect } from "next/navigation";
 
 export const ADMIN_COOKIE = "beyond_admin_session";
 export const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "Beyond@2026";
+// Keep the local fallback aligned with .env.example. Production deployments
+// should always provide ADMIN_PASSWORD as a secret environment variable.
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "Admin@123";
 const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || "beyond-local-admin-session-2026";
 
 async function digest(value: string) {

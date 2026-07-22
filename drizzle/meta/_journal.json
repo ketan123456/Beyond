@@ -8,6 +8,13 @@
       "when": 1784716262817,
       "tag": "0000_redundant_vulture",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1784724043382,
+      "tag": "0001_aberrant_mongoose",
+      "breakpoints": true
     }
   ]
 }
