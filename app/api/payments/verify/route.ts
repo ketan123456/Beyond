@@ -25,6 +25,18 @@ async function ensurePaymentsTable(db: D1Database) {
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     )`,
   ).run();
+  await db.prepare(
+    `CREATE TABLE IF NOT EXISTS recurring_donations (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      razorpay_subscription_id TEXT NOT NULL UNIQUE,
+      razorpay_plan_id TEXT NOT NULL,
+      amount INTEGER NOT NULL,
+      currency TEXT NOT NULL DEFAULT 'INR',
+      status TEXT NOT NULL DEFAULT 'created',
+      razorpay_payment_id TEXT,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )`,
+  ).run();
 }
 
 export async function POST(request: Request) {
@@ -35,17 +47,15 @@ export async function POST(request: Request) {
       RAZORPAY_KEY_SECRET?: string;
     };
     const secret = bindings.RAZORPAY_KEY_SECRET?.trim();
-    if (
-      !secret ||
-      !body.razorpay_order_id ||
-      !body.razorpay_payment_id ||
-      !body.razorpay_signature
-    ) {
+    const referenceId = body.razorpay_subscription_id || body.razorpay_order_id;
+    if (!secret || !referenceId || !body.razorpay_payment_id || !body.razorpay_signature) {
       return Response.json({ error: "Invalid verification request" }, { status: 400 });
     }
 
     const expected = await hmac(
-      `${body.razorpay_order_id}|${body.razorpay_payment_id}`,
+      body.razorpay_subscription_id
+        ? `${body.razorpay_payment_id}|${body.razorpay_subscription_id}`
+        : `${body.razorpay_order_id}|${body.razorpay_payment_id}`,
       secret,
     );
     if (expected !== body.razorpay_signature) {
@@ -54,13 +64,17 @@ export async function POST(request: Request) {
 
     if (bindings.DB) {
       await ensurePaymentsTable(bindings.DB);
-      await bindings.DB.prepare(
-        "UPDATE payments SET status = ? WHERE razorpay_order_id = ?",
-      )
-        .bind("paid", body.razorpay_order_id)
-        .run();
+      if (body.razorpay_subscription_id) {
+        await bindings.DB.prepare(
+          "UPDATE recurring_donations SET status = ?, razorpay_payment_id = ? WHERE razorpay_subscription_id = ?",
+        ).bind("authenticated", body.razorpay_payment_id, body.razorpay_subscription_id).run();
+      } else {
+        await bindings.DB.prepare(
+          "UPDATE payments SET status = ? WHERE razorpay_order_id = ?",
+        ).bind("paid", body.razorpay_order_id).run();
+      }
     }
-    return Response.json({ ok: true });
+    return Response.json({ ok: true, recurring: Boolean(body.razorpay_subscription_id) });
   } catch (error) {
     console.error("Payment verification error", error);
     return Response.json({ error: "Unable to verify payment." }, { status: 500 });

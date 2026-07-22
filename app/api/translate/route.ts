@@ -2,6 +2,7 @@ import { env } from "cloudflare:workers";
 import { ensureDatabaseSchema } from "../../../db/runtime-schema";
 
 const validLocale = (value: string) => /^[a-z]{2,3}(?:-[A-Z]{2})?$/.test(value);
+let providerBlockedUntil = 0;
 
 function chunks(text: string) {
   const parts = text.match(/[^.!?।]+[.!?।]?\s*/gu) || [text];
@@ -26,7 +27,9 @@ async function machineTranslate(text: string, locale: string) {
     const url = new URL("https://api.mymemory.translated.net/get");
     url.searchParams.set("q", part);
     url.searchParams.set("langpair", `en|${locale}`);
+    url.searchParams.set("de", "info@beyonddisability.org");
     const response = await fetch(url, { headers: { accept: "application/json" } });
+    if (response.status === 429) { providerBlockedUntil = Date.now() + 15 * 60 * 1000; throw new Error("RATE_LIMITED"); }
     if (!response.ok) throw new Error(`Translation provider returned ${response.status}`);
     const data = await response.json() as { responseStatus?: number; responseData?: { translatedText?: string } };
     const value = data.responseData?.translatedText?.trim();
@@ -49,15 +52,22 @@ export async function POST(request: Request) {
     if (!enabled) return Response.json({ error: "That language is not enabled." }, { status: 400 });
 
     const translations: Record<string, string> = {};
-    await Promise.all(texts.map(async text => {
+    let limited = Date.now() < providerBlockedUntil;
+    for (const text of texts) {
       const cached = await db.prepare("SELECT value FROM translations WHERE locale=? AND key=?").bind(locale, text).first<{ value: string }>();
-      if (cached?.value) { translations[text] = cached.value; return; }
-      const value = await machineTranslate(text, locale);
-      translations[text] = value;
-      await db.prepare("INSERT INTO translations(locale,key,value,updated_at) VALUES(?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(locale,key) DO UPDATE SET value=excluded.value,updated_at=CURRENT_TIMESTAMP")
-        .bind(locale, text, value).run();
-    }));
-    return Response.json({ translations });
+      if (cached?.value) { translations[text] = cached.value; continue; }
+      if (limited) continue;
+      try {
+        const value = await machineTranslate(text, locale);
+        translations[text] = value;
+        await db.prepare("INSERT INTO translations(locale,key,value,updated_at) VALUES(?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(locale,key) DO UPDATE SET value=excluded.value,updated_at=CURRENT_TIMESTAMP")
+          .bind(locale, text, value).run();
+      } catch (error) {
+        if (error instanceof Error && error.message === "RATE_LIMITED") { limited = true; continue; }
+        console.warn("Translation skipped:", error instanceof Error ? error.message : "provider unavailable");
+      }
+    }
+    return Response.json({ translations, limited, retryAfterSeconds: limited ? 900 : 0 });
   } catch (error) {
     console.error("Automatic translation failed", error);
     return Response.json({ error: "Automatic translation is temporarily unavailable." }, { status: 502 });
