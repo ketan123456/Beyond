@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 import { useState, type FormEvent } from "react";
 import { Logo } from "../../components";

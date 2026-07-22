@@ -11,7 +11,7 @@ const statusOptions:Record<DataSection,string[]>={applications:["submitted","rev
 export default function AdminDashboard({adminName}:{adminName:string}){
  const [data,setData]=useState<Data|null>(null),[section,setSection]=useState<Section>("applications"),[query,setQuery]=useState(""),[error,setError]=useState(""),[loading,setLoading]=useState(true),[updating,setUpdating]=useState<number|null>(null);
  const load=useCallback(async()=>{setLoading(true);setError("");try{const response=await fetch("/api/admin/data",{cache:"no-store"});const body=await response.json();if(response.ok)setData(body);else setError(body.error||"Unable to load dashboard.")}catch{setError("Unable to connect to the admin database.")}finally{setLoading(false)}},[]);
- useEffect(()=>{void load()},[load]);
+ useEffect(()=>{const timer=window.setTimeout(()=>void load(),0);return()=>window.clearTimeout(timer)},[load]);
  const rows=useMemo(()=>{if(section==="languages")return [];const items=data?.[section]||[];const needle=query.trim().toLowerCase();return needle?items.filter(row=>Object.values(row).some(value=>String(value??"").toLowerCase().includes(needle))):items},[data,section,query]);
  const paid=(data?.payments||[]).filter(x=>x.status==="paid"),total=paid.reduce((sum,row)=>sum+Number(row.amount||0),0)/100,pendingDocs=(data?.documents||[]).reduce((sum,row)=>sum+Number(row.pending||0),0);
  async function updateStatus(id:number,status:string){if(section==="languages")return;setUpdating(id);const response=await fetch("/api/admin/data",{method:"PATCH",headers:{"content-type":"application/json"},body:JSON.stringify({section,id,status})});if(response.ok)await load();else setError("Status update failed.");setUpdating(null)}
