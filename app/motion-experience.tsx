@@ -31,7 +31,7 @@ export function MotionExperience({ children }: { children: ReactNode }) {
 
       if (!reduced) {
         gsap.to(".motion-progress__bar", { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: .1 } });
-        ScrollTrigger.batch("main > section:not(.hero), .footer-banner, .footer-grid", {
+        ScrollTrigger.batch("main > section:not(.hero):not(.programs), .footer-banner, .footer-grid", {
           start: "top 94%",
           once: true,
           onEnter: (elements) => gsap.fromTo(elements, { y: 34, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .65, stagger: .08, ease: "power2.out", clearProps: "transform,opacity,visibility" }),
@@ -50,14 +50,29 @@ export function MotionExperience({ children }: { children: ReactNode }) {
           gsap.fromTo(image, { yPercent: -5, scale: 1.04 }, { yPercent: 5, scale: 1, ease: "none", scrollTrigger: { trigger: image, start: "top bottom", end: "bottom top", scrub: .8 } });
         });
 
-        const programmeTrack = root.current?.querySelector<HTMLElement>(".programs .card-grid");
-        if (programmeTrack && window.innerWidth > 980) {
-          gsap.fromTo(programmeTrack, { x: 0 }, {
-            x: () => Math.min(0, -(programmeTrack.scrollWidth - programmeTrack.parentElement!.clientWidth)),
+        const motionMedia = gsap.matchMedia();
+        motionMedia.add("(min-width: 981px) and (prefers-reduced-motion: no-preference)", () => {
+          const programmeSection = root.current?.querySelector<HTMLElement>(".programs");
+          const programmeTrack = programmeSection?.querySelector<HTMLElement>(".card-grid");
+          if (!programmeSection || !programmeTrack) return;
+          const distance = () => Math.max(0, programmeTrack.scrollWidth - window.innerWidth);
+          gsap.set(programmeTrack, { x: 0 });
+          gsap.to(programmeTrack, {
+            x: () => -distance(),
             ease: "none",
-            scrollTrigger: { trigger: ".programs", start: "top 82%", end: "bottom 18%", scrub: 1, invalidateOnRefresh: true },
+            scrollTrigger: {
+              trigger: programmeSection,
+              start: "top top",
+              end: () => `+=${Math.max(distance(), window.innerHeight * .8)}`,
+              pin: true,
+              pinSpacing: true,
+              scrub: .65,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+            },
           });
-        }
+        });
+        nativeCleanups.push(() => motionMedia.revert());
 
         const magneticButtons = Array.from(root.current?.querySelectorAll<HTMLElement>(".btn") || []);
         magneticButtons.forEach((button) => {

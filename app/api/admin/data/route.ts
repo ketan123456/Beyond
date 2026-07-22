@@ -19,13 +19,14 @@ export async function GET() {
   if (!db) return Response.json({ error: "Database binding DB is not configured." }, { status: 503 });
   try {
     await ensureDatabaseSchema(db);
-    const [applications, partners, payments, documents] = await Promise.all([
+    const [applications, partners, payments, documents, applicationDocuments] = await Promise.all([
       db.prepare("SELECT * FROM applications ORDER BY created_at DESC, id DESC").all(),
       db.prepare("SELECT * FROM partner_leads ORDER BY id DESC").all(),
       db.prepare("SELECT * FROM payments ORDER BY created_at DESC, id DESC").all(),
       db.prepare("SELECT application_id, COUNT(*) AS total, SUM(CASE WHEN review_status = 'pending' THEN 1 ELSE 0 END) AS pending FROM documents GROUP BY application_id").all(),
+      db.prepare("SELECT id,application_id,type,filename,review_status FROM documents ORDER BY id DESC").all(),
     ]);
-    return Response.json({ applications: applications.results, partners: partners.results, payments: payments.results, documents: documents.results, refreshedAt: new Date().toISOString() });
+    return Response.json({ applications: applications.results, partners: partners.results, payments: payments.results, documents: documents.results, applicationDocuments: applicationDocuments.results, refreshedAt: new Date().toISOString() });
   } catch (error) {
     console.error("Admin data load failed", error);
     return Response.json({ error: "Unable to load admin data." }, { status: 500 });
@@ -42,4 +43,28 @@ export async function PATCH(request: Request) {
   const table = section === "applications" ? "applications" : section === "partners" ? "partner_leads" : "payments";
   await db.prepare(`UPDATE ${table} SET status = ? WHERE id = ?`).bind(status, id).run();
   return Response.json({ ok: true });
+}
+
+export async function DELETE(request: Request) {
+  if (!(await isStaticAdmin())) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  const db = database();
+  if (!db) return Response.json({ error: "Database binding DB is not configured." }, { status: 503 });
+  await ensureDatabaseSchema(db);
+  const { section, id } = (await request.json()) as { section?: AdminSection; id?: number };
+  if (!section || !id || !["applications", "partners", "payments"].includes(section)) return Response.json({ error: "Invalid delete request." }, { status: 400 });
+  try {
+    if (section === "applications") {
+      const files = await db.prepare("SELECT storage_key FROM documents WHERE application_id = ?").bind(id).all<{storage_key:string}>();
+      const bucket = (env as unknown as { DOCUMENTS?: R2Bucket }).DOCUMENTS;
+      if (bucket && files.results.length) await Promise.all(files.results.map(file => bucket.delete(file.storage_key)));
+      await db.batch([db.prepare("DELETE FROM documents WHERE application_id = ?").bind(id),db.prepare("DELETE FROM applications WHERE id = ?").bind(id)]);
+    } else {
+      const table = section === "partners" ? "partner_leads" : "payments";
+      await db.prepare(`DELETE FROM ${table} WHERE id = ?`).bind(id).run();
+    }
+    return Response.json({ ok: true });
+  } catch (error) {
+    console.error("Admin record deletion failed", error);
+    return Response.json({ error: "Unable to delete this record." }, { status: 500 });
+  }
 }
