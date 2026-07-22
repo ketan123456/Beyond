@@ -1,7 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, type ReactNode } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -10,6 +10,32 @@ gsap.registerPlugin(ScrollTrigger);
 export function MotionExperience({ children }: { children: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
+
+  useLayoutEffect(() => {
+    const handleNavigation = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const anchor = (event.target as Element | null)?.closest<HTMLAnchorElement>("a[href]");
+      if (!anchor || anchor.target === "_blank" || anchor.hasAttribute("download")) return;
+      const destination = new URL(anchor.href, window.location.href);
+      if (destination.origin !== window.location.origin) return;
+      const current = new URL(window.location.href);
+      if (destination.pathname === current.pathname && destination.search === current.search) return;
+      event.preventDefault();
+      const curtain = root.current?.querySelector<HTMLElement>(".route-curtain");
+      if (!curtain) { router.push(`${destination.pathname}${destination.search}${destination.hash}`); return; }
+      gsap.killTweensOf(curtain);
+      gsap.to(curtain, {
+        scaleY: 1,
+        transformOrigin: "bottom",
+        duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : .38,
+        ease: "power3.inOut",
+        onComplete: () => router.push(`${destination.pathname}${destination.search}${destination.hash}`),
+      });
+    };
+    document.addEventListener("click", handleNavigation);
+    return () => document.removeEventListener("click", handleNavigation);
+  }, [router]);
 
   useLayoutEffect(() => {
     if (!root.current) return;
@@ -34,18 +60,20 @@ export function MotionExperience({ children }: { children: ReactNode }) {
         ScrollTrigger.batch("main > section:not(.hero):not(.programs), .footer-banner, .footer-grid", {
           start: "top 94%",
           once: true,
-          onEnter: (elements) => gsap.fromTo(elements, { y: 34, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .65, stagger: .08, ease: "power2.out", clearProps: "transform,opacity,visibility" }),
+          onEnter: (elements) => gsap.fromTo(elements, { y: 34 }, { y: 0, duration: .65, stagger: .08, ease: "power2.out", clearProps: "transform" }),
         });
 
         ScrollTrigger.batch(".service-card, .journey-steps article, .contact-strip > div, .partner-benefits > span, details", {
           start: "top 96%",
           once: true,
-          onEnter: (elements) => gsap.fromTo(elements, { y: 22, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .5, stagger: .05, ease: "power2.out", clearProps: "transform,opacity,visibility" }),
+          onEnter: (elements) => gsap.fromTo(elements, { y: 22 }, { y: 0, duration: .5, stagger: .05, ease: "power2.out", clearProps: "transform" }),
         });
 
-        gsap.to(".hero-copy", { yPercent: 8, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: .8 } });
-        gsap.to(".hero-media img", { scale: 1.08, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: .9 } });
-        gsap.to(".impact-panel", { y: -22, rotate: 1.2, ease: "none", scrollTrigger: { trigger: ".journey", start: "top 85%", end: "bottom 25%", scrub: .8 } });
+        if (document.querySelector(".hero")) {
+          gsap.to(".hero-copy", { yPercent: 8, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: .8 } });
+          gsap.to(".hero-media img", { scale: 1.08, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: .9 } });
+        }
+        if (document.querySelector(".impact-panel")) gsap.to(".impact-panel", { y: -22, rotate: 1.2, ease: "none", scrollTrigger: { trigger: ".journey", start: "top 85%", end: "bottom 25%", scrub: .8 } });
         gsap.utils.toArray<HTMLImageElement>(".page-hero img, .help-hero img, .problem img, .impact-map-section img").forEach((image) => {
           gsap.fromTo(image, { yPercent: -5, scale: 1.04 }, { yPercent: 5, scale: 1, ease: "none", scrollTrigger: { trigger: image, start: "top bottom", end: "bottom top", scrub: .8 } });
         });
