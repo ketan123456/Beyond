@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, type FormEvent, type ReactNode } from "react";
-import { useLanguage } from "./i18n";
+import { useLanguage, type Lang } from "./i18n";
 
 export const heroImage = "/beyond-hero.png";
 export function HeroSlider(){const [slide,setSlide]=useState(0);const positions=["center","72% center","35% center"];const move=(n:number)=>setSlide((n+positions.length)%positions.length);return <div className="hero-media" aria-roledescription="carousel" aria-label="Children supported by Beyond Disability"><img src={heroImage} style={{objectPosition:positions[slide]}} alt={["Children with disabilities learning together","A child using accessible technology","Inclusive learning in Uttar Pradesh"][slide]}/><button className="slider-arrow prev" aria-label="Previous slide" onClick={()=>move(slide-1)}><i className="fa-solid fa-chevron-left"/></button><button className="slider-arrow next" aria-label="Next slide" onClick={()=>move(slide+1)}><i className="fa-solid fa-chevron-right"/></button><div className="slider-dots" role="tablist" aria-label="Choose slide">{positions.map((_,i)=><button key={i} role="tab" aria-selected={slide===i} aria-label={`Slide ${i+1}`} onClick={()=>setSlide(i)} className={slide===i?'active':''}/>)}</div></div>}
@@ -15,7 +15,7 @@ export function Header({ active = "" }: { active?: string }) {
   const [menuOpen,setMenuOpen]=useState(false);
   const {language,setLanguage}=useLanguage();
   const links = [["Home","/"],["About Us","/about"],["Get Help","/get-help"],["Our Impact","/#impact"],["Partner With Us","/partner"],["Resources","/resources"]];
-  return <header><div className="nav"><Logo/><button className="menu-toggle" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={()=>setMenuOpen(!menuOpen)}><i className={`fa-solid ${menuOpen?'fa-xmark':'fa-bars'}`}/></button><nav className={menuOpen?'open':''} aria-label="Primary navigation">{links.map(([label,href])=><Link className={active===label?"active":""} href={href} key={label} onClick={()=>setMenuOpen(false)}>{label}</Link>)}</nav><div className="nav-actions"><select className="language" aria-label="Select language" value={language} onChange={e=>setLanguage(e.target.value as "en"|"hi")}><option value="en">English</option><option value="hi">हिन्दी</option></select><Link className="btn btn-gold compact" href="/donate">Donate Now</Link></div></div></header>;
+  return <header><div className="nav"><Logo/><button className="menu-toggle" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={()=>setMenuOpen(!menuOpen)}><i className={`fa-solid ${menuOpen?'fa-xmark':'fa-bars'}`}/></button><nav className={menuOpen?'open':''} aria-label="Primary navigation">{links.map(([label,href])=><Link className={active===label?"active":""} href={href} key={label} onClick={()=>setMenuOpen(false)}>{label}</Link>)}</nav><div className="nav-actions"><select className="language" aria-label="Select language" value={language} onChange={e=>setLanguage(e.target.value as Lang)}><option value="en">English</option><option value="hi">हिन्दी</option><option value="mr">मराठी</option><option value="ta">தமிழ்</option><option value="bn">বাংলা</option></select><Link className="btn btn-gold compact" href="/donate">Donate Now</Link></div></div></header>;
 }
 
 export function Button({ href, children, tone="gold" }: { href:string; children:ReactNode; tone?:"gold"|"navy"|"outline"|"green" }) {
