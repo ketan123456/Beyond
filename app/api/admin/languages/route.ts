@@ -4,6 +4,10 @@ import { ensureDatabaseSchema } from "../../../../db/runtime-schema";
 
 const getDb = () => (env as unknown as { DB?: D1Database }).DB;
 const validLocale = (value: string) => /^[a-z]{2,3}(?:-[A-Z]{2})?$/.test(value);
+const supportedLocale = (value: string) => {
+  try { return new Intl.DisplayNames(["en"], { type: "language" }).of(value)?.toLowerCase() !== value.toLowerCase(); }
+  catch { return false; }
+};
 
 export async function GET() {
   if (!(await isStaticAdmin())) return Response.json({ error: "Unauthorized" }, { status: 401 });
@@ -23,7 +27,7 @@ export async function POST(request: Request) {
   await ensureDatabaseSchema(db);
   const body = await request.json() as { locale?: string; name?: string; nativeName?: string };
   const locale = body.locale?.trim() || "", name = body.name?.trim() || "", nativeName = body.nativeName?.trim() || "";
-  if (!validLocale(locale) || !name || !nativeName) return Response.json({ error: "Enter a valid locale, name and native name." }, { status: 400 });
+  if (!validLocale(locale) || !supportedLocale(locale) || !name || !nativeName) return Response.json({ error: "Enter a supported ISO language code (for example: ru for Russian), name and native name." }, { status: 400 });
   const order = await db.prepare("SELECT COALESCE(MAX(sort_order),0)+1 AS next_order FROM languages").first<{ next_order: number }>();
   try { await db.prepare("INSERT INTO languages(locale,name,native_name,enabled,sort_order) VALUES(?,?,?,?,?)").bind(locale,name,nativeName,1,order?.next_order || 1).run(); }
   catch { return Response.json({ error: "That locale already exists." }, { status: 409 }); }

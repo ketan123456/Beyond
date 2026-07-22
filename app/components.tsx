@@ -15,7 +15,7 @@ const heroSlides=[
 export function HeroSlider(){return <div className="hero-media"><Splide className="hero-splide" hasTrack={false} aria-label="Stories of children supported by Beyond Disability" options={{type:"fade",rewind:true,autoplay:true,interval:5200,speed:1300,rewindSpeed:1300,pauseOnHover:true,pauseOnFocus:true,resetProgress:false,arrows:true,pagination:true,lazyLoad:"nearby",reducedMotion:{speed:0,rewindSpeed:0,autoplay:"pause"}}}><SplideTrack>{heroSlides.map((slide,index)=><SplideSlide key={slide.src}><div className="wave-slide"><img src={slide.src} alt={slide.alt} loading={index===0?"eager":"lazy"}/></div></SplideSlide>)}</SplideTrack><button className="splide__toggle" type="button"><span className="splide__toggle__play"><i className="fa-solid fa-play"/><span className="sr-only">Play slideshow</span></span><span className="splide__toggle__pause"><i className="fa-solid fa-pause"/><span className="sr-only">Pause slideshow</span></span></button></Splide><div className="hero-impact-card"><i className="fa-solid fa-hands-holding-child"/><div><b>500+</b><span>children supported with dignity</span></div></div></div>}
 
 export function Logo() {
-  return <Link href="/" className="logo" aria-label="Beyond Disability home"><i className="fa-solid fa-infinity"/><span><b>BEYOND</b><small>DISABILITY FOUNDATION</small></span></Link>;
+  return <Link href="/" className="logo" data-no-translate aria-label="Beyond Disability home"><i className="fa-solid fa-infinity"/><span><b>BEYOND</b><small>DISABILITY FOUNDATION</small></span></Link>;
 }
 
 export function Header({ active = "" }: { active?: string }) {

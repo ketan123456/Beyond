@@ -49,14 +49,14 @@ export async function POST(request: Request) {
     if (!enabled) return Response.json({ error: "That language is not enabled." }, { status: 400 });
 
     const translations: Record<string, string> = {};
-    for (const text of texts) {
+    await Promise.all(texts.map(async text => {
       const cached = await db.prepare("SELECT value FROM translations WHERE locale=? AND key=?").bind(locale, text).first<{ value: string }>();
-      if (cached?.value) { translations[text] = cached.value; continue; }
+      if (cached?.value) { translations[text] = cached.value; return; }
       const value = await machineTranslate(text, locale);
       translations[text] = value;
       await db.prepare("INSERT INTO translations(locale,key,value,updated_at) VALUES(?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(locale,key) DO UPDATE SET value=excluded.value,updated_at=CURRENT_TIMESTAMP")
         .bind(locale, text, value).run();
-    }
+    }));
     return Response.json({ translations });
   } catch (error) {
     console.error("Automatic translation failed", error);
