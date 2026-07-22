@@ -10,8 +10,9 @@ export function Logo() {
 }
 
 export function Header({ active = "" }: { active?: string }) {
+  const [menuOpen,setMenuOpen]=useState(false);
   const links = [["Home","/"],["About Us","/about"],["Get Help","/get-help"],["Our Impact","/#impact"],["Partner With Us","/partner"],["Resources","/#resources"]];
-  return <header><div className="nav"><Logo/><nav aria-label="Primary navigation">{links.map(([label,href])=><Link className={active===label?"active":""} href={href} key={label}>{label}</Link>)}</nav><div className="nav-actions"><button className="language" aria-label="Select language">English⌄</button><Link className="btn btn-gold compact" href="/donate">Donate Now</Link></div></div></header>;
+  return <header><div className="nav"><Logo/><button className="menu-toggle" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={()=>setMenuOpen(!menuOpen)}>{menuOpen?'×':'☰'}</button><nav className={menuOpen?'open':''} aria-label="Primary navigation">{links.map(([label,href])=><Link className={active===label?"active":""} href={href} key={label} onClick={()=>setMenuOpen(false)}>{label}</Link>)}</nav><div className="nav-actions"><button className="language" aria-label="Select language">English⌄</button><Link className="btn btn-gold compact" href="/donate">Donate Now</Link></div></div></header>;
 }
 
 export function Button({ href, children, tone="gold" }: { href:string; children:ReactNode; tone?:"gold"|"navy"|"outline"|"green" }) {
