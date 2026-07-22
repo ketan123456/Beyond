@@ -2,10 +2,17 @@
 
 import Link from "next/link";
 import { useState, type FormEvent, type ReactNode } from "react";
+import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
+import "@splidejs/react-splide/css/core";
 import { useLanguage, type Lang } from "./i18n";
 
 export const heroImage = "/beyond-hero.png";
-export function HeroSlider(){return <div className="hero-media"><img src={heroImage} alt="Children using inclusive learning and assistive technology"/><div className="hero-impact-card"><i className="fa-solid fa-hands-holding-child"/><div><b>500+</b><span>children supported with dignity</span></div></div></div>}
+const heroSlides=[
+ {src:heroImage,alt:"Children learning together with inclusive assistive technology"},
+ {src:"/hero-inclusive-learning.png",alt:"A visually impaired student learning with accessible digital technology"},
+ {src:"/hero-therapy-support.png",alt:"A child taking part in a supportive speech therapy session"},
+];
+export function HeroSlider(){return <div className="hero-media"><Splide className="hero-splide" hasTrack={false} aria-label="Stories of children supported by Beyond Disability" options={{type:"loop",autoplay:true,interval:5200,speed:1000,pauseOnHover:true,pauseOnFocus:true,resetProgress:false,arrows:true,pagination:true,lazyLoad:"nearby",reducedMotion:{speed:0,rewindSpeed:0,autoplay:"pause"}}}><SplideTrack>{heroSlides.map((slide,index)=><SplideSlide key={slide.src}><div className="wave-slide"><img src={slide.src} alt={slide.alt} loading={index===0?"eager":"lazy"}/></div></SplideSlide>)}</SplideTrack><button className="splide__toggle" type="button"><span className="splide__toggle__play"><i className="fa-solid fa-play"/><span className="sr-only">Play slideshow</span></span><span className="splide__toggle__pause"><i className="fa-solid fa-pause"/><span className="sr-only">Pause slideshow</span></span></button></Splide><div className="hero-impact-card"><i className="fa-solid fa-hands-holding-child"/><div><b>500+</b><span>children supported with dignity</span></div></div></div>}
 
 export function Logo() {
   return <Link href="/" className="logo" aria-label="Beyond Disability home"><i className="fa-solid fa-infinity"/><span><b>BEYOND</b><small>DISABILITY FOUNDATION</small></span></Link>;
