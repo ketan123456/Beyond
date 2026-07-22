@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.1",
-    "@gsap/react": "^2.1.2",
     "@splidejs/react-splide": "^0.7.12",
     "drizzle-orm": "0.45.2",
     "gsap": "^3.15.0",
