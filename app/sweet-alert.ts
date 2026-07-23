@@ -3,10 +3,15 @@ import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 
 export const AppSwal = Swal.mixin({
-  background: "#0b2948",
-  color: "#eef7ff",
-  confirmButtonColor: "#ffbd18",
-  cancelButtonColor: "#38536d",
+  background: "#ffffff",
+  color: "#1f2937",
+  buttonsStyling: false,
+  showClass: {
+    popup: "swal2-show beyond-swal-enter",
+  },
+  hideClass: {
+    popup: "swal2-hide beyond-swal-exit",
+  },
   customClass: {
     popup: "beyond-swal",
     confirmButton: "beyond-swal-confirm",
@@ -32,8 +37,9 @@ export const popupSuccess = (title: string, text?: string) =>
     icon: "success",
     title,
     text,
+    confirmButtonText: "Great!",
     timer: 2200,
     timerProgressBar: true,
   });
 export const popupError = (title: string, text?: string) =>
-  AppSwal.fire({ icon: "error", title, text });
+  AppSwal.fire({ icon: "error", title, text, confirmButtonText: "Okay" });

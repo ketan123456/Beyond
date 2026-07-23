@@ -1156,14 +1156,39 @@ main details a { color: #ffd15b; }
   .hero-splide .hero-slider-arrows .splide__arrow { width: 43px!important; height: 43px!important; }
 }
 
-/* Branded SweetAlert2 dialogs used for every confirmation popup. */
-.beyond-swal { border: 1px solid #ffffff2b!important; border-radius: 26px!important; box-shadow: 0 30px 100px #010a1499!important; backdrop-filter: blur(18px); }
-.beyond-swal .swal2-title { font-family: inherit; font-size: clamp(1.45rem,3vw,2rem); }
-.beyond-swal .swal2-html-container { color: #bfd1df!important; font-family: inherit; }
-.beyond-swal-cancel, .beyond-swal-confirm { min-width: 120px; border-radius: 999px!important; padding: 11px 22px!important; font-family: inherit!important; font-weight: 800!important; transition: transform .2s ease,filter .2s ease!important; }
-.beyond-swal-confirm { color: #10223c!important; }
-.beyond-swal-cancel:hover, .beyond-swal-confirm:hover { transform: translateY(-2px); filter: brightness(1.08); }
-.swal2-container { z-index: 12000!important; }
+/* Bright state-driven SweetAlert design used across public and admin flows. */
+.swal2-container { z-index:12000!important; padding:18px!important; background:#e9eff599!important; backdrop-filter:blur(8px); }
+.beyond-swal { width:min(430px,calc(100vw - 36px))!important; padding:30px 32px 28px!important; border:1px solid #edf1f5!important; border-radius:22px!important; background:#fff!important; box-shadow:0 22px 65px #18324b28,0 4px 14px #18324b12!important; overflow:visible!important; }
+.beyond-swal .swal2-icon { width:78px!important; height:78px!important; margin:2px auto 20px!important; border-width:3px!important; box-shadow:0 0 0 10px currentColor inset,0 0 0 10px transparent; }
+.beyond-swal .swal2-icon:before { content:""; position:absolute; inset:-14px; z-index:-1; border-radius:50%; background:currentColor; opacity:.08; }
+.beyond-swal .swal2-icon:after { content:""; position:absolute; inset:-24px; z-index:-2; border-radius:50%; background:radial-gradient(circle,currentColor 1.5px,transparent 2px) 0 0/14px 14px; opacity:.42; }
+.beyond-swal .swal2-success { color:#61c879!important; border-color:#61c879!important; }
+.beyond-swal .swal2-error { color:#ef5b63!important; border-color:#ef5b63!important; }
+.beyond-swal .swal2-warning { color:#f3a12c!important; border-color:#f3a12c!important; }
+.beyond-swal .swal2-info { color:#3f82ed!important; border-color:#3f82ed!important; }
+.beyond-swal .swal2-question { color:#8152df!important; border-color:#8152df!important; }
+.beyond-swal .swal2-title { padding:0!important; color:#202938!important; font-family:inherit!important; font-size:clamp(1.55rem,4vw,2rem)!important; font-weight:850!important; letter-spacing:-.035em!important; }
+.beyond-swal .swal2-html-container { margin:10px auto 4px!important; padding:0!important; max-width:330px; color:#647184!important; font-family:inherit!important; font-size:15px!important; line-height:1.55!important; }
+.beyond-swal .swal2-actions { width:100%; margin:24px 0 0!important; gap:12px; }
+.beyond-swal-cancel, .beyond-swal-confirm { min-width:126px; min-height:44px; padding:10px 21px!important; border:1px solid transparent!important; border-radius:7px!important; color:#fff!important; font-family:inherit!important; font-size:14px!important; font-weight:800!important; cursor:pointer; box-shadow:0 8px 18px #18324b18; transition:transform .2s ease,filter .2s ease,box-shadow .2s ease!important; }
+.beyond-swal-cancel { border-color:#ccd4dd!important; background:#fff!important; color:#536174!important; box-shadow:none; }
+.beyond-swal:has(.swal2-success) .beyond-swal-confirm { background:linear-gradient(135deg,#58c671,#43b962)!important; }
+.beyond-swal:has(.swal2-error) .beyond-swal-confirm { background:linear-gradient(135deg,#ef5b63,#e4404a)!important; }
+.beyond-swal:has(.swal2-warning) .beyond-swal-confirm { background:linear-gradient(135deg,#f6aa35,#f28b26)!important; }
+.beyond-swal:has(.swal2-info) .beyond-swal-confirm { background:linear-gradient(135deg,#4f91f4,#3276e5)!important; }
+.beyond-swal:has(.swal2-question) .beyond-swal-confirm { background:linear-gradient(135deg,#8e5be8,#6e3ed1)!important; }
+.beyond-swal-cancel:hover, .beyond-swal-confirm:hover { transform:translateY(-2px); filter:brightness(1.04); box-shadow:0 12px 24px #18324b20; }
+.beyond-swal-cancel:focus-visible, .beyond-swal-confirm:focus-visible { outline:3px solid #2f80ed55!important; outline-offset:3px!important; }
+.beyond-swal .swal2-timer-progress-bar { background:#61c879!important; }
+@keyframes beyond-swal-pop { from { opacity:0; transform:translateY(12px) scale(.94); } to { opacity:1; transform:none; } }
+@keyframes beyond-swal-away { to { opacity:0; transform:translateY(8px) scale(.97); } }
+.beyond-swal-enter { animation:beyond-swal-pop .28s cubic-bezier(.2,.8,.2,1)!important; }
+.beyond-swal-exit { animation:beyond-swal-away .18s ease-in both!important; }
+@media(max-width:480px) {
+  .beyond-swal { padding:26px 20px 22px!important; }
+  .beyond-swal .swal2-actions { display:grid!important; grid-template-columns:1fr; }
+  .beyond-swal-cancel, .beyond-swal-confirm { width:100%; }
+}
 
 /* Admin UI polish and responsive corrections */
 body:has(.admin-dashboard), body:has(.admin-login) { background: radial-gradient(circle at 5% 35%,#b8eef3 0,transparent 24%),radial-gradient(circle at 96% 70%,#ffe4cc 0,transparent 24%),#f5f8fb; }
