@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import Lenis from "lenis";
+import "lenis/dist/lenis.css";
 
 export function MotionExperience({ children }: { children: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
@@ -13,6 +15,16 @@ export function MotionExperience({ children }: { children: ReactNode }) {
     document.documentElement.classList.add("gsap-ready");
     if (reduced) return () => document.documentElement.classList.remove("gsap-ready");
 
+    const lenis = new Lenis({
+      autoRaf: true,
+      duration: 1.15,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.05,
+      syncTouch: false,
+      anchors: { offset: -84 },
+    });
     const bar = root.current.querySelector<HTMLElement>(".motion-progress__bar");
     let frame = 0;
     let disposed = false;
@@ -36,6 +48,7 @@ export function MotionExperience({ children }: { children: ReactNode }) {
       if (disposed) return;
 
       gsap.registerPlugin(ScrollTrigger);
+      lenis.on("scroll", ScrollTrigger.update);
       const motionMedia = gsap.matchMedia();
       const context = gsap.context(() => {
         const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -178,6 +191,7 @@ export function MotionExperience({ children }: { children: ReactNode }) {
 
       ScrollTrigger.refresh();
       destroyMotion = () => {
+        lenis.off("scroll", ScrollTrigger.update);
         motionMedia.revert();
         context.revert();
       };
@@ -188,6 +202,7 @@ export function MotionExperience({ children }: { children: ReactNode }) {
     return () => {
       disposed = true;
       destroyMotion?.();
+      lenis.destroy();
       removeEventListener("scroll", onScroll);
       if (frame) cancelAnimationFrame(frame);
       document.documentElement.classList.remove("gsap-ready");
