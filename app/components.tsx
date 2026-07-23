@@ -389,26 +389,57 @@ export function PageShell({
 
 export function ApplyForm() {
   const [status, setStatus] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (submitting) return;
     setStatus("Submitting…");
+    setSubmitting(true);
     const form = e.currentTarget;
     try {
+      const formData = new FormData(form);
+      const uploads = ["udid", "income"].map((name) => formData.get(name));
+      if (uploads.some((file) => !(file instanceof File) || !file.size)) {
+        setStatus("Please upload both required documents.");
+        return;
+      }
+      if (uploads.some((file) => file instanceof File && file.size > 8 * 1024 * 1024)) {
+        setStatus("Each document must be smaller than 8 MB.");
+        return;
+      }
       const res = await fetch("/api/applications", {
         method: "POST",
-        body: new FormData(form),
+        body: formData,
       });
-      const data = (await res.json()) as { reference?: string; error?: string };
+      const responseText = await res.text();
+      let data: { reference?: string; error?: string } = {};
+      try {
+        data = responseText ? JSON.parse(responseText) : {};
+      } catch {
+        data.error =
+          res.status === 413
+            ? "The uploaded documents are too large. Please choose smaller files."
+            : "The server could not process the application. Please try again.";
+      }
       if (!res.ok) {
-        setStatus(data.error || "Please check the details and try again.");
+        setStatus(
+          data.error ||
+            `We could not submit the application (error ${res.status}). Please try again.`,
+        );
         return;
       }
       form.reset();
       setStatus(
         `Application received successfully. Reference: ${data.reference}`,
       );
-    } catch {
-      setStatus("Network error. Please check your connection and try again.");
+    } catch (error) {
+      setStatus(
+        error instanceof TypeError
+          ? "The application service could not be reached. Please try again."
+          : "We could not submit the application. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
     }
   }
   return (
@@ -468,8 +499,8 @@ export function ApplyForm() {
         <input type="checkbox" required /> I confirm that the information
         provided is correct.
       </label>
-      <button className="btn btn-gold" type="submit">
-        Submit Application / आवेदन जमा करें
+      <button className="btn btn-gold" type="submit" disabled={submitting}>
+        {submitting ? "Submitting…" : "Submit Application / आवेदन जमा करें"}
       </button>
       <p role="status" className="form-status">
         {status}
