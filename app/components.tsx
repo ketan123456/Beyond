@@ -497,6 +497,10 @@ export function ApplyForm() {
           <input name="phone" inputMode="tel" required />
         </label>
         <label>
+          Email address
+          <input name="email" type="email" autoComplete="email" required />
+        </label>
+        <label>
           District
           <select name="district" required>
             <option value="">Select district</option>
@@ -524,7 +528,7 @@ export function ApplyForm() {
           <input
             type="file"
             name="udid"
-            accept=".pdf,.jpg,.jpeg,.png"
+            accept=".pdf"
             required
           />
         </label>
@@ -533,7 +537,7 @@ export function ApplyForm() {
           <input
             type="file"
             name="income"
-            accept=".pdf,.jpg,.jpeg,.png"
+            accept=".pdf"
             required
           />
         </label>

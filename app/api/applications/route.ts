@@ -1,4 +1,5 @@
 import { env } from "cloudflare:workers";
+import { safelySendAdminEmail, safelySendUserEmail } from "../../admin-email";
 
 const allowedTypes = new Set(["application/pdf", "image/jpeg", "image/png"]);
 const maxFileSize = 8 * 1024 * 1024;
@@ -8,20 +9,25 @@ async function ensureApplicationTables(db: D1Database) {
     db.prepare("CREATE TABLE IF NOT EXISTS applications (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, reference TEXT NOT NULL UNIQUE, name TEXT NOT NULL, phone TEXT NOT NULL, district TEXT NOT NULL, category TEXT NOT NULL, details TEXT DEFAULT '' NOT NULL, status TEXT DEFAULT 'submitted' NOT NULL, created_at TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL)"),
     db.prepare("CREATE TABLE IF NOT EXISTS documents (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, application_id INTEGER NOT NULL, type TEXT NOT NULL, storage_key TEXT NOT NULL, filename TEXT NOT NULL, review_status TEXT DEFAULT 'pending' NOT NULL)"),
   ]);
+  const columns = await db.prepare("PRAGMA table_info(applications)").all<{ name: string }>();
+  if (!columns.results.some((column) => column.name === "email")) {
+    await db.prepare("ALTER TABLE applications ADD COLUMN email TEXT NOT NULL DEFAULT ''").run();
+  }
 }
 
 export async function POST(request: Request) {
   try {
     const form = await request.formData();
     const name = String(form.get("name") || "").trim();
+    const email = String(form.get("email") || "").trim().toLowerCase();
     const phone = String(form.get("phone") || "").replace(/\s+/g, "");
     const district = String(form.get("district") || "").trim();
     const category = String(form.get("category") || "").trim();
     const details = String(form.get("details") || "").trim();
     const files = ["udid", "income"].map(type => ({ type, file: form.get(type) }));
 
-    if (!name || !/^\+?[0-9]{10,13}$/.test(phone) || !district || !category) {
-      return Response.json({ ok: false, error: "Please enter a valid name, mobile number, district, and support type." }, { status: 400 });
+    if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !/^\+?[0-9]{10,13}$/.test(phone) || !district || !category) {
+      return Response.json({ ok: false, error: "Please enter a valid name, email, mobile number, district, and support type." }, { status: 400 });
     }
     for (const { file } of files) {
       if (!(file instanceof File) || !file.size) return Response.json({ ok: false, error: "Please upload both required documents." }, { status: 400 });
@@ -34,8 +40,8 @@ export async function POST(request: Request) {
     await ensureApplicationTables(bindings.DB);
 
     const reference = `BD-${Date.now().toString(36).toUpperCase()}`;
-    const inserted = await bindings.DB.prepare("INSERT INTO applications (reference,name,phone,district,category,details,status) VALUES (?,?,?,?,?,?,?) RETURNING id")
-      .bind(reference, name, phone, district, category, details, "submitted").first<{ id: number }>();
+    const inserted = await bindings.DB.prepare("INSERT INTO applications (reference,name,email,phone,district,category,details,status) VALUES (?,?,?,?,?,?,?,?) RETURNING id")
+      .bind(reference, name, email, phone, district, category, details, "submitted").first<{ id: number }>();
     if (!inserted?.id) throw new Error("Application record was not created");
 
     for (const { type, file } of files as { type: string; file: File }[]) {
@@ -45,6 +51,32 @@ export async function POST(request: Request) {
       await bindings.DB.prepare("INSERT INTO documents (application_id,type,storage_key,filename,review_status) VALUES (?,?,?,?,?)")
         .bind(inserted.id, type, key, file.name, "pending").run();
     }
+    await safelySendAdminEmail({
+      subject: `New support application — ${reference}`,
+      heading: "New support application",
+      summary: "A new application and its required documents were submitted.",
+      fields: [
+        ["Reference", reference],
+        ["Applicant", name],
+        ["Email", email],
+        ["Phone", phone],
+        ["District", district],
+        ["Support requested", category],
+      ],
+      idempotencyKey: `application-${reference}`,
+    });
+    await safelySendUserEmail(email, {
+      subject: `We received your application — ${reference}`,
+      heading: "We’ve received your application!",
+      summary: `Hi ${name}, your support application has been received. Our team will review it and contact you with the next steps.`,
+      fields: [
+        ["Reference", reference],
+        ["Applicant", name],
+        ["Support requested", category],
+        ["Status", "Submitted"],
+      ],
+      idempotencyKey: `application-user-${reference}`,
+    });
     return Response.json({ ok: true, reference });
   } catch (error) {
     console.error("Application submission failed", error);

@@ -1664,3 +1664,4 @@ body:not(:has(.admin-dashboard)):not(:has(.admin-login)) main .btn-navy:hover {
     outline-offset:2px;
   }
 }
+.donor-email{display:grid;gap:.5rem;max-width:34rem;margin:1.25rem auto;color:#0b2d4d;font-weight:700;text-align:left}.donor-email input{width:100%;min-height:3.25rem;border:1px solid #cbdbe5;border-radius:.8rem;background:#fff;padding:.8rem 1rem;color:#0b2d4d;font:inherit;outline:none}.donor-email input:focus{border-color:#0e929d;box-shadow:0 0 0 3px rgba(14,146,157,.14)}
