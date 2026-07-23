@@ -159,16 +159,14 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
           <button
             className="btn btn-outline"
             onClick={() => void load()}
-            disabled={loading}
-          >
+            disabled={loading}>
             <i className={`fa-solid fa-rotate ${loading ? "fa-spin" : ""}`} />{" "}
             Refresh
           </button>
           <button
             className="btn btn-outline"
             onClick={() => void logout()}
-            disabled={signingOut}
-          >
+            disabled={signingOut}>
             <i
               className={`fa-solid ${signingOut ? "fa-spinner fa-spin" : "fa-right-from-bracket"}`}
             />{" "}
@@ -212,8 +210,7 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
                 onClick={() => {
                   setSection(item);
                   setQuery("");
-                }}
-              >
+                }}>
                 {item}
               </button>
             ))}
@@ -374,8 +371,9 @@ function AdminTable({
                 <select
                   value={String(row.status)}
                   disabled={updating === row.id}
-                  onChange={(e) => updateStatus(Number(row.id), e.target.value)}
-                >
+                  onChange={(e) =>
+                    updateStatus(Number(row.id), e.target.value)
+                  }>
                   {statusOptions[section].map((status) => (
                     <option key={status}>{status}</option>
                   ))}
@@ -387,8 +385,7 @@ function AdminTable({
                     className="admin-icon-btn view"
                     onClick={() => onView(row)}
                     aria-label="View record"
-                    title="View"
-                  >
+                    title="View">
                     <i className="fa-solid fa-eye" />
                   </button>
                   <button
@@ -396,8 +393,7 @@ function AdminTable({
                     onClick={() => onDelete(row)}
                     disabled={deleting === row.id}
                     aria-label="Delete record"
-                    title="Delete"
-                  >
+                    title="Delete">
                     <i
                       className={`fa-solid ${deleting === row.id ? "fa-spinner fa-spin" : "fa-trash"}`}
                     />
@@ -468,91 +464,94 @@ function RecordModal({
       role="presentation"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
-      }}
-    >
-      <section
-        className="admin-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="record-title"
-      >
-        <header>
-          <div>
-            <p className="eyebrow">{section.slice(0, -1)} record</p>
-            <h2 id="record-title">
-              {String(
-                row.reference ||
-                  row.company ||
-                  row.razorpay_order_id ||
-                  "Record details",
-              )}
-            </h2>
-          </div>
-          <button
-            className="admin-modal-close"
-            onClick={onClose}
-            aria-label="Close details"
-          >
-            <i className="fa-solid fa-xmark" />
-          </button>
-        </header>
-        <div className="admin-detail-grid">
-          {entries.map(([label, value]) => (
-            <div
-              key={String(label)}
-              className={
-                label === "Request details" || label === "Message" ? "wide" : ""
-              }
-            >
-              <span>{label}</span>
-              <b>{String(value || "—")}</b>
+      }}>
+      <div className="main-admin-modal-outer">
+        <section
+          className="admin-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="record-title">
+          <header>
+            <div>
+              <p className="eyebrow">{section.slice(0, -1)} record</p>
+              <h2 id="record-title">
+                {String(
+                  row.reference ||
+                    row.company ||
+                    row.razorpay_order_id ||
+                    "Record details",
+                )}
+              </h2>
             </div>
-          ))}
-        </div>
-        {section === "applications" && (
-          <div className="admin-documents">
-            <h3>Submitted documents</h3>
-            {files.length ? (
-              <div>
-                {files.map((file) => (
-                  <a
-                    key={Number(file.id)}
-                    href={`/api/admin/documents/${file.id}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <i className="fa-solid fa-file-arrow-down" />
-                    <span>
-                      <b>{file.filename}</b>
-                      <small>
-                        {file.type} · {file.review_status}
-                      </small>
-                    </span>
-                    <i className="fa-solid fa-arrow-up-right-from-square" />
-                  </a>
-                ))}
+            <button
+              type="button"
+              className="admin-modal-close"
+              onClick={onClose}
+              aria-label="Close details"
+              title="Close">
+              <i className="fa-solid fa-xmark" aria-hidden="true" />
+            </button>
+          </header>
+          <div className="admin-detail-grid">
+            {entries.map(([label, value]) => (
+              <div
+                key={String(label)}
+                className={
+                  label === "Request details" || label === "Message"
+                    ? "wide"
+                    : ""
+                }>
+                <span>{label}</span>
+                <b>{String(value || "—")}</b>
               </div>
-            ) : (
-              <p>No documents were attached to this application.</p>
-            )}
+            ))}
           </div>
-        )}
-        <footer>
-          <button className="btn btn-outline" onClick={onClose}>
-            Close
-          </button>
-          <button
-            className="btn admin-delete-btn"
-            onClick={onDelete}
-            disabled={deleting}
-          >
-            <i
-              className={`fa-solid ${deleting ? "fa-spinner fa-spin" : "fa-trash"}`}
-            />{" "}
-            {deleting ? "Deleting…" : "Delete record"}
-          </button>
-        </footer>
-      </section>
+          {section === "applications" && (
+            <div className="admin-documents">
+              <h3>Submitted documents</h3>
+              {files.length ? (
+                <div>
+                  {files.map((file) => (
+                    <a
+                      key={Number(file.id)}
+                      href={`/api/admin/documents/${file.id}`}
+                      target="_blank"
+                      rel="noreferrer">
+                      <i className="fa-solid fa-file-arrow-down" />
+                      <span>
+                        <b>{file.filename}</b>
+                        <small>
+                          {file.type} · {file.review_status}
+                        </small>
+                      </span>
+                      <i className="fa-solid fa-arrow-up-right-from-square" />
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <p>No documents were attached to this application.</p>
+              )}
+            </div>
+          )}
+          <footer>
+            <button
+              type="button"
+              className="btn btn-outline admin-close-btn"
+              onClick={onClose}>
+              Close
+            </button>
+            <button
+              className="btn admin-delete-btn"
+              onClick={onDelete}
+              disabled={deleting}>
+              <i
+                className={`fa-solid ${deleting ? "fa-spinner fa-spin" : "fa-trash"}`}
+              />{" "}
+              {deleting ? "Deleting…" : "Delete record"}
+            </button>
+          </footer>
+        </section>
+      </div>
     </div>
   );
 }
