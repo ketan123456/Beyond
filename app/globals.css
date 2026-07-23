@@ -737,8 +737,8 @@ main>section:not(.hero):not(.page-hero):not(.help-hero):not(.donate):not(.home-i
 
 /* GSAP motion-led art direction */
 .motion-root { position: relative; isolation: isolate; }
-.gsap-ready body { cursor: none; }
-.gsap-ready a, .gsap-ready button, .gsap-ready select { cursor: none; }
+.gsap-ready body { cursor: auto; }
+.gsap-ready a, .gsap-ready button, .gsap-ready select { cursor: pointer; }
 .gsap-ready .hero { perspective: 1200px; }
 .gsap-ready .hero-copy { position: relative; }
 .gsap-ready .hero-copy:after { content: ""; position: absolute; width: 180px; height: 180px; right: -70px; top: 12%; border: 1px solid #13767e38; border-radius: 43% 57% 66% 34%/45% 37% 63% 55%; animation: orbital-shape 9s linear infinite; pointer-events: none; }
@@ -815,8 +815,45 @@ main>section:not(.hero):not(.page-hero):not(.help-hero):not(.donate):not(.home-i
 .route-curtain { will-change: transform; }
 .motion-progress__bar { will-change: transform; }
 .journey-steps article, .service-card { will-change: auto; }
+.gsap-ready .hero h1 em:after { background-size: 220% 100%; background-image: linear-gradient(90deg,var(--gold),#fff1a8,var(--gold)); animation: motion-highlight 3.8s ease-in-out infinite; }
+.gsap-ready .motion-marquee i { display: inline-block; animation: motion-spark 2.4s ease-in-out infinite; }
+.gsap-ready .motion-marquee i:nth-of-type(2n) { animation-delay: -1.2s; }
+.gsap-ready .stat>i { animation: motion-icon-breathe 4s ease-in-out infinite; }
+.gsap-ready .stat:nth-child(2n)>i { animation-delay: -2s; }
+.gsap-ready .impact-icon { animation: motion-icon-float 3.6s ease-in-out infinite; }
+.gsap-ready .service-card:before { content: ""; position: absolute; width: 150px; height: 150px; right: -100px; bottom: -100px; border: 1px solid #f1b51d44; border-radius: 50%; pointer-events: none; animation: motion-orbit-ring 7s linear infinite; }
+.gsap-ready .home-cta:after { animation: motion-infinity-drift 11s ease-in-out infinite; }
+.gsap-ready footer:before { animation: motion-footer-drift 12s ease-in-out infinite; }
+.gsap-ready .floating-whatsapp i, .gsap-ready .floating-whatsapp img { animation: motion-icon-breathe 3s ease-in-out infinite; }
 @keyframes marquee-flow {
   to { transform: translateX(-50%); }
+}
+@keyframes motion-highlight {
+  0%, 100% { background-position: 0 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes motion-spark {
+  0%, 100% { transform: rotate(0) scale(.82); opacity: .65; }
+  50% { transform: rotate(180deg) scale(1.18); opacity: 1; }
+}
+@keyframes motion-icon-breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.055); }
+}
+@keyframes motion-icon-float {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-8px) rotate(4deg); }
+}
+@keyframes motion-orbit-ring {
+  to { transform: rotate(360deg) scale(1.08); }
+}
+@keyframes motion-infinity-drift {
+  0%, 100% { transform: translate3d(0,0,0) rotate(-2deg); }
+  50% { transform: translate3d(-2vw,-1.5vw,0) rotate(2deg); }
+}
+@keyframes motion-footer-drift {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-48%) translateY(-10px); }
 }
 html:not([lang="en"]) .home-intro h2 { font-size: clamp(2.6rem,5.2vw,5.5rem); }
 html:not([lang="en"]) .journey h2 { font-size: clamp(2.3rem,4vw,4.2rem); }
@@ -834,6 +871,7 @@ html:not([lang="en"]) .impact-panel blockquote { font-size: clamp(1.2rem,1.8vw,1
 }
 @media(prefers-reduced-motion:reduce) {
   .motion-marquee__track { animation: none; }
+  .gsap-ready .hero h1 em:after, .gsap-ready .motion-marquee i, .gsap-ready .stat>i, .gsap-ready .impact-icon, .gsap-ready .service-card:before, .gsap-ready .home-cta:after, .gsap-ready footer:before, .gsap-ready .floating-whatsapp i, .gsap-ready .floating-whatsapp img { animation: none; }
 }
 
 /* Compact language picker for the mobile header. */
@@ -968,7 +1006,8 @@ html:not([lang="en"]) .impact-panel blockquote { font-size: clamp(1.2rem,1.8vw,1
 .admin-icon-btn.delete:focus-visible, .admin-icon-btn.delete:hover { background: #8f303044; border-color: #ff8f8f; outline-color: #ff8f8f; }
 .admin-icon-btn:disabled { cursor: not-allowed; opacity: .45; transform: none; }
 .admin-modal-backdrop { position: fixed; z-index: 1000; inset: 0; padding: 24px; display: grid; place-items: center; background: #021426c9; backdrop-filter: blur(12px); animation: admin-fade-in .2s ease; }
-.admin-modal { width: min(760px,100%); max-height: min(86vh,900px); overflow: auto; border: 1px solid #ffffff2e; border-radius: 28px; background: #0b2948; color: #eef7ff; box-shadow: 0 30px 100px #0009; animation: admin-modal-in .3s cubic-bezier(.2,.8,.2,1); }
+.admin-modal { width: min(760px,100%); max-height: min(86vh,900px); overflow: auto;  background: #0b2948; color: #eef7ff; box-shadow: 0 30px 100px #0009; animation: admin-modal-in .3s cubic-bezier(.2,.8,.2,1); }
+.main-admin-modal-outer{border: 1px solid #ffffff2e; border-radius: 28px;overflow: hidden;}
 .admin-modal>header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 28px 30px 20px; border-bottom: 1px solid #ffffff18; }
 .admin-modal h2 { color: #000; font-size: clamp(1.55rem,3vw,2.25rem); overflow-wrap: anywhere; }
 .admin-modal .eyebrow { text-transform: capitalize; }
