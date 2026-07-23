@@ -1,138 +1,37 @@
 "use client";
 
-import { useLayoutEffect, useRef, type ReactNode } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
+import { useEffect, useRef, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 
 export function MotionExperience({ children }: { children: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const router = useRouter();
 
-  useLayoutEffect(() => {
-    const handleNavigation = (event: MouseEvent) => {
-      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      const anchor = (event.target as Element | null)?.closest<HTMLAnchorElement>("a[href]");
-      if (!anchor || anchor.target === "_blank" || anchor.hasAttribute("download")) return;
-      const destination = new URL(anchor.href, window.location.href);
-      if (destination.origin !== window.location.origin) return;
-      const current = new URL(window.location.href);
-      if (destination.pathname === current.pathname && destination.search === current.search) return;
-      event.preventDefault();
-      const curtain = root.current?.querySelector<HTMLElement>(".route-curtain");
-      if (!curtain) { router.push(`${destination.pathname}${destination.search}${destination.hash}`); return; }
-      gsap.killTweensOf(curtain);
-      gsap.to(curtain, {
-        scaleY: 1,
-        transformOrigin: "bottom",
-        duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : .38,
-        ease: "power3.inOut",
-        onComplete: () => router.push(`${destination.pathname}${destination.search}${destination.hash}`),
-      });
-    };
-    document.addEventListener("click", handleNavigation);
-    return () => document.removeEventListener("click", handleNavigation);
-  }, [router]);
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!root.current) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const nativeCleanups: Array<() => void> = [];
     document.documentElement.classList.add("gsap-ready");
+    if (reduced) return () => document.documentElement.classList.remove("gsap-ready");
 
-    const context = gsap.context(() => {
-      gsap.set(".route-curtain", { scaleY: 1, transformOrigin: "top" });
-      const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
-      intro
-        .to(".route-curtain", { scaleY: 0, duration: reduced ? 0 : .55 })
-        .from("header", { y: reduced ? 0 : -28, autoAlpha: 0, duration: reduced ? 0 : .45 }, "<.1");
-      if (document.querySelector(".hero")) {
-        intro
-          .from(".hero-copy > *", { y: reduced ? 0 : 30, autoAlpha: 0, duration: reduced ? 0 : .65, stagger: .06 }, "<")
-          .from(".hero-media", { autoAlpha: 0, duration: reduced ? 0 : .7 }, "<.1");
-      }
-
-      if (!reduced) {
-        gsap.to(".motion-progress__bar", { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: .1 } });
-        ScrollTrigger.batch("main > section:not(.hero):not(.programs), .footer-banner, .footer-grid", {
-          start: "top 94%",
-          once: true,
-          onEnter: (elements) => gsap.fromTo(elements, { y: 34 }, { y: 0, duration: .65, stagger: .08, ease: "power2.out", clearProps: "transform" }),
-        });
-
-        ScrollTrigger.batch(".service-card, .journey-steps article, .contact-strip > div, .partner-benefits > span, details", {
-          start: "top 96%",
-          once: true,
-          onEnter: (elements) => gsap.fromTo(elements, { y: 22 }, { y: 0, duration: .5, stagger: .05, ease: "power2.out", clearProps: "transform" }),
-        });
-
-        if (document.querySelector(".hero")) {
-          gsap.to(".hero-copy", { yPercent: 8, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: .8 } });
-          gsap.to(".hero-media img", { scale: 1.08, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: .9 } });
-        }
-        if (document.querySelector(".impact-panel")) gsap.to(".impact-panel", { y: -22, rotate: 1.2, ease: "none", scrollTrigger: { trigger: ".journey", start: "top 85%", end: "bottom 25%", scrub: .8 } });
-        gsap.utils.toArray<HTMLImageElement>(".page-hero img, .help-hero img, .problem img, .impact-map-section img").forEach((image) => {
-          gsap.fromTo(image, { yPercent: -5, scale: 1.04 }, { yPercent: 5, scale: 1, ease: "none", scrollTrigger: { trigger: image, start: "top bottom", end: "bottom top", scrub: .8 } });
-        });
-
-        const motionMedia = gsap.matchMedia();
-        motionMedia.add("(min-width: 981px) and (prefers-reduced-motion: no-preference)", () => {
-          const programmeSection = root.current?.querySelector<HTMLElement>(".programs");
-          const programmeTrack = programmeSection?.querySelector<HTMLElement>(".card-grid");
-          if (!programmeSection || !programmeTrack) return;
-          const distance = () => Math.max(0, programmeTrack.scrollWidth - window.innerWidth);
-          gsap.set(programmeTrack, { x: 0 });
-          gsap.to(programmeTrack, {
-            x: () => -distance(),
-            ease: "none",
-            scrollTrigger: {
-              trigger: programmeSection,
-              start: "top top",
-              end: () => `+=${Math.max(distance(), window.innerHeight * .8)}`,
-              pin: true,
-              pinSpacing: true,
-              scrub: .65,
-              anticipatePin: 1,
-              invalidateOnRefresh: true,
-            },
-          });
-        });
-        nativeCleanups.push(() => motionMedia.revert());
-
-        const magneticButtons = Array.from(root.current?.querySelectorAll<HTMLElement>(".btn") || []);
-        magneticButtons.forEach((button) => {
-          const move = (event: PointerEvent) => { const rect = button.getBoundingClientRect(); gsap.to(button, { x: (event.clientX - rect.left - rect.width / 2) * .12, y: (event.clientY - rect.top - rect.height / 2) * .12, duration: .25, overwrite: true }); };
-          const reset = () => gsap.to(button, { x: 0, y: 0, duration: .5, ease: "elastic.out(1,.4)", overwrite: true });
-          button.addEventListener("pointermove", move); button.addEventListener("pointerleave", reset);
-          nativeCleanups.push(() => { button.removeEventListener("pointermove", move); button.removeEventListener("pointerleave", reset); });
-        });
-      }
-    }, root);
-
-    let refreshTimer = 0;
-    const scheduleRefresh = () => {
-      window.clearTimeout(refreshTimer);
-      refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 120);
+    const bar = root.current.querySelector<HTMLElement>(".motion-progress__bar");
+    let frame = 0;
+    const updateProgress = () => {
+      frame = 0;
+      const distance = document.documentElement.scrollHeight - innerHeight;
+      if (bar) bar.style.transform = `scaleX(${distance > 0 ? scrollY / distance : 0})`;
     };
-    const resizeObserver = new ResizeObserver(scheduleRefresh);
-    resizeObserver.observe(root.current);
-    window.addEventListener("load", scheduleRefresh, { once: true });
-    window.addEventListener("beyond:language-change", scheduleRefresh);
-    document.fonts?.ready.then(scheduleRefresh);
-    scheduleRefresh();
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(updateProgress);
+    };
+    addEventListener("scroll", onScroll, { passive: true });
+    updateProgress();
 
     return () => {
-      window.clearTimeout(refreshTimer);
-      resizeObserver.disconnect();
-      nativeCleanups.forEach((cleanup) => cleanup());
-      window.removeEventListener("beyond:language-change", scheduleRefresh);
-      context.revert();
+      removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
       document.documentElement.classList.remove("gsap-ready");
     };
   }, [pathname]);
 
-  return <div ref={root} className="motion-root"><div className="route-curtain" aria-hidden="true"><span>BEYOND</span></div><div className="motion-progress" aria-hidden="true"><div className="motion-progress__bar"/></div>{children}</div>;
+  return <div ref={root} className="motion-root"><div className="motion-progress" aria-hidden="true"><div className="motion-progress__bar"/></div>{children}</div>;
 }

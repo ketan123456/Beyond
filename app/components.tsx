@@ -6,18 +6,18 @@ import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css/core";
 import { useLanguage, type Lang } from "./i18n";
 
-export const heroImage = "/beyond-hero.png";
+export const heroImage = "/beyond-hero.webp";
 const heroSlides = [
   {
     src: heroImage,
     alt: "Children learning together with inclusive assistive technology",
   },
   {
-    src: "/hero-inclusive-learning.png",
+    src: "/hero-inclusive-learning.webp",
     alt: "A visually impaired student learning with accessible digital technology",
   },
   {
-    src: "/hero-therapy-support.png",
+    src: "/hero-therapy-support.webp",
     alt: "A child taking part in a supportive speech therapy session",
   },
 ];
@@ -51,6 +51,9 @@ export function HeroSlider() {
                   src={slide.src}
                   alt={slide.alt}
                   loading={index === 0 ? "eager" : "lazy"}
+                  fetchPriority={index === 0 ? "high" : "low"}
+                  width={1672}
+                  height={941}
                 />
               </div>
             </SplideSlide>
@@ -126,6 +129,10 @@ export function Header({ active = "" }: { active?: string }) {
       </div>
       <div className="nav">
         <Logo />
+        <Link className="mobile-donate" href="/donate" aria-label="Donate now">
+          <i className="fa-solid fa-heart" aria-hidden="true" />
+          <span>Donate</span>
+        </Link>
         <label className="mobile-language" data-no-translate>
           <i className="fa-solid fa-globe" aria-hidden="true" />
           <span aria-hidden="true">{language.toUpperCase()}</span>
