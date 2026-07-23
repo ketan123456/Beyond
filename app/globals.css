@@ -123,6 +123,7 @@ main>section:not(.hero):not(.page-hero):not(.help-hero):not(.donate) { padding: 
 .form-status { display: inline; margin-left: 15px; }
 .csr { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; border: 1px solid var(--line); border-radius: 10px; margin: 25px 38px; padding: 24px!important; }
 .csr ul { columns: 2; }
+.trust{background: transparent !important;}
 .partner-benefits, .trust { display: grid; grid-template-columns: repeat(5,1fr); border: 1px solid var(--line); border-radius: 8px; }
 .partner-benefits span, .trust span { text-align: center; padding: 20px; border-right: 1px solid var(--line); font-size: 12px; }
 .partner-benefits span {color:#fff;}
