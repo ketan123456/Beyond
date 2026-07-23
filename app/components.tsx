@@ -5,6 +5,7 @@ import { useState, type FormEvent, type ReactNode } from "react";
 import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css/core";
 import { useLanguage, type Lang } from "./i18n";
+import { popupError, popupSuccess } from "./sweet-alert";
 
 export const heroImage = "/beyond-hero.webp";
 const heroSlides = [
@@ -436,11 +437,13 @@ export function ApplyForm() {
       const formData = new FormData(form);
       const uploads = ["udid", "income"].map((name) => formData.get(name));
       if (uploads.some((file) => !(file instanceof File) || !file.size)) {
-        setStatus("Please upload both required documents.");
+        setStatus("");
+        await popupError("Documents required", "Please upload both required documents.");
         return;
       }
       if (uploads.some((file) => file instanceof File && file.size > 8 * 1024 * 1024)) {
-        setStatus("Each document must be smaller than 8 MB.");
+        setStatus("");
+        await popupError("File too large", "Each document must be smaller than 8 MB.");
         return;
       }
       const res = await fetch("/api/applications", {
@@ -458,22 +461,26 @@ export function ApplyForm() {
             : "The server could not process the application. Please try again.";
       }
       if (!res.ok) {
-        setStatus(
+        const message =
           data.error ||
-            `We could not submit the application (error ${res.status}). Please try again.`,
-        );
+          `We could not submit the application (error ${res.status}). Please try again.`;
+        setStatus("");
+        await popupError("Application not submitted", message);
         return;
       }
       form.reset();
-      setStatus(
-        `Application received successfully. Reference: ${data.reference}`,
+      setStatus("");
+      await popupSuccess(
+        "Application submitted",
+        `Your application was received successfully. Reference: ${data.reference}`,
       );
     } catch (error) {
-      setStatus(
+      const message =
         error instanceof TypeError
           ? "The application service could not be reached. Please try again."
-          : "We could not submit the application. Please try again.",
-      );
+          : "We could not submit the application. Please try again.";
+      setStatus("");
+      await popupError("Application not submitted", message);
     } finally {
       setSubmitting(false);
     }
@@ -547,25 +554,43 @@ export function ApplyForm() {
 
 export function PartnerForm() {
   const [status, setStatus] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (submitting) return;
     setStatus("Sending…");
+    setSubmitting(true);
     const form = e.currentTarget;
-    const payload = Object.fromEntries(new FormData(form));
-    const res = await fetch("/api/partners", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (res.ok) {
+    try {
+      const payload = Object.fromEntries(new FormData(form));
+      const res = await fetch("/api/partners", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) {
+        throw new Error(
+          data.error ||
+            "We could not send your enquiry. Please email csr@beyonddisability.org.",
+        );
+      }
       form.reset();
-      setStatus(
+      setStatus("");
+      await popupSuccess(
+        "CSR enquiry sent",
         "Thank you. Our CSR team will contact you within two working days.",
       );
-    } else
-      setStatus(
-        "We could not send your enquiry. Please email csr@beyonddisability.org.",
-      );
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "We could not send your enquiry. Please try again.";
+      setStatus("");
+      await popupError("Enquiry not sent", message);
+    } finally {
+      setSubmitting(false);
+    }
   }
   return (
     <form className="apply-form" onSubmit={submit}>
@@ -591,8 +616,8 @@ export function PartnerForm() {
           <textarea name="message" rows={4} required />
         </label>
       </div>
-      <button className="btn btn-gold" type="submit">
-        Send CSR Enquiry
+      <button className="btn btn-gold" type="submit" disabled={submitting}>
+        {submitting ? "Sending…" : "Send CSR Enquiry"}
       </button>
       <p className="form-status" role="status">
         {status}
