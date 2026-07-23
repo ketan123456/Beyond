@@ -104,7 +104,7 @@ export default function Donate() {
       key: data.key,
       amount: data.amount,
       currency: "INR",
-      name: "Beyond DISABILITY FOUNDATION",
+      name: "BEYOND DISABILITY FOUNDATION",
       description: recurring
         ? "Monthly donation with AutoPay"
         : "One-time contribution",

@@ -17,10 +17,20 @@ export default function AppointmentForm() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify(Object.fromEntries(new FormData(form))),
       });
-      const result = await response.json() as { reference?: string; error?: string };
+      const result = await response.json() as {
+        reference?: string;
+        error?: string;
+        emailSent?: boolean;
+        emailWarning?: string;
+      };
       if (!response.ok) throw new Error(result.error || "Unable to book the appointment.");
       form.reset();
-      await popupSuccess("Appointment requested", `We received your request. Reference: ${result.reference}`);
+      await popupSuccess(
+        "Appointment requested",
+        result.emailSent
+          ? `We received your request and sent the confirmation emails. Reference: ${result.reference}`
+          : `We received your request. Reference: ${result.reference}. ${result.emailWarning || "Email confirmation is delayed."}`,
+      );
     } catch (error) {
       await popupError("Appointment not booked", error instanceof Error ? error.message : "Please try again.");
     } finally {

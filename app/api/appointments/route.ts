@@ -25,7 +25,10 @@ async function sendEmail(templateId: string, params: Record<string, string>) {
       template_params: params,
     }),
   });
-  if (!response.ok) throw new Error(`EmailJS returned ${response.status}`);
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(`EmailJS returned ${response.status}: ${detail}`);
+  }
   return true;
 }
 
@@ -49,20 +52,72 @@ export async function POST(request: Request) {
     await bindings.DB.prepare("INSERT INTO appointments (reference,name,email,phone,service,preferred_date,preferred_time,message,status) VALUES (?,?,?,?,?,?,?,?,?)")
       .bind(reference, values.name, values.email, values.phone, values.service, values.date, values.time, values.message, "requested").run();
 
-    const params = {
-      reference, name: values.name, to_name: values.name, to_email: values.email,
-      user_email: values.email, phone: values.phone, service: values.service,
-      appointment_date: values.date, appointment_time: values.time, message: values.message,
+    const appointmentSummary = [
+      `Appointment reference: ${reference}`,
+      `Name: ${values.name}`,
+      `Email: ${values.email}`,
+      `Phone: ${values.phone}`,
+      `Appointment type: ${values.service}`,
+      `Preferred date: ${values.date}`,
+      `Preferred time: ${values.time}`,
+      `Message: ${values.message}`,
+    ].join("\n");
+    const commonParams = {
+      reference,
+      appointment_reference: reference,
+      name: values.name,
+      from_name: values.name,
+      customer_name: values.name,
+      email: values.email,
+      from_email: values.email,
+      user_email: values.email,
+      reply_to: values.email,
+      phone: values.phone,
+      phone_number: values.phone,
+      service: values.service,
+      appointment_type: values.service,
+      date: values.date,
+      appointment_date: values.date,
+      time: values.time,
+      appointment_time: values.time,
+      notes: values.message,
+      appointment_message: values.message,
+      appointment_details: appointmentSummary,
       admin_email: bindings.ADMIN_NOTIFICATION_EMAIL || "",
     };
+    let userEmailSent = false;
+    let adminEmailSent = false;
     try {
-      await sendEmail(bindings.EMAILJS_USER_TEMPLATE_ID || "", { ...params, recipient_email: values.email });
+      userEmailSent = await sendEmail(bindings.EMAILJS_USER_TEMPLATE_ID || "", {
+        ...commonParams,
+        to_name: values.name,
+        to_email: values.email,
+        recipient_email: values.email,
+        subject: `Appointment request received — ${reference}`,
+        title: "Appointment request received",
+        message: appointmentSummary,
+      });
       await new Promise((resolve) => setTimeout(resolve, 1100));
-      await sendEmail(bindings.EMAILJS_ADMIN_TEMPLATE_ID || "", { ...params, recipient_email: bindings.ADMIN_NOTIFICATION_EMAIL || "" });
+      adminEmailSent = await sendEmail(bindings.EMAILJS_ADMIN_TEMPLATE_ID || "", {
+        ...commonParams,
+        to_name: "Beyond Disability Foundation Admin",
+        to_email: bindings.ADMIN_NOTIFICATION_EMAIL || "",
+        recipient_email: bindings.ADMIN_NOTIFICATION_EMAIL || "",
+        subject: `New appointment request — ${reference}`,
+        title: "New appointment request",
+        message: appointmentSummary,
+      });
     } catch (error) {
       console.error("Appointment email delivery failed", error);
     }
-    return Response.json({ ok: true, reference });
+    return Response.json({
+      ok: true,
+      reference,
+      emailSent: userEmailSent && adminEmailSent,
+      emailWarning: userEmailSent && adminEmailSent
+        ? undefined
+        : "Your appointment was saved, but one or more confirmation emails could not be delivered.",
+    });
   } catch (error) {
     console.error("Appointment booking failed", error);
     return Response.json({ error: "Unable to book the appointment. Please try again." }, { status: 500 });
