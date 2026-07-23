@@ -579,7 +579,7 @@ header { background: #fff; border: 0; box-shadow: 0 8px 30px #0737630b; }
 .home-cta .eyebrow { color: #d8f4ee; }
 .home-cta .btn-outline { border-color: #fff; color: #fff; }
 footer { background: var(--navy-deep); color: #d2e0e7; border: 0; box-shadow: none; }
-.footer-banner { max-width: 1184px; margin: auto; padding: 45px 28px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ffffff1f; }
+.footer-banner {gap:20px; max-width: 1184px; margin: auto; padding: 45px 28px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ffffff1f; }
 .footer-banner p { margin: 0; color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: .13em; }
 .footer-banner h2 { font-size: 28px; margin: 4px 0; }
 .footer-banner .btn-outline { color: #fff; border-color: #87a2b2; }
@@ -1457,6 +1457,69 @@ main { overflow:clip; }
   .partner-benefits { grid-template-columns:1fr; }
   .donate-box { padding:22px; }
   .donate-box .tabs { grid-template-columns:1fr; }
+}
+
+/* Keep hero banners compact on responsive layouts. */
+@media (max-width: 980px) {
+  .hero,
+  .hero-media {
+    min-height: clamp(540px, 72svh, 600px);
+  }
+  .hero-copy {
+    padding: 48px 26px 112px;
+  }
+  .interior-hero {
+    min-height: clamp(480px, 62svh, 540px);
+  }
+  .interior-hero__content {
+    padding-block: 64px;
+  }
+}
+@media (max-width: 540px) {
+  .hero,
+  .hero-media {
+    min-height: clamp(520px, 74svh, 570px);
+  }
+  .hero-copy {
+    padding: 34px 18px 104px;
+  }
+  .hero h1 {
+    margin-block: 8px 12px;
+    font-size: clamp(2.2rem, 11vw, 3.15rem);
+    line-height: 1;
+  }
+  .hero .lead {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .hero .actions {
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .hero .btn {
+    min-height: 42px;
+    padding-block: 7px;
+  }
+  .hero-impact-card {
+    bottom: 14px;
+  }
+  .interior-hero {
+    min-height: clamp(450px, 64svh, 510px);
+  }
+  .interior-hero__content {
+    padding: 110px 0 38px;
+  }
+  .interior-hero h1 {
+    font-size: clamp(2.35rem, 12vw, 3.65rem);
+  }
+  .interior-hero__content > p:not(.eyebrow) {
+    margin-top: 16px;
+    line-height: 1.55;
+  }
+  .interior-hero .actions {
+    margin-top: 20px;
+    gap: 8px;
+  }
 }
 
 /* Public contrast guarantees: prevent legacy theme rules from washing out text. */
