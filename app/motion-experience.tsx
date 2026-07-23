@@ -12,10 +12,14 @@ export function MotionExperience({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!root.current) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isAdmin = pathname.startsWith("/admin");
     document.documentElement.classList.add("gsap-ready");
-    if (reduced) return () => document.documentElement.classList.remove("gsap-ready");
+    document.documentElement.classList.toggle("admin-native-scroll", isAdmin);
+    if (reduced) return () => {
+      document.documentElement.classList.remove("gsap-ready", "admin-native-scroll");
+    };
 
-    const lenis = new Lenis({
+    const lenis = isAdmin ? null : new Lenis({
       autoRaf: true,
       duration: 1.15,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -48,7 +52,7 @@ export function MotionExperience({ children }: { children: ReactNode }) {
       if (disposed) return;
 
       gsap.registerPlugin(ScrollTrigger);
-      lenis.on("scroll", ScrollTrigger.update);
+      lenis?.on("scroll", ScrollTrigger.update);
       const motionMedia = gsap.matchMedia();
       const context = gsap.context(() => {
         const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -191,7 +195,7 @@ export function MotionExperience({ children }: { children: ReactNode }) {
 
       ScrollTrigger.refresh();
       destroyMotion = () => {
-        lenis.off("scroll", ScrollTrigger.update);
+        lenis?.off("scroll", ScrollTrigger.update);
         motionMedia.revert();
         context.revert();
       };
@@ -202,10 +206,10 @@ export function MotionExperience({ children }: { children: ReactNode }) {
     return () => {
       disposed = true;
       destroyMotion?.();
-      lenis.destroy();
+      lenis?.destroy();
       removeEventListener("scroll", onScroll);
       if (frame) cancelAnimationFrame(frame);
-      document.documentElement.classList.remove("gsap-ready");
+      document.documentElement.classList.remove("gsap-ready", "admin-native-scroll");
     };
   }, [pathname]);
 

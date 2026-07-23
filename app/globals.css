@@ -2,6 +2,7 @@
 :root { --navy: #062f63; --ink: #082654; --gold: #ffbd18; --mint: #39b86b; --line: #d7dee8; --paper: #fff; --wash: #f7f9fc; }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+html.admin-native-scroll { scroll-behavior: auto !important; }
 body { margin: 0; background: #fff; color: var(--ink); font-family: var(--font-geist-sans),Arial,sans-serif; font-size: 14px; }
 a { color: inherit; text-decoration: none;cursor: pointer !important; }
 button{cursor: pointer !important;}
