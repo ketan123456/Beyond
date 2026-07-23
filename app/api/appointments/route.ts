@@ -85,26 +85,15 @@ export async function POST(request: Request) {
       appointment_details: appointmentSummary,
       admin_email: bindings.ADMIN_NOTIFICATION_EMAIL || "",
     };
-    let userEmailSent = false;
-    let adminEmailSent = false;
+    let emailSent = false;
     try {
-      userEmailSent = await sendEmail(bindings.EMAILJS_USER_TEMPLATE_ID || "", {
-        ...commonParams,
-        to_name: values.name,
-        to_email: values.email,
-        recipient_email: values.email,
-        subject: `Appointment request received — ${reference}`,
-        title: "Appointment request received",
-        message: appointmentSummary,
-      });
-      await new Promise((resolve) => setTimeout(resolve, 1100));
-      adminEmailSent = await sendEmail(bindings.EMAILJS_ADMIN_TEMPLATE_ID || "", {
+      emailSent = await sendEmail(bindings.EMAILJS_ADMIN_TEMPLATE_ID || "", {
         ...commonParams,
         to_name: "Beyond Disability Foundation Admin",
         to_email: bindings.ADMIN_NOTIFICATION_EMAIL || "",
-        recipient_email: bindings.ADMIN_NOTIFICATION_EMAIL || "",
-        subject: `New appointment request — ${reference}`,
-        title: "New appointment request",
+        recipient_email: values.email,
+        subject: `Appointment request — ${reference}`,
+        title: "Appointment Request Received",
         message: appointmentSummary,
       });
     } catch (error) {
@@ -113,10 +102,10 @@ export async function POST(request: Request) {
     return Response.json({
       ok: true,
       reference,
-      emailSent: userEmailSent && adminEmailSent,
-      emailWarning: userEmailSent && adminEmailSent
+      emailSent,
+      emailWarning: emailSent
         ? undefined
-        : "Your appointment was saved, but one or more confirmation emails could not be delivered.",
+        : "Your appointment was saved, but the confirmation emails could not be delivered.",
     });
   } catch (error) {
     console.error("Appointment booking failed", error);
