@@ -55,6 +55,11 @@ export function MotionExperience({ children }: { children: ReactNode }) {
       lenis?.on("scroll", ScrollTrigger.update);
       const motionMedia = gsap.matchMedia();
       const context = gsap.context(() => {
+        gsap.fromTo(
+          root.current,
+          { autoAlpha: 0 },
+          { autoAlpha: 1, duration: 0.42, ease: "power2.out", clearProps: "opacity,visibility" },
+        );
         const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
         intro.from("header", { y: -26, autoAlpha: 0, duration: 0.5 });
 
