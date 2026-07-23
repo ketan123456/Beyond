@@ -23,7 +23,7 @@ export async function GET() {
       db.prepare("SELECT * FROM applications ORDER BY created_at DESC, id DESC").all(),
       db.prepare("SELECT * FROM partner_leads ORDER BY id DESC").all(),
       db.prepare("SELECT * FROM payments ORDER BY created_at DESC, id DESC").all(),
-      db.prepare("SELECT application_id, COUNT(*) AS total, SUM(CASE WHEN review_status = 'pending' THEN 1 ELSE 0 END) AS pending FROM documents GROUP BY application_id").all(),
+      db.prepare("SELECT d.application_id, COUNT(*) AS total, SUM(CASE WHEN d.review_status = 'pending' AND a.status IN ('submitted','reviewing','documents-needed') THEN 1 ELSE 0 END) AS pending FROM documents d INNER JOIN applications a ON a.id = d.application_id GROUP BY d.application_id").all(),
       db.prepare("SELECT id,application_id,type,filename,review_status FROM documents ORDER BY id DESC").all(),
     ]);
     return Response.json({ applications: applications.results, partners: partners.results, payments: payments.results, documents: documents.results, applicationDocuments: applicationDocuments.results, refreshedAt: new Date().toISOString() });
@@ -40,6 +40,19 @@ export async function PATCH(request: Request) {
   await ensureDatabaseSchema(db);
   const { section, id, status } = (await request.json()) as { section?: AdminSection; id?: number; status?: string };
   if (!section || !id || !status || !allowedStatuses[section]?.includes(status)) return Response.json({ error: "Invalid update." }, { status: 400 });
+  if (section === "applications") {
+    const documentStatus =
+      status === "approved" || status === "supported"
+        ? "approved"
+        : status === "rejected"
+          ? "rejected"
+          : "pending";
+    await db.batch([
+      db.prepare("UPDATE applications SET status = ? WHERE id = ?").bind(status, id),
+      db.prepare("UPDATE documents SET review_status = ? WHERE application_id = ?").bind(documentStatus, id),
+    ]);
+    return Response.json({ ok: true });
+  }
   const table = section === "applications" ? "applications" : section === "partners" ? "partner_leads" : "payments";
   await db.prepare(`UPDATE ${table} SET status = ? WHERE id = ?`).bind(status, id).run();
   return Response.json({ ok: true });
