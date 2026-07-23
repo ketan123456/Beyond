@@ -109,7 +109,7 @@ export function Header({ active = "" }: { active?: string }) {
     ["Home", "/", "fa-house"],
     ["About Us", "/about", "fa-circle-info"],
     ["Get Help", "/get-help", "fa-hand-holding-medical"],
-    ["Our Impact", "/#impact", "fa-chart-line"],
+    ["Our Impact", "/#impact-map-title", "fa-chart-line"],
     ["Partner With Us", "/partner", "fa-handshake"],
     ["Resources", "/resources", "fa-book-open"],
   ];
@@ -334,7 +334,7 @@ export function Footer() {
           <h4>Explore</h4>
           <Link href="/about">About our work</Link>
           <Link href="/get-help">Get support</Link>
-          <Link href="/#impact">Our impact</Link>
+          <Link href="/#impact-map-title">Our impact</Link>
           <Link href="/partner">CSR partnerships</Link>
         </div>
         <div>
@@ -495,10 +495,6 @@ export function ApplyForm() {
         <label>
           Mobile number
           <input name="phone" inputMode="tel" required />
-        </label>
-        <label>
-          Email address
-          <input name="email" type="email" autoComplete="email" required />
         </label>
         <label>
           District

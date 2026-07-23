@@ -8,11 +8,12 @@ type Data = {
   applications: Row[];
   partners: Row[];
   payments: Row[];
+  appointments: Row[];
   documents: Row[];
   applicationDocuments: Row[];
   refreshedAt: string;
 };
-type DataSection = "applications" | "partners" | "payments";
+type DataSection = "applications" | "partners" | "payments" | "appointments";
 type Section = DataSection | "languages";
 const statusOptions: Record<DataSection, string[]> = {
   applications: [
@@ -25,6 +26,7 @@ const statusOptions: Record<DataSection, string[]> = {
   ],
   partners: ["new", "contacted", "meeting", "committed", "closed"],
   payments: ["created", "paid", "failed", "refunded"],
+  appointments: ["requested", "confirmed", "completed", "cancelled"],
 };
 
 export default function AdminDashboard({ adminName }: { adminName: string }) {
@@ -202,7 +204,7 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
         <div className="admin-toolbar">
           <div className="admin-tabs">
             {(
-              ["applications", "partners", "payments", "languages"] as Section[]
+              ["applications", "partners", "payments", "appointments", "languages"] as Section[]
             ).map((item) => (
               <button
                 key={item}
@@ -316,11 +318,18 @@ function AdminTable({
                 <th>Message</th>
                 <th>Status</th>
               </>
-            ) : (
+            ) : section === "payments" ? (
               <>
                 <th>Razorpay order</th>
                 <th>Amount</th>
                 <th>Created</th>
+                <th>Status</th>
+              </>
+            ) : (
+              <>
+                <th>Reference / Name</th>
+                <th>Appointment</th>
+                <th>Contact</th>
                 <th>Status</th>
               </>
             )}
@@ -358,13 +367,19 @@ function AdminTable({
                   </td>
                   <td>{row.message}</td>
                 </>
-              ) : (
+              ) : section === "payments" ? (
                 <>
                   <td>
                     <b>{row.razorpay_order_id}</b>
                   </td>
                   <td>₹{(Number(row.amount) / 100).toLocaleString("en-IN")}</td>
                   <td>{String(row.created_at || "")}</td>
+                </>
+              ) : (
+                <>
+                  <td><b>{row.reference}</b><span>{row.name}</span></td>
+                  <td>{row.service}<span>{row.preferred_date} · {row.preferred_time}</span></td>
+                  <td>{row.phone}<span>{row.email}</span></td>
                 </>
               )}
               <td>
@@ -444,7 +459,7 @@ function RecordModal({
             ["Message", row.message],
             ["Received", row.created_at],
           ]
-        : [
+        : section === "payments" ? [
             ["Razorpay order", row.razorpay_order_id],
             ["Razorpay payment", row.razorpay_payment_id || "Not captured"],
             [
@@ -454,6 +469,17 @@ function RecordModal({
             ["Currency", row.currency],
             ["Status", row.status],
             ["Created", row.created_at],
+          ] : [
+            ["Reference", row.reference],
+            ["Name", row.name],
+            ["Email", row.email],
+            ["Phone", row.phone],
+            ["Appointment type", row.service],
+            ["Preferred date", row.preferred_date],
+            ["Preferred time", row.preferred_time],
+            ["Status", row.status],
+            ["Message", row.message],
+            ["Requested", row.created_at],
           ];
   const files = documents.filter(
     (document) => Number(document.application_id) === Number(row.id),
@@ -478,7 +504,7 @@ function RecordModal({
                 {String(
                   row.reference ||
                     row.company ||
-                    row.razorpay_order_id ||
+                    row.razorpay_order_id || row.reference ||
                     "Record details",
                 )}
               </h2>

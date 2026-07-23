@@ -6,9 +6,12 @@ interface Env {
   ASSETS: Fetcher;
   DB: D1Database;
   DOCUMENTS: R2Bucket;
-  RESEND_API_KEY?: string;
+  EMAILJS_SERVICE_ID?: string;
+  EMAILJS_PUBLIC_KEY?: string;
+  EMAILJS_PRIVATE_KEY?: string;
+  EMAILJS_USER_TEMPLATE_ID?: string;
+  EMAILJS_ADMIN_TEMPLATE_ID?: string;
   ADMIN_NOTIFICATION_EMAIL?: string;
-  EMAIL_FROM?: string;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
