@@ -27,7 +27,18 @@ export async function POST(request: Request) {
     }
 
     const bindings = env as unknown as { DB?: D1Database; DOCUMENTS?: R2Bucket };
-    if (!bindings.DB || !bindings.DOCUMENTS) throw new Error("Application storage bindings are unavailable");
+    if (!bindings.DB) {
+      return Response.json(
+        { ok: false, error: "Application database is not configured. Add DATABASE_URL and restart the server." },
+        { status: 503 },
+      );
+    }
+    if (!bindings.DOCUMENTS) {
+      return Response.json(
+        { ok: false, error: "Document uploads are not configured. Add the S3_ENDPOINT, S3_REGION, S3_BUCKET, S3_ACCESS_KEY_ID, and S3_SECRET_ACCESS_KEY variables." },
+        { status: 503 },
+      );
+    }
     await ensureApplicationTables(bindings.DB);
 
     const reference = `BD-${Date.now().toString(36).toUpperCase()}`;

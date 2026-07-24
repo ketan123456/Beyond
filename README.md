@@ -32,6 +32,21 @@ docker build -t beyond-disability .
 docker run --env-file .env -p 3000:3000 beyond-disability
 ```
 
+## Render (easiest)
+
+1. Push this repository to GitHub and open the Render Dashboard.
+2. Select **New +** → **Blueprint**, then choose this repository. Render reads
+   `render.yaml`, creates the `beyond-disability-db` PostgreSQL database, and
+   assigns its internal connection string to `DATABASE_URL` automatically.
+3. In the Blueprint form, fill the values marked as secrets. Use the **Internal
+   Database URL** only within Render; never paste a localhost URL into Render.
+4. Deploy. The `preDeployCommand` runs `npm run db:migrate`, which applies
+   `db/schema.postgres.sql` before the web service starts.
+
+Render does not provide S3 object storage, so document uploads require a small
+separate S3-compatible bucket (Cloudflare R2, AWS S3, or Backblaze B2). Add its
+five `S3_*` values in the Render environment settings.
+
 ## Production services
 
 This project is a portable Next.js application, not a static export. The full

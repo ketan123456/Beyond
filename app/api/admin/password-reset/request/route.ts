@@ -131,11 +131,11 @@ export async function POST() {
         { status: 503 },
       );
     }
-    const now = Date.now();
+    const now = new Date();
     const recent = await bindings.DB
       .prepare("SELECT requested_at FROM admin_password_resets ORDER BY id DESC LIMIT 1")
-      .first<{ requested_at: number }>();
-    if (recent && now - Number(recent.requested_at) < RESET_INTERVAL_MS) {
+      .first<{ requested_at: Date | string }>();
+    if (recent && Date.now() - new Date(recent.requested_at).getTime() < RESET_INTERVAL_MS) {
       return genericResponse;
     }
 
@@ -145,7 +145,7 @@ export async function POST() {
     );
     await bindings.DB
       .prepare("INSERT INTO admin_password_resets (code_hash,expires_at,requested_at) VALUES (?,?,?)")
-      .bind(codeHash, now + RESET_LIFETIME_MS, now)
+      .bind(codeHash, new Date(now.getTime() + RESET_LIFETIME_MS), now)
       .run();
     await bindings.DB
       .prepare("DELETE FROM admin_password_resets WHERE expires_at < ? OR used_at IS NOT NULL")

@@ -33,10 +33,10 @@ export async function getAdminCredentials(): Promise<AdminCredentials> {
     return { username: saved.username, passwordToken: saved.password_token };
   }
   if (saved) {
-    await db.prepare("UPDATE admin_credentials SET username = ?, password_token = ?, updated_at = ? WHERE id = 1").bind(username, passwordToken, Date.now()).run();
+    await db.prepare("UPDATE admin_credentials SET username = ?, password_token = ?, updated_at = ? WHERE id = 1").bind(username, passwordToken, new Date()).run();
     return { username, passwordToken };
   }
-  await db.prepare("INSERT INTO admin_credentials (id,username,password_token,updated_at) VALUES (1,?,?,?)").bind(username, passwordToken, Date.now()).run();
+  await db.prepare("INSERT INTO admin_credentials (id,username,password_token,updated_at) VALUES (1,?,?,?)").bind(username, passwordToken, new Date()).run();
   return { username, passwordToken };
 }
 

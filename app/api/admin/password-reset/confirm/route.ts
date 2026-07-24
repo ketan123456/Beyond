@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       return Response.json({ error: "Password reset is unavailable." }, { status: 503 });
     }
     await ensureDatabaseSchema(bindings.DB);
-    const now = Date.now();
+    const now = new Date();
     const reset = await bindings.DB
       .prepare("SELECT id,code_hash,attempts FROM admin_password_resets WHERE used_at IS NULL AND expires_at > ? ORDER BY id DESC LIMIT 1")
       .bind(now)
