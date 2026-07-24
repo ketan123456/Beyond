@@ -1,4 +1,4 @@
-import { env } from "cloudflare:workers";
+import { env } from "../../../../lib/server/runtime";
 import { isStaticAdmin } from "../../../static-admin-auth";
 import { ensureDatabaseSchema } from "../../../../db/runtime-schema";
 
@@ -43,7 +43,7 @@ export async function PATCH(request: Request) {
   if (!validLocale(locale)) return Response.json({ error: "Invalid locale." }, { status: 400 });
   if (locale === "en" && body.enabled === false) return Response.json({ error: "English is the required fallback language." }, { status: 400 });
   await db.prepare("UPDATE languages SET name=COALESCE(?,name),native_name=COALESCE(?,native_name),enabled=COALESCE(?,enabled) WHERE locale=?")
-    .bind(body.name?.trim() || null, body.nativeName?.trim() || null, typeof body.enabled === "boolean" ? Number(body.enabled) : null, locale).run();
+    .bind(body.name?.trim() || null, body.nativeName?.trim() || null, typeof body.enabled === "boolean" ? body.enabled : null, locale).run();
   return Response.json({ ok: true });
 }
 

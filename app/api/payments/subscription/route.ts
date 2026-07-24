@@ -1,4 +1,4 @@
-import { env } from "cloudflare:workers";
+import { env } from "../../../../lib/server/runtime";
 
 type PaymentEnv = {
   DB?: D1Database;
@@ -24,25 +24,7 @@ async function razorpay(path: string, key: string, secret: string, body: unknown
 }
 
 async function ensureSubscriptionTables(db: D1Database) {
-  await db.prepare(
-    `CREATE TABLE IF NOT EXISTS recurring_donations (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      razorpay_subscription_id TEXT NOT NULL UNIQUE,
-      razorpay_plan_id TEXT NOT NULL,
-      amount INTEGER NOT NULL,
-      currency TEXT NOT NULL DEFAULT 'INR',
-      status TEXT NOT NULL DEFAULT 'created',
-      razorpay_payment_id TEXT,
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-    )`,
-  ).run();
-  await db.prepare(
-    `CREATE TABLE IF NOT EXISTS razorpay_plan_cache (
-      amount INTEGER PRIMARY KEY,
-      razorpay_plan_id TEXT NOT NULL UNIQUE,
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-    )`,
-  ).run();
+  void db;
 }
 
 export async function POST(request: Request) {
@@ -84,7 +66,7 @@ export async function POST(request: Request) {
       planId = plan.id;
       if (bindings.DB) {
         await bindings.DB.prepare(
-          "INSERT OR IGNORE INTO razorpay_plan_cache (amount,razorpay_plan_id) VALUES (?,?)",
+          "INSERT INTO razorpay_plan_cache (amount,razorpay_plan_id) VALUES (?,?) ON CONFLICT (amount) DO NOTHING",
         ).bind(amountInPaise, planId).run();
       }
     }

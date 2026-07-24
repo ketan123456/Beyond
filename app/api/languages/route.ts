@@ -1,4 +1,4 @@
-import { env } from "cloudflare:workers";
+import { env } from "../../../lib/server/runtime";
 import { ensureDatabaseSchema } from "../../../db/runtime-schema";
 
 export async function GET() {

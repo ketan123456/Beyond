@@ -1,4 +1,4 @@
-import { env } from "cloudflare:workers";
+import { env } from "../../../../lib/server/runtime";
 
 async function hmac(message: string, secret: string) {
   const key = await crypto.subtle.importKey(
@@ -15,28 +15,7 @@ async function hmac(message: string, secret: string) {
 }
 
 async function ensurePaymentsTable(db: D1Database) {
-  await db.prepare(
-    `CREATE TABLE IF NOT EXISTS payments (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      razorpay_order_id TEXT NOT NULL UNIQUE,
-      amount INTEGER NOT NULL,
-      currency TEXT NOT NULL DEFAULT 'INR',
-      status TEXT NOT NULL DEFAULT 'created',
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-    )`,
-  ).run();
-  await db.prepare(
-    `CREATE TABLE IF NOT EXISTS recurring_donations (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      razorpay_subscription_id TEXT NOT NULL UNIQUE,
-      razorpay_plan_id TEXT NOT NULL,
-      amount INTEGER NOT NULL,
-      currency TEXT NOT NULL DEFAULT 'INR',
-      status TEXT NOT NULL DEFAULT 'created',
-      razorpay_payment_id TEXT,
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-    )`,
-  ).run();
+  void db;
 }
 
 export async function POST(request: Request) {
@@ -70,8 +49,8 @@ export async function POST(request: Request) {
         ).bind("authenticated", body.razorpay_payment_id, body.razorpay_subscription_id).run();
       } else {
         await bindings.DB.prepare(
-          "UPDATE payments SET status = ? WHERE razorpay_order_id = ?",
-        ).bind("paid", body.razorpay_order_id).run();
+          "UPDATE payments SET status = ?, razorpay_payment_id = ?, updated_at = CURRENT_TIMESTAMP WHERE razorpay_order_id = ?",
+        ).bind("paid", body.razorpay_payment_id, body.razorpay_order_id).run();
       }
     }
     return Response.json({ ok: true, recurring: Boolean(body.razorpay_subscription_id) });

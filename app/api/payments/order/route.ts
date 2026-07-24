@@ -1,4 +1,4 @@
-import { env } from "cloudflare:workers";
+import { env } from "../../../../lib/server/runtime";
 
 type PaymentEnv = {
   DB?: D1Database;
@@ -7,16 +7,7 @@ type PaymentEnv = {
 };
 
 async function ensurePaymentsTable(db: D1Database) {
-  await db.prepare(
-    `CREATE TABLE IF NOT EXISTS payments (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      razorpay_order_id TEXT NOT NULL UNIQUE,
-      amount INTEGER NOT NULL,
-      currency TEXT NOT NULL DEFAULT 'INR',
-      status TEXT NOT NULL DEFAULT 'created',
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-    )`,
-  ).run();
+  void db;
 }
 
 export async function POST(request: Request) {

@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { env } from "cloudflare:workers";
+import { env } from "../lib/server/runtime";
 import { ensureDatabaseSchema } from "../db/runtime-schema";
 
 export const ADMIN_COOKIE = "beyond_admin_session";

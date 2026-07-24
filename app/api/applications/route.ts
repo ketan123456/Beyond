@@ -1,13 +1,10 @@
-import { env } from "cloudflare:workers";
+import { env } from "../../../lib/server/runtime";
 
 const allowedTypes = new Set(["application/pdf", "image/jpeg", "image/png"]);
 const maxFileSize = 8 * 1024 * 1024;
 
 async function ensureApplicationTables(db: D1Database) {
-  await db.batch([
-    db.prepare("CREATE TABLE IF NOT EXISTS applications (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, reference TEXT NOT NULL UNIQUE, name TEXT NOT NULL, phone TEXT NOT NULL, district TEXT NOT NULL, category TEXT NOT NULL, details TEXT DEFAULT '' NOT NULL, status TEXT DEFAULT 'submitted' NOT NULL, created_at TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL)"),
-    db.prepare("CREATE TABLE IF NOT EXISTS documents (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, application_id INTEGER NOT NULL, type TEXT NOT NULL, storage_key TEXT NOT NULL, filename TEXT NOT NULL, review_status TEXT DEFAULT 'pending' NOT NULL)"),
-  ]);
+  void db;
 }
 
 export async function POST(request: Request) {
@@ -42,8 +39,8 @@ export async function POST(request: Request) {
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
       const key = `applications/${reference}/${type}-${safeName}`;
       await bindings.DOCUMENTS.put(key, file.stream(), { httpMetadata: { contentType: file.type } });
-      await bindings.DB.prepare("INSERT INTO documents (application_id,type,storage_key,filename,review_status) VALUES (?,?,?,?,?)")
-        .bind(inserted.id, type, key, file.name, "pending").run();
+      await bindings.DB.prepare("INSERT INTO documents (application_id,type,storage_key,filename,content_type,size_bytes,review_status) VALUES (?,?,?,?,?,?,?)")
+        .bind(inserted.id, type, key, file.name, file.type, file.size, "pending").run();
     }
     return Response.json({ ok: true, reference });
   } catch (error) {
