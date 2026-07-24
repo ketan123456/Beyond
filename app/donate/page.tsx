@@ -48,10 +48,19 @@ export default function Donate() {
     useState<"one-time" | "monthly">("one-time");
   const [method, setMethod] = useState("upi");
   const [status, setStatus] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   function loadCheckout() {
     return new Promise<boolean>((resolve) => {
       if (window.Razorpay) return resolve(true);
+      const existingScript = document.querySelector<HTMLScriptElement>(
+        'script[src="https://checkout.razorpay.com/v1/checkout.js"]',
+      );
+      if (existingScript) {
+        existingScript.addEventListener("load", () => resolve(true), { once: true });
+        existingScript.addEventListener("error", () => resolve(false), { once: true });
+        return;
+      }
       const script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.onload = () => resolve(true);
@@ -61,7 +70,9 @@ export default function Donate() {
   }
 
   async function pay(selectedMethod = method) {
+    if (isProcessing) return;
     setMethod(selectedMethod);
+    setIsProcessing(true);
     setStatus(
       frequency === "monthly"
         ? "Preparing your monthly AutoPay mandate…"
@@ -72,35 +83,37 @@ export default function Donate() {
       return;
     }
 
-    const recurring = frequency === "monthly";
-    const response = await fetch(
-      recurring ? "/api/payments/subscription" : "/api/payments/order",
-      {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          amount,
-          ...(!recurring && { frequency, method: selectedMethod }),
-        }),
-      },
-    );
-    const data = (await response.json()) as Record<string, string>;
-    if (!response.ok || !data.id) {
-      setStatus(
-        data.message ||
-          data.error ||
-          "Payment service is not configured yet.",
+    try {
+      const recurring = frequency === "monthly";
+      const response = await fetch(
+        recurring ? "/api/payments/subscription" : "/api/payments/order",
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            amount,
+            ...(!recurring && { frequency, method: selectedMethod }),
+          }),
+        },
       );
-      return;
-    }
-    if (!(await loadCheckout()) || !window.Razorpay) {
-      setStatus(
-        "Secure checkout could not load. Please check your connection.",
-      );
-      return;
-    }
+      const data = (await response.json().catch(() => ({}))) as Record<
+        string,
+        string
+      >;
+      if (!response.ok || !data.id || !data.key) {
+        setStatus(
+          data.message || data.error || "Unable to start payment. Please try again.",
+        );
+        return;
+      }
+      if (!(await loadCheckout()) || !window.Razorpay) {
+        setStatus(
+          "Secure checkout could not load. Please check your connection.",
+        );
+        return;
+      }
 
-    const checkoutOptions: Record<string, unknown> = {
+      const checkoutOptions: Record<string, unknown> = {
       key: data.key,
       amount: data.amount,
       currency: "INR",
@@ -129,37 +142,48 @@ export default function Donate() {
               },
             },
           }),
-      handler: async (result: Record<string, string>) => {
-        const verification = await fetch("/api/payments/verify", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify(result),
-        });
-        setStatus(
-          verification.ok
-            ? recurring
-              ? "Monthly AutoPay authorised successfully. Thank you for your ongoing support!"
-              : "Thank you. Your payment was verified successfully."
-            : "Payment received; verification is pending. Please contact support with your payment ID.",
-        );
-      },
-      modal: {
-        ondismiss: () =>
-          setStatus(
-            recurring
-              ? "AutoPay setup was cancelled. No mandate was created."
-              : "Payment window closed. No charge was made.",
-          ),
-      },
-      theme: { color: "#0a9f91" },
-    };
+        handler: async (result: Record<string, string>) => {
+          try {
+            const verification = await fetch("/api/payments/verify", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify(result),
+            });
+            setStatus(
+              verification.ok
+                ? recurring
+                  ? "Monthly AutoPay authorised successfully. Thank you for your ongoing support!"
+                  : "Thank you. Your payment was verified successfully."
+                : "Payment received; verification is pending. Please contact support with your payment ID.",
+            );
+          } catch {
+            setStatus(
+              "Payment received; verification is pending. Please contact support with your payment ID.",
+            );
+          }
+        },
+        modal: {
+          ondismiss: () =>
+            setStatus(
+              recurring
+                ? "AutoPay setup was cancelled. No mandate was created."
+                : "Payment window closed. No charge was made.",
+            ),
+        },
+        theme: { color: "#0a9f91" },
+      };
 
-    new window.Razorpay(checkoutOptions).open();
-    setStatus(
-      recurring
-        ? "Complete the secure mandate authorisation in Razorpay."
-        : "Secure Razorpay checkout opened.",
-    );
+      new window.Razorpay(checkoutOptions).open();
+      setStatus(
+        recurring
+          ? "Complete the secure mandate authorisation in Razorpay."
+          : "Secure Razorpay checkout opened.",
+      );
+    } catch {
+      setStatus("Unable to reach the payment service. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
   }
 
   return (
@@ -194,6 +218,7 @@ export default function Donate() {
               type="button"
               role="tab"
               aria-selected={frequency === "one-time"}
+              disabled={isProcessing}
               className={frequency === "one-time" ? "selected-tab" : ""}
               onClick={() => {
                 setFrequency("one-time");
@@ -206,6 +231,7 @@ export default function Donate() {
               type="button"
               role="tab"
               aria-selected={frequency === "monthly"}
+              disabled={isProcessing}
               className={frequency === "monthly" ? "selected-tab" : ""}
               onClick={() => {
                 setFrequency("monthly");
@@ -221,21 +247,24 @@ export default function Donate() {
               <button
                 type="button"
                 className={amount === value ? "selected" : ""}
+                disabled={isProcessing}
                 onClick={() => setAmount(value)}
                 key={value}>
                 ₹{value.toLocaleString("en-IN")}
               </button>
             ))}
             <label className="custom-amount">
-              <span>Custom Amount</span>
               <input
                 aria-label="Custom donation amount"
                 type="number"
                 min="1"
+                disabled={isProcessing}
                 value={![500, 1000, 2500, 5000].includes(amount) ? amount : ""}
                 placeholder="Enter amount"
                 onChange={(event) => setAmount(Number(event.target.value))}
               />
+              <span>Custom Amount</span>
+
               <i className="fa-solid fa-pen" aria-hidden="true" />
             </label>
           </div>
@@ -273,7 +302,8 @@ export default function Donate() {
                     key={item.id}
                     className={method === item.id ? "chosen" : ""}
                     aria-pressed={method === item.id}
-                    onClick={() => setMethod(item.id)}>
+                    disabled={isProcessing}
+                    onClick={() => pay(item.id)}>
                     <span className="method-icon">
                       <i className={`fa-solid ${item.icon}`} />
                     </span>
@@ -291,6 +321,7 @@ export default function Donate() {
                 <button
                   className="qr-launch"
                   type="button"
+                  disabled={isProcessing}
                   onClick={() => pay("upi")}
                   aria-label="Open Razorpay UPI QR payment">
                   <span className="qr-frame" aria-hidden="true">
@@ -316,6 +347,7 @@ export default function Donate() {
           <button
             className="btn btn-gold pay secure-pay"
             type="button"
+            disabled={isProcessing}
             onClick={() => pay(method)}>
             <span>
               <i
@@ -323,9 +355,11 @@ export default function Donate() {
                   frequency === "monthly" ? "fa-arrows-rotate" : "fa-lock"
                 }`}
               />
-              {frequency === "monthly"
-                ? "Enable Monthly AutoPay"
-                : "Pay Securely with Razorpay"}
+              {isProcessing
+                ? "Opening secure checkout…"
+                : frequency === "monthly"
+                  ? "Enable Monthly AutoPay"
+                  : "Pay Securely with Razorpay"}
               <small>
                 {frequency === "monthly"
                   ? "Secure recurring support, authorised by you"

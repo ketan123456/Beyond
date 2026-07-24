@@ -7,12 +7,16 @@ export async function ensureDatabaseSchema(db: D1Database) {
     db.prepare("CREATE TABLE IF NOT EXISTS languages (id INTEGER PRIMARY KEY AUTOINCREMENT, locale TEXT NOT NULL UNIQUE, name TEXT NOT NULL, native_name TEXT NOT NULL, enabled INTEGER NOT NULL DEFAULT 1, sort_order INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)"),
     db.prepare("CREATE TABLE IF NOT EXISTS translations (id INTEGER PRIMARY KEY AUTOINCREMENT, locale TEXT NOT NULL, key TEXT NOT NULL, value TEXT NOT NULL, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)"),
     db.prepare("CREATE TABLE IF NOT EXISTS appointments (id INTEGER PRIMARY KEY AUTOINCREMENT, reference TEXT NOT NULL UNIQUE, name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT NOT NULL, service TEXT NOT NULL, preferred_date TEXT NOT NULL, preferred_time TEXT NOT NULL, message TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'requested', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)"),
+    db.prepare("CREATE TABLE IF NOT EXISTS admin_credentials (id INTEGER PRIMARY KEY CHECK (id = 1), username TEXT NOT NULL, password_token TEXT NOT NULL, updated_at INTEGER NOT NULL)"),
+    db.prepare("CREATE TABLE IF NOT EXISTS admin_password_resets (id INTEGER PRIMARY KEY AUTOINCREMENT, code_hash TEXT NOT NULL, expires_at INTEGER NOT NULL, attempts INTEGER NOT NULL DEFAULT 0, used_at INTEGER, requested_at INTEGER NOT NULL)"),
     db.prepare("CREATE UNIQUE INDEX IF NOT EXISTS translations_locale_key_unique ON translations(locale, key)"),
   ]);
   const partnerColumns = await db.prepare("PRAGMA table_info(partner_leads)").all<{name:string}>();
   const partnerColumnNames = new Set(partnerColumns.results.map(column=>column.name));
   if (!partnerColumnNames.has("phone")) await db.prepare("ALTER TABLE partner_leads ADD COLUMN phone TEXT NOT NULL DEFAULT ''").run();
   if (!partnerColumnNames.has("created_at")) await db.prepare("ALTER TABLE partner_leads ADD COLUMN created_at TEXT").run();
+  const adminColumns = await db.prepare("PRAGMA table_info(admin_credentials)").all<{name:string}>();
+  if (!adminColumns.results.some(column => column.name === "username")) await db.prepare("ALTER TABLE admin_credentials ADD COLUMN username TEXT NOT NULL DEFAULT 'admin'").run();
   // Older versions stored the phone as the first line of message. Split those
   // records once so existing enquiries display correctly in the admin panel.
   await db.prepare("UPDATE partner_leads SET phone = TRIM(SUBSTR(message,1,INSTR(message,CHAR(10))-1)), message = LTRIM(SUBSTR(message,INSTR(message,CHAR(10))+1),CHAR(10)||CHAR(13)||' ') WHERE phone = '' AND INSTR(message,CHAR(10)) > 1").run();

@@ -8,9 +8,14 @@ import "lenis/dist/lenis.css";
 export function MotionExperience({ children }: { children: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const previousPathname = useRef(pathname);
 
   useEffect(() => {
     if (!root.current) return;
+    if (previousPathname.current !== pathname) {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      previousPathname.current = pathname;
+    }
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isAdmin = pathname.startsWith("/admin");
     document.documentElement.classList.add("gsap-ready");

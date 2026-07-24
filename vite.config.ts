@@ -42,6 +42,15 @@ export default defineConfig(async ({ mode }) => {
     configuredEnv.RAZORPAY_KEY_ID || legacyExampleEnv.RAZORPAY_KEY_ID;
   const razorpayKeySecret =
     configuredEnv.RAZORPAY_KEY_SECRET || legacyExampleEnv.RAZORPAY_KEY_SECRET;
+  const razorpayMonthlyTotalCount =
+    configuredEnv.RAZORPAY_MONTHLY_TOTAL_COUNT ||
+    legacyExampleEnv.RAZORPAY_MONTHLY_TOTAL_COUNT;
+  const adminUsername =
+    configuredEnv.ADMIN_USERNAME;
+  const adminPassword =
+    configuredEnv.ADMIN_PASSWORD;
+  const adminSessionSecret =
+    configuredEnv.ADMIN_SESSION_SECRET;
   // Keep Wrangler and Miniflare state project-local. These are non-secret tool
   // settings; application environment belongs in ignored `.env*` files.
   process.env.WRANGLER_WRITE_LOGS ??= "false";
@@ -66,6 +75,14 @@ export default defineConfig(async ({ mode }) => {
             ...(razorpayKeyId ? { RAZORPAY_KEY_ID: razorpayKeyId } : {}),
             ...(razorpayKeySecret
               ? { RAZORPAY_KEY_SECRET: razorpayKeySecret }
+              : {}),
+            ...(razorpayMonthlyTotalCount
+              ? { RAZORPAY_MONTHLY_TOTAL_COUNT: razorpayMonthlyTotalCount }
+              : {}),
+            ...(adminUsername ? { ADMIN_USERNAME: adminUsername } : {}),
+            ...(adminPassword ? { ADMIN_PASSWORD: adminPassword } : {}),
+            ...(adminSessionSecret
+              ? { ADMIN_SESSION_SECRET: adminSessionSecret }
               : {}),
           },
         },
