@@ -1,6 +1,5 @@
 import { env } from "../../../../../lib/server/runtime";
 import { ensureDatabaseSchema } from "../../../../../db/runtime-schema";
-import { configuredAdminUsername } from "../../../../static-admin-auth";
 
 type ResetEnv = {
   DB?: D1Database;
@@ -113,11 +112,13 @@ export async function POST() {
 
   try {
     await ensureDatabaseSchema(bindings.DB);
-    const username = configuredAdminUsername();
-    const recipient = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username)
-      ? username
-      : bindings.ADMIN_NOTIFICATION_EMAIL;
-    if (!recipient) return Response.json({ error: "No administrator email is configured." }, { status: 503 });
+    const recipient = bindings.ADMIN_NOTIFICATION_EMAIL?.trim() || "";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)) {
+      return Response.json(
+        { error: "No valid administrator notification email is configured." },
+        { status: 503 },
+      );
+    }
     const hasResend = Boolean(bindings.RESEND_API_KEY);
     const hasEmailJs = Boolean(
       bindings.EMAILJS_SERVICE_ID &&

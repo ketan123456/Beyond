@@ -1,78 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import {
-  useEffect,
-  useRef,
-  useState,
-  type FormEvent,
-  type ReactNode,
-} from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css/core";
 import { useLanguage, type Lang } from "./i18n";
 import { popupError, popupSuccess } from "./sweet-alert";
 import SelectControl from "./select-control";
 import Image from "next/image";
+import { NumberTicker } from "./components/magicui/number-ticker";
 
 export const heroImage = "/beyond-hero.webp";
-
-export function CountUp({
-  value,
-  suffix = "",
-  padStart = 0,
-}: {
-  value: number;
-  suffix?: string;
-  padStart?: number;
-}) {
-  const [current, setCurrent] = useState(0);
-  const element = useRef<HTMLSpanElement>(null);
-  const hasAnimated = useRef(false);
-
-  useEffect(() => {
-    const node = element.current;
-    if (!node) return;
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (reduceMotion) {
-      setCurrent(value);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting || hasAnimated.current) return;
-        hasAnimated.current = true;
-        observer.disconnect();
-        const startedAt = performance.now();
-        const duration = Math.min(1800, Math.max(800, value * 2.2));
-        let frame = 0;
-        const tick = (now: number) => {
-          const progress = Math.min(1, (now - startedAt) / duration);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          setCurrent(Math.round(value * eased));
-          if (progress < 1) frame = requestAnimationFrame(tick);
-        };
-        frame = requestAnimationFrame(tick);
-        return () => cancelAnimationFrame(frame);
-      },
-      { threshold: 0.35 },
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [value]);
-
-  return (
-    <span ref={element} aria-label={`${value}${suffix}`}>
-      <span aria-hidden="true">
-        {String(current).padStart(padStart, "0")}
-        {suffix}
-      </span>
-    </span>
-  );
-}
 
 const heroSlides = [
   {
@@ -144,7 +82,7 @@ export function HeroSlider() {
       <div className="hero-impact-card">
         <i className="fa-solid fa-hands-holding-child" />
         <div>
-          <b><CountUp value={500} suffix="+" /></b>
+          <b><NumberTicker value={500} />+</b>
           <span>children supported with dignity</span>
         </div>
       </div>
@@ -273,9 +211,9 @@ export function Button({
 export function Stats() {
   return (
     <div className="stats">
-      <Stat icon="fa-child-reaching" value={<CountUp value={500} suffix="+" />} label="Kids Supported" />
-      <Stat icon="fa-location-dot" value={<CountUp value={75} />} label="Districts (U.P.)" />
-      <Stat icon="fa-city" value={<CountUp value={10} suffix="+" />} label="Impact Zones" />
+      <Stat icon="fa-child-reaching" value={<><NumberTicker value={500} />+</>} label="Kids Supported" />
+      <Stat icon="fa-location-dot" value={<NumberTicker value={75} />} label="Districts (U.P.)" />
+      <Stat icon="fa-city" value={<><NumberTicker value={10} />+</>} label="Impact Zones" />
       <Stat icon="fa-people-group" value="Thousands" label="Lives Touched" />
     </div>
   );

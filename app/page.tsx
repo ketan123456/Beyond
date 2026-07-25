@@ -1,12 +1,12 @@
 import {
   Button,
-  CountUp,
   Header,
   Footer,
   HeroSlider,
   ServiceCards,
   Stats,
 } from "./components";
+import { NumberTicker } from "./components/magicui/number-ticker";
 import AppointmentForm from "./appointment-form";
 const marqueePhrases=["GIVE HOPE","CHANGE A LIFE","EVERY CHILD MATTERS","EMPOWER DREAMS","INCLUSIVE FUTURE","MAKE A DIFFERENCE","SUPPORT ABILITIES","OPEN DOORS","SHARE KINDNESS","BUILD CONFIDENCE","CREATE OPPORTUNITIES","INSPIRE CHANGE","STRENGTHEN FAMILIES","UNLOCK POTENTIAL","DONATE TODAY","BE THE REASON"];
 export default function Home() {
@@ -119,7 +119,7 @@ export default function Home() {
             </p>
             <div className="journey-steps">
               <article>
-                <b>01</b>
+                <b>0<NumberTicker value={1} /></b>
                 <div>
                   <h3>Tell us what you need</h3>
                   <p>
@@ -128,7 +128,7 @@ export default function Home() {
                 </div>
               </article>
               <article>
-                <b>02</b>
+                <b>0<NumberTicker value={2} /></b>
                 <div>
                   <h3>We review together</h3>
                   <p>
@@ -138,7 +138,7 @@ export default function Home() {
                 </div>
               </article>
               <article>
-                <b>03</b>
+                <b>0<NumberTicker value={3} /></b>
                 <div>
                   <h3>Support reaches you</h3>
                   <p>
@@ -162,7 +162,7 @@ export default function Home() {
               come.”
             </blockquote>
             <div className="impact-metric">
-              <b><CountUp value={75} /></b>
+              <b><NumberTicker value={75} /></b>
               <span>districts within our growing support network</span>
             </div>
           </div>
