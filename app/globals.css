@@ -2012,3 +2012,64 @@ body:not(:has(.admin-dashboard)):not(:has(.admin-login)) main .btn-navy:hover { 
   .appointment-fields { grid-template-columns: 1fr; }
   .appointment-fields .wide { grid-column: auto; }
 }
+
+/* Adaptive logo: preserve the colored mark and switch only the live text. */
+.logo .logo-mark {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  display: block;
+  overflow: hidden;
+}
+.logo .logo-mark img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 58px;
+  height: auto;
+  display: block;
+}
+.logo .logo-wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.logo .logo-wordmark b {
+  color: #082f57;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: -.025em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.logo .logo-wordmark small {
+  color: #526f85;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: .18em;
+  line-height: 1;
+}
+.logo.logo--on-light .logo-wordmark b { color: #082f57; }
+.logo.logo--on-light .logo-wordmark small { color: #526f85; }
+.logo.logo--on-dark {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.logo.logo--on-dark .logo-wordmark b,
+.logo.logo--on-dark:hover .logo-wordmark b { color: #f7fbff!important; }
+.logo.logo--on-dark .logo-wordmark small,
+.logo.logo--on-dark:hover .logo-wordmark small { color: #c5d9e8!important; }
+.logo.logo--on-dark:hover,
+.logo.logo--on-dark:focus-visible { background: transparent; box-shadow: none!important; }
+@media(max-width:560px) {
+  .logo .logo-mark { width: 44px; height: 44px; flex-basis: 44px; }
+  .logo .logo-mark img { width: 44px; }
+  .logo .logo-wordmark b { font-size: 14px; }
+  .logo .logo-wordmark small { font-size: 6px; }
+}

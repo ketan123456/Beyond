@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { InteriorHero, PageShell } from "../components";
 
 declare global {
@@ -42,6 +42,29 @@ const paymentMethods = [
   },
 ];
 
+let checkoutPromise: Promise<boolean> | null = null;
+function loadCheckout() {
+  if (window.Razorpay) return Promise.resolve(true);
+  if (checkoutPromise) return checkoutPromise;
+  checkoutPromise = new Promise<boolean>((resolve) => {
+    const existingScript = document.querySelector<HTMLScriptElement>(
+      'script[src="https://checkout.razorpay.com/v1/checkout.js"]',
+    );
+    if (existingScript) {
+      existingScript.addEventListener("load", () => resolve(true), { once: true });
+      existingScript.addEventListener("error", () => { checkoutPromise = null; resolve(false); }, { once: true });
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => { checkoutPromise = null; resolve(false); };
+    document.head.appendChild(script);
+  });
+  return checkoutPromise;
+}
+
 export default function Donate() {
   const [amount, setAmount] = useState(1000);
   const [frequency, setFrequency] =
@@ -50,24 +73,7 @@ export default function Donate() {
   const [status, setStatus] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
 
-  function loadCheckout() {
-    return new Promise<boolean>((resolve) => {
-      if (window.Razorpay) return resolve(true);
-      const existingScript = document.querySelector<HTMLScriptElement>(
-        'script[src="https://checkout.razorpay.com/v1/checkout.js"]',
-      );
-      if (existingScript) {
-        existingScript.addEventListener("load", () => resolve(true), { once: true });
-        existingScript.addEventListener("error", () => resolve(false), { once: true });
-        return;
-      }
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.head.appendChild(script);
-    });
-  }
+  useEffect(() => { void loadCheckout(); }, []);
 
   async function pay(selectedMethod = method) {
     if (isProcessing) return;
@@ -80,11 +86,13 @@ export default function Donate() {
     );
     if (!amount || amount < 1) {
       setStatus("Please choose an amount of at least ₹1.");
+      setIsProcessing(false);
       return;
     }
 
     try {
       const recurring = frequency === "monthly";
+      const checkoutReady = loadCheckout();
       const response = await fetch(
         recurring ? "/api/payments/subscription" : "/api/payments/order",
         {
@@ -106,7 +114,7 @@ export default function Donate() {
         );
         return;
       }
-      if (!(await loadCheckout()) || !window.Razorpay) {
+      if (!(await checkoutReady) || !window.Razorpay) {
         setStatus(
           "Secure checkout could not load. Please check your connection.",
         );

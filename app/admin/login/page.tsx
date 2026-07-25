@@ -104,7 +104,7 @@ export default function AdminLogin() {
   return (
     <main className="admin-login">
       <section className="admin-login-card">
-        <Logo />
+        <Logo onDark />
         <div className="admin-login-icon">
           <i className={`fa-solid ${view === "login" ? "fa-user-shield" : "fa-key"}`} />
         </div>

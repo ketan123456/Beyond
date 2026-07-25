@@ -1,4 +1,5 @@
 import { env } from "../../../../lib/server/runtime";
+import { after } from "next/server";
 
 type PaymentEnv = {
   DB?: D1Database;
@@ -62,12 +63,18 @@ export async function POST(request: Request) {
     }
 
     if (bindings.DB) {
-      await ensurePaymentsTable(bindings.DB);
-      await bindings.DB.prepare(
-        "INSERT INTO payments (razorpay_order_id,amount,currency,status) VALUES (?,?,?,?)",
-      )
-        .bind(order.id, amountInPaise, "INR", "created")
-        .run();
+      after(async () => {
+        try {
+          await ensurePaymentsTable(bindings.DB!);
+          await bindings.DB!.prepare(
+            "INSERT INTO payments (razorpay_order_id,amount,currency,status) VALUES (?,?,?,?)",
+          )
+            .bind(order.id, amountInPaise, "INR", "created")
+            .run();
+        } catch (error) {
+          console.error("Payment order audit insert failed", error);
+        }
+      });
     }
 
     // Razorpay Checkout needs the public key. The secret is never returned.

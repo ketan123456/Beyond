@@ -7,6 +7,7 @@ import "@splidejs/react-splide/css/core";
 import { useLanguage, type Lang } from "./i18n";
 import { popupError, popupSuccess } from "./sweet-alert";
 import SelectControl from "./select-control";
+import Image from "next/image";
 
 export const heroImage = "/beyond-hero.webp";
 const heroSlides = [
@@ -87,18 +88,17 @@ export function HeroSlider() {
   );
 }
 
-export function Logo() {
+export function Logo({ onDark = false }: { onDark?: boolean }) {
   return (
     <Link
       href="/"
-      className="logo"
+      className={`logo ${onDark ? "logo--on-dark" : "logo--on-light"}`}
       data-no-translate
       aria-label="Beyond Disability home">
-      <i className="fa-solid fa-infinity" />
-      <span>
-        <b>BEYOND</b>
-        <small>DISABILITY FOUNDATION</small>
+      <span className="logo-mark" aria-hidden="true">
+        <Image src="/logo.png" alt="" width={60} height={150}/>
       </span>
+      
     </Link>
   );
 }
@@ -304,7 +304,7 @@ export function Footer() {
       </div>
       <div className="footer-grid">
         <div className="footer-brand">
-          <Logo />
+          <Logo onDark />
           <p>
             Removing barriers and creating pathways to independence for children
             with disabilities and their families.
