@@ -1825,7 +1825,7 @@ body:not(:has(.admin-dashboard)):not(:has(.admin-login)) main .btn-navy:hover { 
 
 /* Adaptive logo: keep a consistent responsive width and swap artwork by surface. */
 .logo { width: clamp(140px, 13vw, 180px); min-width: 0; flex: 0 0 auto; }
-.logo .logo-image { width: 100%; height: auto; display: block; object-fit: contain; }
+.logo .logo-image { width: 150px; height: auto; display: block; object-fit: contain; }
 .logo .logo-wordmark { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .logo .logo-wordmark b { color: #082f57; font-size: 17px; font-weight: 900; letter-spacing: -.025em; line-height: 1; white-space: nowrap; }
 .logo .logo-wordmark small { color: #526f85; font-size: 8px; font-weight: 850; letter-spacing: .18em; line-height: 1; }
