@@ -231,7 +231,17 @@ export function Stats() {
         }
         label="Kids Supported"
       />
-      <Stat icon="fa-location-dot" value={<NumberTicker value={75} />} label="Districts (U.P.)" />
+      <Stat
+        icon="fa-location-dot"
+        value={
+          <b>
+            <span className="number-with-icon">
+              <NumberTicker value={75} />
+            </span>
+          </b>
+        }
+        label="Districts (U.P.)"
+      />
       <Stat
         icon="fa-city"
         value={
