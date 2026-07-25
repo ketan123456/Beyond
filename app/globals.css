@@ -15,6 +15,17 @@ body { margin: 0; background: #fff; color: var(--ink); font-family: var(--font-g
 a { color: inherit; text-decoration: none; cursor: pointer!important; }
 button { cursor: pointer!important; }
 button, input, select, textarea { font: inherit; }
+/* Normal input */
+input, select, textarea { appearance: none; -webkit-appearance: none; background: #fff; color: #000; border: 1px solid #ccc; transition: background-color 9999s ease-out,color 9999s ease-out; }
+
+/* Chrome, Edge, Safari */
+input:-webkit-autofill, input:-webkit-autofill:active, input:-webkit-autofill:focus, input:-webkit-autofill:hover, select:-webkit-autofill, textarea:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #fff inset!important; box-shadow: 0 0 0 1000px #fff inset!important; -webkit-text-fill-color: #000!important; caret-color: #000; border: 1px solid #ccc!important; background-clip: content-box!important; transition: background-color 9999s ease-out,color 9999s ease-out; }
+
+/* Firefox */
+input:-moz-autofill, select:-moz-autofill, textarea:-moz-autofill { box-shadow: 0 0 0 1000px #fff inset!important; -moz-text-fill-color: #000; color: #000!important; }
+
+/* Remove iOS rounded appearance */
+input, select, textarea { border-radius: 6px; -webkit-border-radius: 6px; }
 header { position: sticky; top: 0; z-index: 20; background: #fff; border-bottom: 1px solid #e8ebef; box-shadow: 0 2px 16px #09244b0d; }
 .nav { max-width: 1280px; height: 68px; margin: auto; padding: 0 28px; display: flex; align-items: center; gap: 34px; }
 .logo { display: flex; flex-direction: column; line-height: .8; min-width: 94px; letter-spacing: .4px; }
@@ -1148,10 +1159,10 @@ main details a { color: #ffd15b; }
   .autopay-panel>i { width: 40px; height: 40px; flex-basis: 40px; }
   .autopay-panel h2 { font-size: 19px; }
 }
-.btn.compact{display: none;}
+.btn.compact { display: none; }
 /* Fluid desktop navigation: translated labels remain legible without collisions. */
 @media(min-width:851px) {
-  .btn.compact{display: flex;}
+  .btn.compact { display: flex; }
   .nav { max-width: min(100%,1240px); padding-inline: clamp(16px,1.45vw,28px); gap: clamp(8px,1.35vw,28px); }
   .nav .logo { min-width: clamp(150px,10.5vw,205px); gap: clamp(7px,.58vw,11px); }
   .nav .logo>i { width: clamp(36px,2.2vw,42px); height: clamp(36px,2.2vw,42px); font-size: clamp(17px,1.05vw,20px); }
