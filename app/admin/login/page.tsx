@@ -1,13 +1,15 @@
-/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Logo } from "../../components";
 import { popupError, popupSuccess } from "../../sweet-alert";
 
 type View = "login" | "request" | "reset";
 
 export default function AdminLogin() {
+  const router = useRouter();
   const [view, setView] = useState<View>("login");
   const [status, setStatus] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -32,7 +34,8 @@ export default function AdminLogin() {
       if (response.ok) {
         setStatus("");
         await popupSuccess("Welcome back", "You signed in successfully.");
-        window.location.assign("/admin");
+        router.replace("/admin");
+        router.refresh();
         return;
       }
       const data = (await response.json()) as { error?: string };
@@ -142,7 +145,7 @@ export default function AdminLogin() {
         )}
 
         <p className="form-status" role="status">{status}</p>
-        <a href="/" className="admin-back"><i className="fa-solid fa-arrow-left" /> Back to website</a>
+        <Link href="/" className="admin-back"><i className="fa-solid fa-arrow-left" /> Back to website</Link>
       </section>
     </main>
   );

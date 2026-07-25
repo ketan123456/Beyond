@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { ADMIN_COOKIE } from "../../../static-admin-auth";
 
 function logout(request: Request) {
-  const response = NextResponse.redirect(new URL("/", request.url), 303);
+  const response = request.method === "POST"
+    ? NextResponse.json({ ok: true })
+    : NextResponse.redirect(new URL("/", request.url), 303);
   response.cookies.set({
     name: ADMIN_COOKIE,
     value: "",

@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import LanguageManager from "./language-manager";
 import { confirmDelete, popupError, popupSuccess } from "../sweet-alert";
 
@@ -30,6 +31,7 @@ const statusOptions: Record<DataSection, string[]> = {
 };
 
 export default function AdminDashboard({ adminName }: { adminName: string }) {
+  const router = useRouter();
   const [data, setData] = useState<Data | null>(null),
     [section, setSection] = useState<Section>("applications"),
     [query, setQuery] = useState(""),
@@ -105,9 +107,17 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
     else setError("Status update failed.");
     setUpdating(null);
   }
-  function logout() {
+  async function logout() {
     setSigningOut(true);
-    window.location.replace("/api/admin/logout");
+    try {
+      const response = await fetch("/api/admin/logout", { method: "POST" });
+      if (!response.ok) throw new Error("Sign out failed.");
+      router.replace("/");
+      router.refresh();
+    } catch {
+      setSigningOut(false);
+      await popupError("Sign out failed", "Please try signing out again.");
+    }
   }
   async function deleteRecord(targetSection: DataSection, row: Row) {
     const label = String(
