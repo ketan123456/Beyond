@@ -2026,8 +2026,9 @@ body:not(:has(.admin-dashboard)):not(:has(.admin-login)) main .btn-navy:hover { 
   position: absolute;
   top: 0;
   left: 0;
-  width: 5px;
-  height: auto;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   display: block;
 }
 .logo .logo-wordmark {
