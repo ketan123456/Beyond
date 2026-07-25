@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import LanguageManager from "./language-manager";
 import { confirmDelete, popupError, popupSuccess } from "../sweet-alert";
+import SelectControl from "../select-control";
 
 type Row = Record<string, string | number | null>;
 type Data = {
@@ -393,16 +394,13 @@ function AdminTable({
                 </>
               )}
               <td>
-                <select
+                <SelectControl
+                  instanceId={`status-${section}-${row.id}`}
                   value={String(row.status)}
                   disabled={updating === row.id}
-                  onChange={(e) =>
-                    updateStatus(Number(row.id), e.target.value)
-                  }>
-                  {statusOptions[section].map((status) => (
-                    <option key={status}>{status}</option>
-                  ))}
-                </select>
+                  options={statusOptions[section].map((status)=>({value:status,label:status}))}
+                  onChange={(value) => updateStatus(Number(row.id), value)}
+                />
               </td>
               <td>
                 <div className="admin-actions">

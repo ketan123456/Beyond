@@ -966,6 +966,39 @@ html:not([lang="en"]) .impact-panel blockquote { font-size: clamp(1.2rem,1.8vw,1
 .admin-table td { border-top: 1px solid #ffffff12; vertical-align: top; }
 .admin-table td>span { display: block; margin-top: 4px; color: #9fb7ca; font-size: 11px; }
 .admin-table select { padding: 9px 12px; border: 1px solid #ffffff26; border-radius: 999px; background: #102e4e; color: #fff; }
+
+/* React Select and MUI date picker */
+.app-react-select { width: 100%; margin-top: 7px; color: var(--ink); font-size: 13px; font-weight: 600; }
+.app-select__control { min-height: 46px!important; border: 1px solid #b9c5d3!important; border-radius: 14px!important; background: #fff!important; box-shadow: none!important; cursor: pointer!important; }
+.app-select__control--is-focused, .app-select__control:hover { border-color: #64cfc6!important; box-shadow: 0 0 0 4px #42d9d026!important; }
+.app-select__value-container { padding: 2px 12px!important; }
+.app-select__input-container, .app-select__single-value { color: var(--ink)!important; }
+.app-select__placeholder { color: #66788b!important; }
+.app-select__indicator-separator { display: none; }
+.app-select__dropdown-indicator { color: #2c6d83!important; }
+.app-select__menu { z-index: 80!important; overflow: hidden; border: 1px solid #d7e0e8; border-radius: 14px!important; background: #fff!important; box-shadow: 0 16px 38px #123d6b25!important; }
+.app-select__menu-list { padding: 6px!important; }
+.app-select__option { border-radius: 9px!important; color: #17324d!important; cursor: pointer!important; }
+.app-select__option--is-focused { background: #e7f7f5!important; }
+.app-select__option--is-selected { background: #15548f!important; color: #fff!important; }
+.nav-actions .app-react-select.language { width: 145px; margin: 0; padding: 0; border: 0; background: none; }
+.nav-actions .language .app-select__control { min-height: 38px!important; border-color: #ffffff26!important; border-radius: 999px!important; background: #102b48!important; }
+.nav-actions .language .app-select__input-container, .nav-actions .language .app-select__single-value { color: #fff!important; }
+.nav-actions .language .app-select__menu { min-width: 170px; }
+.mobile-language .app-react-select { width: 94px; margin: 0; }
+.mobile-language .app-select__control { min-height: 40px!important; border: 0!important; background: transparent!important; box-shadow: none!important; }
+.mobile-language .app-select__value-container { padding: 0 2px!important; }
+.mobile-language .app-select__indicator { padding: 3px!important; }
+.mobile-language .app-select__menu { width: 165px; right: 0; left: auto; text-align: left; }
+.appointment-fields .MuiFormControl-root { margin-top: 7px; }
+.appointment-fields .MuiInputBase-root { min-height: 46px; border-radius: 14px; background: #fff; font: inherit; }
+.appointment-fields .MuiOutlinedInput-notchedOutline { border-color: #b9c5d3; }
+.appointment-fields .Mui-focused .MuiOutlinedInput-notchedOutline, .appointment-fields .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline { border-color: #64cfc6!important; }
+.appointment-fields .Mui-focused { box-shadow: 0 0 0 4px #42d9d026; }
+.appointment-fields .MuiInputBase-input { padding: 11px 13px; font-size: 13px; }
+.admin-table .app-react-select { min-width: 150px; margin: 0; color: #fff; }
+.admin-table .app-select__control { min-height: 38px!important; border-color: #ffffff26!important; border-radius: 999px!important; background: #102e4e!important; }
+.admin-table .app-select__input-container, .admin-table .app-select__single-value { color: #fff!important; }
 .admin-empty { min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #9db6ca; }
 .admin-error { margin: 18px; padding: 14px; border: 1px solid #ff8e8e55; border-radius: 14px; background: #7d242444; }
 .admin-refreshed { padding: 0 18px 16px; text-align: right; color: #7899b2; font-size: 10px; }
@@ -1303,6 +1336,346 @@ body:has(.admin-dashboard), body:has(.admin-login) { background: radial-gradient
   .language-list p { line-height: 1.4; }
   .admin-login-card { border-radius: 24px; }
   .admin-modal h2 { font-size: 1.45rem; }
+}
+
+/* Unified themed form controls */
+.apply-form, .appointment-fields { --control-navy: #082f57; --control-teal: var(--site-text); --control-gold: #f4b928; --control-border: #bfd1df; --control-bg: #fbfdff; --control-shadow: 0 8px 22px #0a31580b,inset 0 1px 0 #fff; }
+.apply-form label, .appointment-fields label { color: var(--control-navy); font-weight: 800; letter-spacing: -.01em; }
+.apply-form .app-select__control, .appointment-fields .MuiInputBase-root, .appointment-fields .app-select__control, .appointment-fields input:not([type="hidden"]), .appointment-fields textarea, .form-grid input:not([type="hidden"]):not([type="checkbox"]), .form-grid textarea { min-height: 52px!important; margin-top: 0; border: 1px solid var(--control-border)!important; border-radius: 14px!important; background: linear-gradient(180deg,#fff,#f9fcfe)!important; color: var(--control-navy)!important; box-shadow: var(--control-shadow)!important; transition: border-color .2s ease,box-shadow .2s ease,background-color .2s ease,transform .2s ease!important; }
+.apply-form .app-select__control:hover, .appointment-fields .MuiInputBase-root:hover, .appointment-fields .app-select__control:hover, .appointment-fields input:not([type="hidden"]):hover, .appointment-fields textarea:hover, .form-grid input:not([type="hidden"]):not([type="checkbox"]):hover, .form-grid textarea:hover { border-color: #75bfc2!important; }
+.apply-form .app-select__control--is-focused, .appointment-fields .Mui-focused, .appointment-fields .app-select__control--is-focused, .appointment-fields input:not([type="hidden"]):focus, .appointment-fields textarea:focus, .form-grid input:not([type="hidden"]):not([type="checkbox"]):focus, .form-grid textarea:focus { outline: 0!important; border-color: var(--control-teal)!important; background: #fff!important; box-shadow: 0 0 0 4px var(--site-text) 1c,0 12px 28px #0a315812!important; }
+.apply-form .app-react-select, .appointment-fields .app-react-select { margin-top: 0; font-size: 14px; font-weight: 700; }
+.apply-form .app-select__value-container, .appointment-fields .app-select__value-container { padding: 0 15px!important; }
+.apply-form .app-select__placeholder, .appointment-fields .app-select__placeholder { color: #718497!important; font-weight: 650; }
+.apply-form .app-select__input-container, .apply-form .app-select__single-value, .appointment-fields .app-select__input-container, .appointment-fields .app-select__single-value { color: var(--control-navy)!important; }
+.apply-form .app-select__indicator-separator, .appointment-fields .app-select__indicator-separator { display: block; width: 1px; margin-block: 10px; background: #d3dee6; }
+.apply-form .app-select__dropdown-indicator, .appointment-fields .app-select__dropdown-indicator { margin: 7px; padding: 6px!important; border-radius: 50%; color: #b47b00!important; transition: transform .2s ease,background-color .2s ease!important; }
+.apply-form .app-select__control--menu-is-open .app-select__dropdown-indicator, .appointment-fields .app-select__control--menu-is-open .app-select__dropdown-indicator { transform: rotate(180deg); color: var(--control-navy)!important; }
+.apply-form .app-select__menu, .appointment-fields .app-select__menu { margin-top: 8px; padding: 4px; border: 1px solid #d2e0e9; border-radius: 16px!important; background: #fff!important; box-shadow: 0 20px 48px #082f5726!important; }
+.apply-form .app-select__option, .appointment-fields .app-select__option { min-height: 42px; display: flex; align-items: center; padding-inline: 12px!important; border-radius: 10px!important; color: var(--control-navy)!important; }
+.apply-form .app-select__option--is-focused, .appointment-fields .app-select__option--is-focused { background: #e8f7f6!important; }
+.apply-form .app-select__option--is-selected, .appointment-fields .app-select__option--is-selected { background: linear-gradient(135deg,var(--control-navy),#155b7d)!important; color: #fff!important; }
+.form-grid input[type="file"] { padding: 7px 8px; }
+.form-grid input[type="file"]::file-selector-button { height: 36px; margin-right: 11px; padding: 0 14px; border: 0; border-radius: 9px; background: #e7f5f4; color: var(--control-navy); font: inherit; font-weight: 800; cursor: pointer; }
+.appointment-fields .MuiOutlinedInput-notchedOutline { border: 0!important; }
+.appointment-fields .MuiIconButton-root { margin-right: 5px; color: #b47b00; background: #fff4d5; }
+.MuiPickersPopper-root .MuiPaper-root { overflow: hidden; border: 1px solid #d2e0e9; border-radius: 18px; box-shadow: 0 22px 60px #082f5730; }
+.MuiPickersPopper-root .MuiPickersCalendarHeader-label { color: #082f57; font-weight: 850; }
+.MuiPickersPopper-root .MuiPickersDay-root.Mui-selected { background: var(--site-text)!important; color: #fff!important; }
+.MuiPickersPopper-root .MuiPickersDay-root.MuiPickersDay-today { border-color: #f4b928!important; }
+.MuiPickersPopper-root .MuiDayCalendar-weekDayLabel { color: #155b7d; font-weight: 800; }
+@media(max-width:600px) {
+  .apply-form .app-select__control,   .appointment-fields .MuiInputBase-root,   .appointment-fields .app-select__control,   .appointment-fields input:not([type="hidden"]),   .appointment-fields textarea,   .form-grid input:not([type="hidden"]):not([type="checkbox"]), .form-grid textarea { min-height: 48px!important; }
+}
+
+/* Accessible confirmation radio card */
+.apply-form .consent { position: relative; display: flex; align-items: center; gap: 14px; width: 100%; margin: 26px 0 22px; padding: 16px 18px; border: 1px solid #bfd1df; border-radius: 16px; background: linear-gradient(135deg,#fff,#f5fbfd); color: #082f57; box-shadow: 0 9px 24px #0a31580b,inset 0 1px 0 #fff; cursor: pointer; transition: transform .2s ease,border-color .2s ease,box-shadow .2s ease,background-color .2s ease; }
+.apply-form .consent:hover { transform: translateY(-2px); border-color: #6fbfc2; box-shadow: 0 14px 30px #0a315814,inset 0 1px 0 #fff; }
+.apply-form .consent input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; pointer-events: none; }
+.consent-switch { position: relative; width: 54px; height: 30px; flex: 0 0 54px; border: 2px solid #9ab8c5; border-radius: 999px; background: #dce7ec; box-shadow: inset 0 2px 5px #082f5718; transition: border-color .25s ease,background-color .25s ease,box-shadow .25s ease; }
+.consent-switch span { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 3px 8px #082f5735; transition: transform .25s cubic-bezier(.2,.8,.2,1),background-color .25s ease; }
+.consent-switch i { position: absolute; top: 8px; right: 7px; color: #6e8797; font-size: 10px; opacity: 0; transition: opacity .2s ease; }
+.consent-copy { display: grid; gap: 3px; line-height: 1.35; }
+.consent-copy b { color: #082f57; font-size: 14px; }
+.consent-copy small { color: #687e90; font-size: 11px; font-weight: 600; }
+.apply-form .consent:has(input:checked) { border-color: var(--site-text); background: linear-gradient(135deg,#edfbf9,#fff9e7); box-shadow: 0 0 0 4px var(--site-text) 12,0 14px 32px #0a315814; }
+.consent input:checked + .consent-switch { border-color: var(--site-text); background: var(--site-text); box-shadow: inset 0 2px 5px #063d471f,0 0 0 3px #f4b92866; }
+.consent input:checked + .consent-switch span { transform: translateX(24px); background: #fff; }
+.consent input:checked + .consent-switch i { right: auto; left: 8px; color: #fff; opacity: 1; }
+.apply-form .consent:has(input:focus-visible) { outline: 3px solid #f4b92880; outline-offset: 3px; }
+@media(max-width:600px) {
+  .apply-form .consent { align-items: flex-start; padding: 14px; }
+  .consent-switch { width: 50px; height: 28px; flex-basis: 50px; }
+  .consent-switch span { width: 18px; height: 18px; }
+  .consent input:checked + .consent-switch span { transform: translateX(22px); }
+  .consent-copy b { font-size: 13px; }
+}
+
+/* Minimal familiar toggle treatment */
+.apply-form .consent { padding: 8px 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.apply-form .consent:hover { transform: none; border-color: transparent; box-shadow: none; }
+.apply-form .consent:has(input:checked) { border-color: transparent; background: transparent; box-shadow: none; }
+.consent-switch { width: 58px; height: 34px; flex-basis: 58px; border: 0; background: #b8bcc1; box-shadow: inset 0 1px 3px #0000001c; }
+.consent-switch span { top: 3px; left: 3px; width: 28px; height: 28px; box-shadow: 0 2px 7px #00000030; }
+.consent-switch i { display: none; }
+.consent input:checked + .consent-switch { border-color: transparent; background: var(--site-text); box-shadow: inset 0 1px 3px #063d4728; }
+.consent input:checked + .consent-switch span { transform: translateX(24px); }
+.apply-form .consent:has(input:focus-visible) { outline: 3px solid #f4b92880; outline-offset: 4px; border-radius: 10px; }
+@media(max-width:600px) {
+  .apply-form .consent { align-items: center; padding: 8px 0; }
+  .consent-switch { width: 54px; height: 32px; flex-basis: 54px; }
+  .consent-switch span { width: 26px; height: 26px; }
+  .consent input:checked + .consent-switch span { transform: translateX(22px); }
+}
+
+/* Beyond-themed MUI calendar */
+.beyond-date-picker .MuiPaper-root {
+  overflow: hidden;
+  border: 1px solid #c9dbe5;
+  border-radius: 22px;
+  background: linear-gradient(180deg,#fff 0%,#f8fcfd 100%);
+  box-shadow: 0 26px 70px #082f5738,0 8px 22px #082f5717;
+}
+.beyond-date-picker .MuiDateCalendar-root {
+  width: 340px;
+  max-height: 390px;
+  color: #082f57;
+}
+.beyond-date-picker .MuiPickersCalendarHeader-root {
+  min-height: 70px;
+  margin: 0 0 10px;
+  padding: 12px 14px;
+  background: linear-gradient(135deg,#082f57,#155b7d);
+  color: #fff;
+}
+.beyond-date-picker .MuiPickersCalendarHeader-label {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 850;
+  letter-spacing: -.02em;
+}
+.beyond-date-picker .MuiPickersCalendarHeader-switchViewButton,
+.beyond-date-picker .MuiPickersArrowSwitcher-button {
+  width: 34px;
+  height: 34px;
+  margin: 0 2px;
+  border: 1px solid #ffffff3d;
+  background: #ffffff14;
+  color: #fff;
+  transition: transform .2s ease,background-color .2s ease,color .2s ease;
+}
+.beyond-date-picker .MuiPickersCalendarHeader-switchViewButton:hover,
+.beyond-date-picker .MuiPickersArrowSwitcher-button:hover {
+  transform: translateY(-1px);
+  background: #f4b928;
+  color: #082f57;
+}
+.beyond-date-picker .MuiDayCalendar-header {
+  padding-inline: 10px;
+}
+.beyond-date-picker .MuiDayCalendar-weekDayLabel {
+  width: 40px;
+  height: 34px;
+  margin: 0 2px;
+  color: #0f7f88;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.beyond-date-picker .MuiDayCalendar-monthContainer {
+  padding: 0 10px 12px;
+}
+.beyond-date-picker .MuiDayCalendar-weekContainer {
+  margin: 2px 0;
+}
+.beyond-date-picker .MuiPickersDay-root {
+  width: 40px;
+  height: 40px;
+  margin: 0 2px;
+  border: 1px solid transparent;
+  color: #173b5d;
+  font-size: 13px;
+  font-weight: 750;
+  transition: transform .18s ease,background-color .18s ease,border-color .18s ease,color .18s ease;
+}
+.beyond-date-picker .MuiPickersDay-root:hover {
+  transform: translateY(-1px);
+  background: #e4f6f4;
+  border-color: #9bd5d2;
+  color: #075e66;
+}
+.beyond-date-picker .MuiPickersDay-root.Mui-selected,
+.beyond-date-picker .MuiPickersDay-root.Mui-selected:hover,
+.beyond-date-picker .MuiPickersDay-root.Mui-selected:focus {
+  border-color: #0f929b;
+  background: linear-gradient(135deg,#0f929b,#08747d)!important;
+  color: #fff!important;
+  box-shadow: 0 5px 14px #0f929b45;
+}
+.beyond-date-picker .MuiPickersDay-root.MuiPickersDay-today {
+  border: 2px solid #f4b928!important;
+  background: #fff8df;
+  color: #082f57;
+}
+.beyond-date-picker .MuiPickersDay-root.Mui-selected.MuiPickersDay-today {
+  border-color: #f4b928!important;
+  box-shadow: 0 0 0 2px #fff,0 0 0 4px #f4b92880;
+}
+.beyond-date-picker .MuiPickersDay-root.Mui-disabled {
+  color: #afbdc7;
+  background: transparent;
+  opacity: .58;
+}
+.beyond-date-picker .MuiPickersSlideTransition-root {
+  min-height: 250px;
+}
+.beyond-date-picker .MuiYearCalendar-root {
+  padding: 14px;
+}
+.beyond-date-picker .MuiPickersYear-yearButton {
+  border-radius: 10px;
+  color: #173b5d;
+  font-weight: 750;
+}
+.beyond-date-picker .MuiPickersYear-yearButton:hover {
+  background: #e4f6f4;
+}
+.beyond-date-picker .MuiPickersYear-yearButton.Mui-selected {
+  background: #0f929b!important;
+  color: #fff;
+}
+.appointment-fields .MuiInputAdornment-root .MuiIconButton-root {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff3cf;
+  color: #a87300;
+}
+.appointment-fields .MuiInputAdornment-root .MuiIconButton-root:hover {
+  background: #f4b928;
+  color: #082f57;
+}
+@media(max-width:420px) {
+  .beyond-date-picker .MuiDateCalendar-root { width: min(340px,calc(100vw - 28px)); }
+  .beyond-date-picker .MuiPickersDay-root,
+  .beyond-date-picker .MuiDayCalendar-weekDayLabel { width: 36px; margin-inline: 1px; }
+}
+
+/* Keep the MUI date field identical to React Select */
+.appointment-fields .MuiInputBase-root {
+  min-height: 52px!important;
+  padding: 0 8px 0 0!important;
+  border: 1px solid var(--control-border)!important;
+  border-radius: 14px!important;
+  background: linear-gradient(180deg,#fff,#f9fcfe)!important;
+  box-shadow: var(--control-shadow)!important;
+}
+.appointment-fields .MuiInputBase-root:hover {
+  border-color: #75bfc2!important;
+}
+.appointment-fields .MuiInputBase-root.Mui-focused {
+  border-color: var(--control-teal)!important;
+  box-shadow: 0 0 0 4px #0f929b1c,0 12px 28px #0a315812!important;
+}
+.appointment-fields .MuiInputBase-input {
+  min-height: 0!important;
+  margin: 0!important;
+  padding: 14px 15px!important;
+  border: 0!important;
+  border-radius: 0!important;
+  outline: 0!important;
+  background: transparent!important;
+  color: var(--control-navy)!important;
+  box-shadow: none!important;
+  font-size: 14px!important;
+  font-weight: 700!important;
+}
+.appointment-fields .MuiInputBase-input::placeholder {
+  color: #718497!important;
+  opacity: 1;
+}
+.appointment-fields .MuiInputAdornment-root {
+  height: 100%;
+  max-height:initial;
+  margin: 0!important;
+  padding-left: 8px;
+  border-left: 1px solid #d3dee6;
+}
+.appointment-fields .MuiInputAdornment-root .MuiIconButton-root {
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  padding: 6px;
+  border: 0;
+  border-radius: 0;
+  background: transparent!important;
+  color: #2c6d83;
+  box-shadow: none;
+}
+.appointment-fields .MuiInputAdornment-root .MuiIconButton-root:hover {
+  background: transparent!important;
+  color: #0f929b;
+}
+.appointment-fields .MuiInputAdornment-root .MuiIconButton-root:focus-visible {
+  outline: 0;
+  border-radius: 0;
+}
+
+/* MUI X accessible-field DOM uses picker-specific classes */
+.appointment-fields .MuiPickersOutlinedInput-root {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  min-height: 52px!important;
+  height: 52px;
+  padding: 0 8px 0 15px!important;
+  border: 1px solid #bfd1df!important;
+  border-radius: 14px!important;
+  background: linear-gradient(180deg,#fff,#f9fcfe)!important;
+  box-shadow: var(--control-shadow)!important;
+  color: var(--control-navy)!important;
+}
+.appointment-fields .MuiPickersOutlinedInput-root:hover {
+  border-color: #bfd1df!important;
+}
+.appointment-fields .MuiPickersOutlinedInput-root.Mui-focused {
+  border-color: #bfd1df!important;
+  box-shadow: var(--control-shadow)!important;
+}
+.appointment-fields .MuiPickersOutlinedInput-notchedOutline,
+.appointment-fields .MuiPickersOutlinedInput-root:hover .MuiPickersOutlinedInput-notchedOutline,
+.appointment-fields .MuiPickersOutlinedInput-root.Mui-focused .MuiPickersOutlinedInput-notchedOutline {
+  border: 0!important;
+}
+.appointment-fields .MuiPickersInputBase-sectionsContainer,
+.appointment-fields .MuiPickersOutlinedInput-sectionsContainer {
+  height: 50px;
+  min-height: 50px;
+  padding: 0!important;
+  display: flex;
+  align-items: center;
+  color: var(--control-navy);
+  font-size: 14px;
+  font-weight: 700;
+}
+.appointment-fields .MuiPickersInputBase-sectionContent {
+  display: inline-flex;
+  align-items: center;
+  min-height: 50px;
+  color: var(--control-navy);
+  font: inherit;
+}
+.appointment-fields .MuiPickersInputBase-sectionContent.MuiPickersInputBase-sectionContent {
+  outline: 0;
+}
+.appointment-fields .MuiPickersOutlinedInput-root .MuiInputAdornment-root {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  height: 50px;
+  margin-left: 8px!important;
+  padding-left: 8px;
+  border-left: 1px solid #d3dee6;
+}
+.appointment-fields .MuiPickersOutlinedInput-root .MuiIconButton-root,
+.appointment-fields .MuiPickersOutlinedInput-root .MuiIconButton-root:hover,
+.appointment-fields .MuiPickersOutlinedInput-root .MuiIconButton-root:focus,
+.appointment-fields .MuiPickersOutlinedInput-root .MuiIconButton-root:focus-visible {
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  padding: 6px;
+  border: 0!important;
+  border-radius: 0!important;
+  outline: 0!important;
+  background: transparent!important;
+  color: #2c6d83;
+  box-shadow: none!important;
+}
+.appointment-fields .MuiPickersOutlinedInput-root .MuiIconButton-root:hover {
+  color: #0f929b;
 }
 @media(max-width:420px) {
   .admin-kpis { grid-template-columns: 1fr; }

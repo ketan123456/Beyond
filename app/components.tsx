@@ -6,6 +6,7 @@ import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css/core";
 import { useLanguage, type Lang } from "./i18n";
 import { popupError, popupSuccess } from "./sweet-alert";
+import SelectControl from "./select-control";
 
 export const heroImage = "/beyond-hero.webp";
 const heroSlides = [
@@ -105,6 +106,7 @@ export function Logo() {
 export function Header({ active = "" }: { active?: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { language, languages, setLanguage } = useLanguage();
+  const languageOptions = languages.map((item) => ({ value: item.locale, label: item.native_name }));
   const links = [
     ["Home", "/", "fa-house"],
     ["About Us", "/about", "fa-circle-info"],
@@ -134,21 +136,16 @@ export function Header({ active = "" }: { active?: string }) {
           <i className="fa-solid fa-heart" aria-hidden="true" />
           <span>Donate</span>
         </Link>
-        <label className="mobile-language" data-no-translate>
+        <div className="mobile-language" data-no-translate>
           <i className="fa-solid fa-globe" aria-hidden="true" />
-          <span aria-hidden="true">{language.toUpperCase()}</span>
-          <i className="fa-solid fa-chevron-down" aria-hidden="true" />
-          <select
-            aria-label="Select language"
+          <SelectControl
+            instanceId="mobile-language"
+            className="mobile-language-select"
             value={language}
-            onChange={(e) => setLanguage(e.target.value as Lang)}>
-            {languages.map((item) => (
-              <option value={item.locale} key={item.locale}>
-                {item.native_name}
-              </option>
-            ))}
-          </select>
-        </label>
+            options={languageOptions}
+            onChange={(value) => setLanguage(value as Lang)}
+          />
+        </div>
         <button
           className="menu-toggle"
           aria-label="Toggle navigation"
@@ -171,17 +168,15 @@ export function Header({ active = "" }: { active?: string }) {
           ))}
         </nav>
         <div className="nav-actions">
-          <select
+          <div data-no-translate>
+          <SelectControl
+            instanceId="desktop-language"
             className="language"
-            aria-label="Select language"
             value={language}
-            onChange={(e) => setLanguage(e.target.value as Lang)}>
-            {languages.map((item) => (
-              <option value={item.locale} key={item.locale}>
-                {item.native_name}
-              </option>
-            ))}
-          </select>
+            options={languageOptions}
+            onChange={(value) => setLanguage(value as Lang)}
+          />
+          </div>
           <Link className="btn btn-gold compact" href="/donate">
             <i className="fa-solid fa-heart" aria-hidden="true" />
             Donate
@@ -425,11 +420,17 @@ export function InteriorHero({
 }
 
 export function ApplyForm() {
+  const [district, setDistrict] = useState("");
+  const [category, setCategory] = useState("Cochlear Life-Support");
   const [status, setStatus] = useState("");
   const [submitting, setSubmitting] = useState(false);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (submitting) return;
+    if (!district || !category) {
+      await popupError("Select support details", "Choose your district and the support you need.");
+      return;
+    }
     setStatus("Submitting…");
     setSubmitting(true);
     const form = e.currentTarget;
@@ -469,6 +470,8 @@ export function ApplyForm() {
         return;
       }
       form.reset();
+      setDistrict("");
+      setCategory("Cochlear Life-Support");
       setStatus("");
       await popupSuccess(
         "Application submitted",
@@ -498,22 +501,11 @@ export function ApplyForm() {
         </label>
         <label>
           District
-          <select name="district" required>
-            <option value="">Select district</option>
-            <option>Kanpur Nagar</option>
-            <option>Lucknow</option>
-            <option>Prayagraj</option>
-            <option>Varanasi</option>
-            <option>Other U.P. district</option>
-          </select>
+          <SelectControl instanceId="aid-district" name="district" value={district} onChange={setDistrict} placeholder="Select district" options={["Kanpur Nagar","Lucknow","Prayagraj","Varanasi","Other U.P. district"].map(value=>({value,label:value}))}/>
         </label>
         <label>
           Support needed
-          <select name="category" required>
-            <option>Cochlear Life-Support</option>
-            <option>Digital Empowerment</option>
-            <option>Therapeutic Aid</option>
-          </select>
+          <SelectControl instanceId="aid-category" name="category" value={category} onChange={setCategory} options={["Cochlear Life-Support","Digital Empowerment","Therapeutic Aid"].map(value=>({value,label:value}))}/>
         </label>
         <label className="wide">
           Tell us what support is needed
@@ -539,8 +531,15 @@ export function ApplyForm() {
         </label>
       </div>
       <label className="consent">
-        <input type="checkbox" required /> I confirm that the information
-        provided is correct.
+        <input type="checkbox" name="confirmation" value="confirmed" role="switch" required />
+        <span className="consent-switch" aria-hidden="true">
+          <span />
+          <i className="fa-solid fa-check" />
+        </span>
+        <span className="consent-copy">
+          <b>I confirm that the information provided is correct.</b>
+          <small>Please review your details and uploaded documents before submitting.</small>
+        </span>
       </label>
       <button className="btn btn-gold" type="submit" disabled={submitting}>
         {submitting ? "Submitting…" : "Submit Application / आवेदन जमा करें"}
