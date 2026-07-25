@@ -178,7 +178,7 @@ export default function Donate() {
                 : "Payment window closed. No charge was made.",
             ),
         },
-        theme: { color: "#0a9f91" },
+        theme: { color: "#00b8d9" },
       };
 
       new window.Razorpay(checkoutOptions).open();
