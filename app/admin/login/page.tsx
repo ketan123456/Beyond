@@ -96,6 +96,7 @@ export default function AdminLogin() {
     setView("login");
     setStatus("");
   }
+  
 
   return (
     <main className="admin-login">

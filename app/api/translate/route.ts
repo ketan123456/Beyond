@@ -3,6 +3,7 @@ import { ensureDatabaseSchema } from "../../../db/runtime-schema";
 
 const validLocale = (value: string) => /^[a-z]{2,3}(?:-[A-Z]{2})?$/.test(value);
 let providerBlockedUntil = 0;
+const memoryCache = new Map<string, string>();
 
 function chunks(text: string) {
   const parts = text.match(/[^.!?।]+[.!?।]?\s*/gu) || [text];
@@ -46,22 +47,35 @@ export async function POST(request: Request) {
     const texts = [...new Set((body.texts || []).map(value => String(value).trim()).filter(Boolean))].slice(0, 12);
     if (!validLocale(locale) || locale === "en" || !texts.length) return Response.json({ error: "Invalid translation request." }, { status: 400 });
     const db = (env as unknown as { DB?: D1Database }).DB;
-    if (!db) return Response.json({ error: "Translation database is unavailable." }, { status: 503 });
-    await ensureDatabaseSchema(db);
-    const enabled = await db.prepare("SELECT locale FROM languages WHERE locale=? AND enabled=1").bind(locale).first();
-    if (!enabled) return Response.json({ error: "That language is not enabled." }, { status: 400 });
+    if (db) {
+      await ensureDatabaseSchema(db);
+      const enabled = await db.prepare("SELECT locale FROM languages WHERE locale=? AND enabled=TRUE").bind(locale).first();
+      if (!enabled) return Response.json({ error: "That language is not enabled." }, { status: 400 });
+    }
 
     const translations: Record<string, string> = {};
     let limited = Date.now() < providerBlockedUntil;
     for (const text of texts) {
-      const cached = await db.prepare("SELECT value FROM translations WHERE locale=? AND key=?").bind(locale, text).first<{ value: string }>();
-      if (cached?.value) { translations[text] = cached.value; continue; }
+      const cacheKey = `${locale}\u0000${text}`;
+      const memoryValue = memoryCache.get(cacheKey);
+      if (memoryValue) { translations[text] = memoryValue; continue; }
+      const cached = db
+        ? await db.prepare("SELECT value FROM translations WHERE locale=? AND key=?").bind(locale, text).first<{ value: string }>()
+        : null;
+      if (cached?.value) {
+        memoryCache.set(cacheKey, cached.value);
+        translations[text] = cached.value;
+        continue;
+      }
       if (limited) continue;
       try {
         const value = await machineTranslate(text, locale);
         translations[text] = value;
-        await db.prepare("INSERT INTO translations(locale,key,value,updated_at) VALUES(?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(locale,key) DO UPDATE SET value=excluded.value,updated_at=CURRENT_TIMESTAMP")
-          .bind(locale, text, value).run();
+        memoryCache.set(cacheKey, value);
+        if (db) {
+          await db.prepare("INSERT INTO translations(locale,key,value,updated_at) VALUES(?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(locale,key) DO UPDATE SET value=excluded.value,updated_at=CURRENT_TIMESTAMP")
+            .bind(locale, text, value).run();
+        }
       } catch (error) {
         if (error instanceof Error && error.message === "RATE_LIMITED") { limited = true; continue; }
         console.warn("Translation skipped:", error instanceof Error ? error.message : "provider unavailable");
