@@ -62,9 +62,9 @@ export default function NotFound() {
             <div className={styles.logo}>
               <span className={styles.logoHalo} />
               <Image
-                src="/logo.png"
+                src="/logo-light.png"
                 alt=""
-                width={210}
+                width={200}
                 height={300}
                 priority
               />
