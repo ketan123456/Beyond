@@ -1,5 +1,6 @@
 import {
   Button,
+  CountUp,
   Header,
   Footer,
   HeroSlider,
@@ -161,7 +162,7 @@ export default function Home() {
               come.”
             </blockquote>
             <div className="impact-metric">
-              <b>75</b>
+              <b><CountUp value={75} /></b>
               <span>districts within our growing support network</span>
             </div>
           </div>

@@ -40,6 +40,8 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
     [loading, setLoading] = useState(true),
     [updating, setUpdating] = useState<number | null>(null),
     [deleting, setDeleting] = useState<number | null>(null),
+    [bulkDeleting, setBulkDeleting] = useState(false),
+    [selectedIds, setSelectedIds] = useState<number[]>([]),
     [signingOut, setSigningOut] = useState(false),
     [selected, setSelected] = useState<{
       section: DataSection;
@@ -157,6 +159,42 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
       setDeleting(null);
     }
   }
+  async function deleteSelected(targetSection: DataSection) {
+    if (!selectedIds.length) return;
+    const confirmation = await confirmDelete(
+      `Delete ${selectedIds.length} selected record${selectedIds.length === 1 ? "" : "s"}?`,
+    );
+    if (!confirmation.isConfirmed) return;
+    setBulkDeleting(true);
+    setError("");
+    try {
+      const response = await fetch("/api/admin/data", {
+        method: "DELETE",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ section: targetSection, ids: selectedIds }),
+      });
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok)
+        throw new Error(body.error || "Unable to delete the selected records.");
+      const count = selectedIds.length;
+      setSelectedIds([]);
+      setSelected(null);
+      await load();
+      await popupSuccess(
+        "Records deleted",
+        `${count} selected record${count === 1 ? " was" : "s were"} removed successfully.`,
+      );
+    } catch (reason) {
+      const message =
+        reason instanceof Error
+          ? reason.message
+          : "Unable to delete the selected records.";
+      setError(message);
+      await popupError("Bulk delete failed", message);
+    } finally {
+      setBulkDeleting(false);
+    }
+  }
   return (
     <>
       <div className="admin-heading">
@@ -223,6 +261,7 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
                 onClick={() => {
                   setSection(item);
                   setQuery("");
+                  setSelectedIds([]);
                 }}>
                 {item}
               </button>
@@ -259,6 +298,10 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
                 rows={rows}
                 updating={updating}
                 deleting={deleting}
+                bulkDeleting={bulkDeleting}
+                selectedIds={selectedIds}
+                onSelectionChange={setSelectedIds}
+                onDeleteSelected={() => void deleteSelected(section)}
                 updateStatus={updateStatus}
                 onView={(row) => setSelected({ section, row })}
                 onDelete={(row) => void deleteRecord(section, row)}
@@ -289,6 +332,10 @@ function AdminTable({
   rows,
   updating,
   deleting,
+  bulkDeleting,
+  selectedIds,
+  onSelectionChange,
+  onDeleteSelected,
   updateStatus,
   onView,
   onDelete,
@@ -297,6 +344,10 @@ function AdminTable({
   rows: Row[];
   updating: number | null;
   deleting: number | null;
+  bulkDeleting: boolean;
+  selectedIds: number[];
+  onSelectionChange: (ids: number[]) => void;
+  onDeleteSelected: () => void;
   updateStatus: (id: number, status: string) => void;
   onView: (row: Row) => void;
   onDelete: (row: Row) => void;
@@ -309,11 +360,43 @@ function AdminTable({
         <span>New records will appear here automatically.</span>
       </div>
     );
+  const rowIds = rows.map((row) => Number(row.id));
+  const allSelected = rowIds.every((id) => selectedIds.includes(id));
   return (
-    <div className="admin-table-wrap">
+    <>
+      <div className="admin-bulk-actions">
+        <span>
+          {selectedIds.length
+            ? `${selectedIds.length} selected`
+            : "Select records to delete together"}
+        </span>
+        <button
+          className="btn admin-bulk-delete"
+          type="button"
+          disabled={!selectedIds.length || bulkDeleting}
+          onClick={onDeleteSelected}>
+          <i className={`fa-solid ${bulkDeleting ? "fa-spinner fa-spin" : "fa-trash-can"}`} />
+          {bulkDeleting ? "Deleting…" : "Delete selected"}
+        </button>
+      </div>
+      <div className="admin-table-wrap">
       <table className="admin-table">
         <thead>
           <tr>
+            <th className="admin-select-cell">
+              <input
+                type="checkbox"
+                aria-label="Select all visible records"
+                checked={allSelected}
+                onChange={(event) =>
+                  onSelectionChange(
+                    event.target.checked
+                      ? [...new Set([...selectedIds, ...rowIds])]
+                      : selectedIds.filter((id) => !rowIds.includes(id)),
+                  )
+                }
+              />
+            </th>
             {section === "applications" ? (
               <>
                 <th>Reference / Applicant</th>
@@ -350,6 +433,20 @@ function AdminTable({
         <tbody>
           {rows.map((row) => (
             <tr key={Number(row.id)}>
+              <td className="admin-select-cell">
+                <input
+                  type="checkbox"
+                  aria-label={`Select record ${row.reference || row.company || row.razorpay_order_id || row.id}`}
+                  checked={selectedIds.includes(Number(row.id))}
+                  onChange={(event) =>
+                    onSelectionChange(
+                      event.target.checked
+                        ? [...selectedIds, Number(row.id)]
+                        : selectedIds.filter((id) => id !== Number(row.id)),
+                    )
+                  }
+                />
+              </td>
               {section === "applications" ? (
                 <>
                   <td>
@@ -394,13 +491,19 @@ function AdminTable({
                 </>
               )}
               <td>
-                <SelectControl
-                  instanceId={`status-${section}-${row.id}`}
-                  value={String(row.status)}
-                  disabled={updating === row.id}
-                  options={statusOptions[section].map((status)=>({value:status,label:status}))}
-                  onChange={(value) => updateStatus(Number(row.id), value)}
-                />
+                {section === "payments" ? (
+                  <span className="status-chip enabled">
+                    <i className="fa-solid fa-circle-check" /> Paid
+                  </span>
+                ) : (
+                  <SelectControl
+                    instanceId={`status-${section}-${row.id}`}
+                    value={String(row.status)}
+                    disabled={updating === row.id}
+                    options={statusOptions[section].map((status)=>({value:status,label:status}))}
+                    onChange={(value) => updateStatus(Number(row.id), value)}
+                  />
+                )}
               </td>
               <td>
                 <div className="admin-actions">
@@ -427,7 +530,8 @@ function AdminTable({
           ))}
         </tbody>
       </table>
-    </div>
+      </div>
+    </>
   );
 }
 

@@ -1,0 +1,359 @@
+.page {
+  --cyan: #00b8d9;
+  --cyan-dark: #008eaa;
+  --lime: #d7ee00;
+  --pink: #f26f8f;
+  --ink: #121b24;
+  --muted: #607783;
+  min-height: calc(100svh - 116px);
+  padding: clamp(18px, 3.4vw, 48px);
+  background:
+    radial-gradient(circle at 8% 8%, #00b8d917, transparent 28%),
+    radial-gradient(circle at 92% 90%, #d7ee0021, transparent 26%),
+    #f8fcfd;
+}
+
+.panel {
+  width: min(1180px, 100%);
+  min-height: 500px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(380px, .95fr);
+  overflow: hidden;
+  border: 1px solid #d7e6eb;
+  border-radius: 30px;
+  background: #fff;
+  box-shadow: 0 24px 70px #102a3816;
+}
+
+.copy {
+  align-self: center;
+  padding: clamp(40px, 6vw, 78px);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  color: var(--cyan-dark);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.eyebrow span {
+  width: 30px;
+  height: 3px;
+  border-radius: 10px;
+  background: var(--pink);
+}
+
+.copy h1 {
+  max-width: 620px;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(2.8rem, 5.3vw, 5rem);
+  line-height: .96;
+  letter-spacing: -.065em;
+}
+
+.copy h1 em {
+  display: block;
+  color: var(--cyan-dark);
+  font-style: normal;
+}
+
+.message {
+  max-width: 570px;
+  margin: 24px 0 0;
+  color: var(--muted);
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.7;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.primaryAction,
+.secondaryAction {
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 23px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 850;
+  text-decoration: none;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.primaryAction {
+  border-color: #afc500;
+  background: linear-gradient(135deg, #e9fa60, var(--lime));
+  color: var(--ink);
+  box-shadow: 0 12px 25px #afc50026;
+}
+
+.secondaryAction {
+  border-color: #9eb4bd;
+  background: #fff;
+  color: var(--ink);
+}
+
+.primaryAction:hover,
+.secondaryAction:hover {
+  transform: translateY(-3px);
+}
+
+.secondaryAction:hover {
+  border-color: var(--cyan);
+  color: var(--cyan-dark);
+  box-shadow: 0 12px 25px #00b8d915;
+}
+
+.art {
+  position: relative;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.5vw, 22px);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 45%, #1d4855, transparent 36%),
+    linear-gradient(145deg, #0b141c, #1c303a);
+  isolation: isolate;
+}
+
+.art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#ffffff24 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 80%, transparent);
+}
+
+.largeNumber {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  font-size: clamp(5.5rem, 9vw, 8.5rem);
+  font-weight: 950;
+  letter-spacing: -.08em;
+  line-height: 1;
+}
+
+.logo {
+  position: relative;
+  z-index: 2;
+  width: clamp(110px, 13vw, 170px);
+  height: clamp(160px, 18vw, 230px);
+  display: grid;
+  place-items: center;
+}
+
+.logo img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 20px #0007);
+}
+
+.logoHalo {
+  position: absolute;
+  width: 145%;
+  aspect-ratio: 1;
+  border: 1px solid #00b8d95e;
+  border-radius: 48% 52% 43% 57%;
+  background: #ffffff08;
+  box-shadow: inset 0 0 45px #00b8d914;
+  transform: rotate(18deg);
+}
+
+.orbit {
+  position: absolute;
+  z-index: 1;
+  width: 78%;
+  aspect-ratio: 1.6;
+  border: 1px solid #d7ee0042;
+  border-radius: 50%;
+  transform: rotate(-12deg);
+}
+
+.pinkHeart,
+.limeDot {
+  position: absolute;
+  z-index: 3;
+  filter: drop-shadow(0 8px 12px #0007);
+}
+
+.pinkHeart {
+  top: 18%;
+  right: 14%;
+  color: var(--pink);
+  font-size: 24px;
+  transform: rotate(13deg);
+}
+
+.limeDot {
+  bottom: 18%;
+  left: 14%;
+  color: var(--lime);
+  font-size: 15px;
+}
+
+.helpfulLinks {
+  width: min(1180px, 100%);
+  margin: 16px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.helpfulLinks > a {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 13px;
+  padding: 16px;
+  border: 1px solid #d7e6eb;
+  border-radius: 17px;
+  background: #fff;
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 0 10px 24px #102a380b;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.helpfulLinks > a:hover {
+  border-color: var(--cyan);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px #102a3815;
+}
+
+.linkIcon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #e8fafe;
+  color: var(--cyan-dark);
+}
+
+.helpfulLinks > a:nth-child(2) .linkIcon {
+  background: #f7fbdc;
+  color: #829400;
+}
+
+.helpfulLinks > a:nth-child(3) .linkIcon {
+  background: #fff0f4;
+  color: var(--pink);
+}
+
+.helpfulLinks span {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.helpfulLinks b {
+  font-size: 14px;
+}
+
+.helpfulLinks small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arrow {
+  color: #8aa0ab;
+  font-size: 12px;
+}
+
+@media (max-width: 850px) {
+  .page {
+    min-height: calc(100svh - 70px);
+    padding: 16px;
+  }
+
+  .panel {
+    grid-template-columns: 1fr;
+  }
+
+  .copy {
+    padding: 48px 32px;
+  }
+
+  .art {
+    min-height: 320px;
+  }
+
+  .helpfulLinks {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .page {
+    padding: 10px;
+  }
+
+  .panel {
+    border-radius: 22px;
+  }
+
+  .copy {
+    padding: 36px 22px 40px;
+  }
+
+  .copy h1 {
+    font-size: clamp(2.65rem, 14vw, 4rem);
+  }
+
+  .actions {
+    display: grid;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    width: 100%;
+  }
+
+  .art {
+    min-height: 260px;
+  }
+
+  .largeNumber {
+    font-size: clamp(4.6rem, 24vw, 6.2rem);
+  }
+
+  .logo {
+    width: 90px;
+    height: 130px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryAction,
+  .secondaryAction,
+  .helpfulLinks > a {
+    transition: none;
+  }
+}
