@@ -8,6 +8,13 @@ import {
 } from "./components";
 import { NumberTicker } from "./components/magicui/number-ticker";
 import AppointmentForm from "./appointment-form";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Disability Support & Assistive Technology in Uttar Pradesh",
+  description: "Beyond Disability Foundation helps children access assistive technology, therapy, inclusive education and family support across Uttar Pradesh.",
+  alternates: { canonical: "/" },
+};
 const marqueePhrases=["GIVE HOPE","CHANGE A LIFE","EVERY CHILD MATTERS","EMPOWER DREAMS","INCLUSIVE FUTURE","MAKE A DIFFERENCE","SUPPORT ABILITIES","OPEN DOORS","SHARE KINDNESS","BUILD CONFIDENCE","CREATE OPPORTUNITIES","INSPIRE CHANGE","STRENGTHEN FAMILIES","UNLOCK POTENTIAL","DONATE TODAY","BE THE REASON"];
 export default function Home() {
   return (

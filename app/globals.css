@@ -1823,9 +1823,9 @@ body:not(:has(.admin-dashboard)):not(:has(.admin-login)) main .btn-navy:hover { 
   .appointment-fields .wide { grid-column: auto; }
 }
 
-/* Adaptive logo: preserve the colored mark and switch only the live text. */
-.logo .logo-mark { position: relative; width: 58px; height: 58px; flex: 0 0 58px; display: block; overflow: hidden; }
-.logo .logo-mark img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
+/* Adaptive logo: keep a consistent responsive width and swap artwork by surface. */
+.logo { width: clamp(140px, 13vw, 180px); min-width: 0; flex: 0 0 auto; }
+.logo .logo-image { width: 100%; height: auto; display: block; object-fit: contain; }
 .logo .logo-wordmark { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .logo .logo-wordmark b { color: #082f57; font-size: 17px; font-weight: 900; letter-spacing: -.025em; line-height: 1; white-space: nowrap; }
 .logo .logo-wordmark small { color: #526f85; font-size: 8px; font-weight: 850; letter-spacing: .18em; line-height: 1; }
@@ -1836,8 +1836,7 @@ body:not(:has(.admin-dashboard)):not(:has(.admin-login)) main .btn-navy:hover { 
 .logo.logo--on-dark .logo-wordmark small, .logo.logo--on-dark:hover .logo-wordmark small { color: #c5d9e8!important; }
 .logo.logo--on-dark:focus-visible, .logo.logo--on-dark:hover { background: transparent; box-shadow: none!important; }
 @media(max-width:560px) {
-  .logo .logo-mark { width: 44px; height: 44px; flex-basis: 44px; }
-  .logo .logo-mark img { width: 44px; }
+  .logo { width: 140px; }
   .logo .logo-wordmark b { font-size: 14px; }
   .logo .logo-wordmark small { font-size: 6px; }
 }
@@ -1897,7 +1896,7 @@ body:has(.admin-dashboard), body:has(.admin-login) { background: radial-gradient
 .admin-field i, .admin-kpis i, .language-list .language-toggle { color: var(--brand-cyan)!important; }
 .admin-tabs button.active { background: linear-gradient(135deg,var(--brand-lime),#e8f95c)!important; color: var(--brand-charcoal)!important; }
 .admin-icon-btn.delete, .language-list .language-delete { color: var(--brand-pink)!important; }
-
+.admin-login-card .eyebrow{justify-content: center;}
 /* Treat ticker suffix icons as part of the number, not as statistic badges. */
 .stat .number-with-icon>i,
 .hero-impact-card .number-with-icon>i {

@@ -102,10 +102,15 @@ export function Logo({ onDark = false }: { onDark?: boolean }) {
       className={`logo ${onDark ? "logo--on-dark" : "logo--on-light"}`}
       data-no-translate
       aria-label="Beyond Disability home">
-      <span className="logo-mark" aria-hidden="true">
-        <Image src="/logo.png" alt="" width={70} height={190}/>
-      </span>
-      
+      <Image
+        className="logo-image"
+        src={onDark ? "/logo-light.png" : "/logo.png"}
+        alt="Beyond Disability Foundation"
+        width={1536}
+        height={1024}
+        priority={!onDark}
+        sizes="(max-width: 600px) 140px, 180px"
+      />
     </Link>
   );
 }
@@ -253,7 +258,7 @@ function Stat({
   return (
     <div className="stat">
       <i className={`fa-solid ${icon}`} />
-      <div>
+      <div style={{display:"block"}}>
         <b>{value}</b>
         <span>{label}</span>
       </div>
