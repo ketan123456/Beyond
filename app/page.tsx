@@ -52,7 +52,12 @@ export default function Home() {
         <Stats />
         <section className="motion-marquee" aria-hidden="true">
           <div className="motion-marquee__track">
-            {[...marqueePhrases,...marqueePhrases].map((phrase,index)=><span key={`${phrase}-${index}`}>{phrase}<i>✦</i></span>)}
+            {[...marqueePhrases, ...marqueePhrases].map((phrase, index) => (
+              <span key={`${phrase}-${index}`}>
+                {phrase}
+                <i>✦</i>
+              </span>
+            ))}
           </div>
         </section>
         <section
@@ -119,7 +124,9 @@ export default function Home() {
             </p>
             <div className="journey-steps">
               <article>
-                <b>0<NumberTicker value={1} /></b>
+                <b>
+                  <NumberTicker value={1} />
+                </b>
                 <div>
                   <h3>Tell us what you need</h3>
                   <p>
@@ -128,7 +135,9 @@ export default function Home() {
                 </div>
               </article>
               <article>
-                <b>0<NumberTicker value={2} /></b>
+                <b>
+                  <NumberTicker value={2} />
+                </b>
                 <div>
                   <h3>We review together</h3>
                   <p>
@@ -138,7 +147,9 @@ export default function Home() {
                 </div>
               </article>
               <article>
-                <b>0<NumberTicker value={3} /></b>
+                <b>
+                  <NumberTicker value={3} />
+                </b>
                 <div>
                   <h3>Support reaches you</h3>
                   <p>
@@ -162,7 +173,9 @@ export default function Home() {
               come.”
             </blockquote>
             <div className="impact-metric">
-              <b><NumberTicker value={75} /></b>
+              <strong>
+                <NumberTicker value={75} />
+              </strong>
               <span>districts within our growing support network</span>
             </div>
           </div>

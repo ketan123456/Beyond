@@ -82,7 +82,12 @@ export function HeroSlider() {
       <div className="hero-impact-card">
         <i className="fa-solid fa-hands-holding-child" />
         <div>
-          <b><NumberTicker value={500} />+</b>
+          <b>
+            <span className="number-with-icon">
+              <NumberTicker value={500} />
+              <i className="fa-solid fa-plus" aria-label="plus" />
+            </span>
+          </b>
           <span>children supported with dignity</span>
         </div>
       </div>
@@ -211,9 +216,27 @@ export function Button({
 export function Stats() {
   return (
     <div className="stats">
-      <Stat icon="fa-child-reaching" value={<><NumberTicker value={500} />+</>} label="Kids Supported" />
+      <Stat
+        icon="fa-child-reaching"
+        value={
+          <span className="number-with-icon">
+            <NumberTicker value={500} />
+            <i className="fa-solid fa-plus" aria-label="plus" />
+          </span>
+        }
+        label="Kids Supported"
+      />
       <Stat icon="fa-location-dot" value={<NumberTicker value={75} />} label="Districts (U.P.)" />
-      <Stat icon="fa-city" value={<><NumberTicker value={10} />+</>} label="Impact Zones" />
+      <Stat
+        icon="fa-city"
+        value={
+          <span className="number-with-icon">
+            <NumberTicker value={10} />
+            <i className="fa-solid fa-plus" aria-label="plus" />
+          </span>
+        }
+        label="Impact Zones"
+      />
       <Stat icon="fa-people-group" value="Thousands" label="Lives Touched" />
     </div>
   );
