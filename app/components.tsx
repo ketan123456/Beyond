@@ -96,7 +96,7 @@ export function Logo({ onDark = false }: { onDark?: boolean }) {
       data-no-translate
       aria-label="Beyond Disability home">
       <span className="logo-mark" aria-hidden="true">
-        <Image src="/logo.png" alt="" width={60} height={150}/>
+        <Image src="/logo.png" alt="" width={70} height={190}/>
       </span>
       
     </Link>
