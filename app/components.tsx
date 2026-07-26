@@ -104,7 +104,7 @@ export function Logo({ onDark = false }: { onDark?: boolean }) {
       aria-label="Beyond Disability home">
       <Image
         className="logo-image"
-        src={onDark ? "/logo-light.png" : "/logo.png"}
+        src={onDark ? "/logo1.jpeg" : "/logo1.jpeg"}
         alt="Beyond Disability Foundation"
         width={150}
         height={1024}
