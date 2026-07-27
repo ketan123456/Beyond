@@ -294,10 +294,12 @@ export default function Donate() {
               <div>
                 <h2>Monthly AutoPay</h2>
                 <p>
-                  Authorise once through Razorpay. ₹
-                  {amount.toLocaleString("en-IN")} will be donated automatically
-                  every month. You can cancel the mandate through your bank or
-                  Razorpay.
+                  Authorise once through Razorpay.{" "}
+                  <span data-no-translate>
+                    ₹{amount.toLocaleString("en-IN")}
+                  </span>{" "}
+                  will be donated automatically every month. You can cancel the
+                  mandate through your bank or Razorpay.
                 </p>
               </div>
             </div>
