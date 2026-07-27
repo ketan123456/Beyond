@@ -710,7 +710,7 @@ function translate(root: ParentNode, lang: Lang) {
   for (const n of list) {
     if (
       n.parentElement?.closest(
-        'script,style,.logo,.language,[data-no-translate],[translate="no"]',
+        'script,style,.logo,.language,.MuiDateCalendar-root,.beyond-date-picker,[data-no-translate],[translate="no"]',
       )
     )
       continue;
@@ -733,7 +733,11 @@ function translate(root: ParentNode, lang: Lang) {
   for (const el of root.querySelectorAll?.(
     "[placeholder],[title],[aria-label],[alt]",
   ) || []) {
-    if (el.closest('.logo,.language,[data-no-translate],[translate="no"]'))
+    if (
+      el.closest(
+        '.logo,.language,.MuiDateCalendar-root,.beyond-date-picker,[data-no-translate],[translate="no"]',
+      )
+    )
       continue;
     let saved = originalAttributes.get(el);
     if (!saved) {
