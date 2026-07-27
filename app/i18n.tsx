@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { usePathname } from "next/navigation";
 import generatedTranslations from "./translations.generated.json";
 export type Lang = string;
 export type LanguageOption = {
@@ -801,6 +802,7 @@ async function fillMissing(lang: Lang, texts: string[]) {
   }
 }
 export function LanguageProvider({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
   const [language, setState] = useState<Lang>("en"),
     [languages, setLanguages] = useState<LanguageOption[]>(defaultLanguages);
   const changeId = useRef(0);
@@ -882,7 +884,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       window.clearTimeout(timer);
       o.disconnect();
     };
-  }, [language]);
+  }, [language, pathname]);
   return (
     <C.Provider value={{ language, languages, setLanguage }}>
       {children}
