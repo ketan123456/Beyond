@@ -1938,6 +1938,17 @@ body:has(.admin-dashboard), body:has(.admin-login) { background: radial-gradient
 .admin-icon-btn.delete, .language-list .language-delete { color: var(--brand-pink)!important; }
 .admin-login-card .eyebrow{justify-content: center;}
 
+/* Every route and overlay begins with opacity before any movement. */
+.motion-page { animation: route-fade-in .48s cubic-bezier(.22,.8,.3,1) both; }
+.content-modal-backdrop { animation: overlay-fade-in .22s ease-out both; }
+.content-modal { animation: modal-fade-rise .32s cubic-bezier(.22,.8,.3,1) both; }
+@keyframes route-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes overlay-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modal-fade-rise { from { opacity: 0; transform: translateY(18px) scale(.98); } to { opacity: 1; transform: none; } }
+@media(prefers-reduced-motion:reduce) {
+  .motion-page, .content-modal-backdrop, .content-modal { animation-duration: .01ms!important; }
+}
+
 /* Final public-page responsive normalization. */
 .download-band { min-width: 0; padding: clamp(28px,4vw,42px); }
 .download-band>div { min-width: 0; flex: 1 1 auto; }

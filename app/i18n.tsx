@@ -28,6 +28,17 @@ const C = createContext<{
   languages: LanguageOption[];
   setLanguage: (l: Lang) => void;
 }>({ language: "en", languages: defaultLanguages, setLanguage: () => {} });
+
+function canonicalLocale(value: string) {
+  const locale = String(value || "en").trim().toLowerCase().replace("_", "-");
+  if (locale === "bengali" || locale === "ben" || locale.startsWith("bn-")) return "bn";
+  if (locale === "hindi" || locale === "hin" || locale.startsWith("hi-")) return "hi";
+  if (locale === "marathi" || locale === "mar" || locale.startsWith("mr-")) return "mr";
+  if (locale === "tamil" || locale === "tam" || locale.startsWith("ta-")) return "ta";
+  if (locale === "bhojpuri" || locale.startsWith("bho-")) return "bho";
+  if (locale.startsWith("en-")) return "en";
+  return locale;
+}
 const hi: Record<string, string> = {
   Home: "होम",
   "About Us": "हमारे बारे में",
@@ -700,10 +711,48 @@ Object.assign(dictionaries.bn, {
   "DONATE TODAY": "আজই দান করুন",
   "BE THE REASON": "পরিবর্তনের কারণ হোন",
 });
+Object.assign(dictionaries.hi, {
+  "Advocacy": "पक्षसमर्थन",
+  "Closing gaps at the source": "समस्या की जड़ में मौजूद कमियों को दूर करना",
+  "At Beyond Disability Foundation, we believe that sustainable change requires addressing systemic bottlenecks at the highest levels of governance, which is why our policy-level advocacy focuses directly on bridging the gaps that prevent government programs from delivering their intended benefits to children with disabilities. By actively engaging with policymakers, health authorities, and administrative bodies, we strive to transform welfare frameworks into robust, practical lifelines for underprivileged families. This is an ongoing exercise where we need support of those who can influence decision makers to understand our mission and give momentum to our efforts.": "बियॉन्ड डिसएबिलिटी फाउंडेशन में हमारा मानना है कि स्थायी बदलाव के लिए शासन के उच्चतम स्तरों पर प्रणालीगत बाधाओं को दूर करना आवश्यक है। इसलिए हमारी नीतिगत पैरवी उन कमियों को भरने पर केंद्रित है जो सरकारी कार्यक्रमों को दिव्यांग बच्चों तक उनका अपेक्षित लाभ पहुंचाने से रोकती हैं। नीति निर्माताओं, स्वास्थ्य अधिकारियों और प्रशासनिक संस्थाओं के साथ सक्रिय संवाद के माध्यम से हम कल्याणकारी ढांचों को वंचित परिवारों के लिए मजबूत और व्यावहारिक जीवनरेखा में बदलने का प्रयास करते हैं। यह एक सतत प्रयास है और हमें ऐसे लोगों के सहयोग की आवश्यकता है जो निर्णय निर्माताओं को हमारा उद्देश्य समझा सकें और हमारे प्रयासों को गति दे सकें।",
+  "Fixing Cochlear Implant Gaps of State and Central Government": "राज्य और केंद्र सरकार की कॉक्लियर इम्प्लांट योजनाओं की कमियां दूर करना",
+  "We are making effort to sensitize the government of the disadvantages of just finding the implants and leaving the implanted children to fund for themselves. Most of the children cannot afford accessories and become deaf again. We are actively trying to ensure that government make changes in the program which otherwise loses its purpose.": "हम सरकार को केवल इम्प्लांट उपलब्ध कराने और उसके बाद बच्चों को आवश्यक खर्च स्वयं उठाने के लिए छोड़ देने की कमियों के प्रति संवेदनशील बनाने का प्रयास कर रहे हैं। अधिकांश बच्चे सहायक उपकरणों का खर्च नहीं उठा सकते और फिर से सुनने की क्षमता खो देते हैं। हम सरकारी कार्यक्रम में आवश्यक बदलाव सुनिश्चित करने के लिए सक्रिय रूप से प्रयासरत हैं, ताकि उसका मूल उद्देश्य पूरा हो सके।",
+  "Universal Newborn Hearing Screening Protocols": "सार्वभौमिक नवजात श्रवण जांच प्रोटोकॉल",
+  "We have made representations to authorities to implement a mandatory standardized protocol for early newborn hearing testing following the globally recognized 1-3-6 guideline—ensuring universal screening by 1 month of age, comprehensive diagnostic evaluation by 3 months, and the commencement of early intervention services by 6 months, we need support to be heard.": "हमने अधिकारियों से विश्व स्तर पर मान्य 1-3-6 दिशानिर्देश के अनुसार नवजात शिशुओं की प्रारंभिक श्रवण जांच के लिए अनिवार्य मानकीकृत प्रोटोकॉल लागू करने का अनुरोध किया है - 1 माह तक सार्वभौमिक जांच, 3 माह तक व्यापक निदान और 6 माह तक प्रारंभिक हस्तक्षेप सेवाओं की शुरुआत। हमारी आवाज सुनी जाए, इसके लिए हमें सहयोग चाहिए।",
+  "Influence for Change": "बदलाव के लिए प्रभाव",
+  "This is an ongoing exercise where we need support of those who can influence decision makers to understand our mission and give momentum to our efforts.": "यह एक सतत प्रयास है और हमें ऐसे लोगों के सहयोग की आवश्यकता है जो निर्णय निर्माताओं को हमारा उद्देश्य समझा सकें और हमारे प्रयासों को गति दे सकें।",
+  "Read more": "और पढ़ें",
+  "Support this effort →": "इस प्रयास का समर्थन करें →",
+  "Help us be heard →": "हमारी आवाज़ बुलंद करें →",
+  "Work with us →": "हमारे साथ काम करें →",
+});
+Object.assign(dictionaries.mr, {
+  "Advocacy": "धोरणात्मक पाठपुरावा", "Closing gaps at the source": "मुळातील त्रुटी दूर करणे", "Fixing Cochlear Implant Gaps of State and Central Government": "राज्य आणि केंद्र सरकारच्या कॉक्लिअर इम्प्लांट योजनांतील त्रुटी दूर करणे", "Universal Newborn Hearing Screening Protocols": "सार्वत्रिक नवजात श्रवण तपासणी प्रोटोकॉल", "Influence for Change": "बदलासाठी प्रभाव", "Read more": "अधिक वाचा", "Support this effort →": "या प्रयत्नाला पाठिंबा द्या →", "Help us be heard →": "आमचा आवाज पोहोचवायला मदत करा →", "Work with us →": "आमच्यासोबत काम करा →",
+  "This is an ongoing exercise where we need support of those who can influence decision makers to understand our mission and give momentum to our efforts.": "हा सातत्याने चालणारा प्रयत्न आहे. निर्णय घेणाऱ्यांना आमचे ध्येय समजावून सांगू शकणाऱ्या आणि आमच्या प्रयत्नांना गती देऊ शकणाऱ्या व्यक्तींच्या सहकार्याची आम्हाला गरज आहे.",
+  "At Beyond Disability Foundation, we believe that sustainable change requires addressing systemic bottlenecks at the highest levels of governance, which is why our policy-level advocacy focuses directly on bridging the gaps that prevent government programs from delivering their intended benefits to children with disabilities. By actively engaging with policymakers, health authorities, and administrative bodies, we strive to transform welfare frameworks into robust, practical lifelines for underprivileged families. This is an ongoing exercise where we need support of those who can influence decision makers to understand our mission and give momentum to our efforts.": "बियॉन्ड डिसॅबिलिटी फाउंडेशनमध्ये आमचा विश्वास आहे की शाश्वत बदलासाठी शासनाच्या सर्वोच्च स्तरांवरील प्रणालीगत अडथळे दूर करणे आवश्यक आहे. म्हणून आमचा धोरणात्मक पाठपुरावा दिव्यांग मुलांपर्यंत सरकारी योजनांचे अपेक्षित लाभ पोहोचण्यास अडथळा ठरणाऱ्या त्रुटी भरून काढण्यावर केंद्रित आहे. धोरणकर्ते, आरोग्य अधिकारी आणि प्रशासकीय संस्थांशी सक्रिय संवाद साधून आम्ही कल्याणकारी चौकटींना वंचित कुटुंबांसाठी मजबूत आणि व्यावहारिक आधार बनवण्याचा प्रयत्न करतो. या सातत्यपूर्ण प्रयत्नाला निर्णयकर्त्यांवर प्रभाव टाकू शकणाऱ्या व्यक्तींच्या सहकार्याची गरज आहे.",
+  "We are making effort to sensitize the government of the disadvantages of just finding the implants and leaving the implanted children to fund for themselves. Most of the children cannot afford accessories and become deaf again. We are actively trying to ensure that government make changes in the program which otherwise loses its purpose.": "केवळ इम्प्लांट उपलब्ध करून दिल्यानंतर आवश्यक खर्च कुटुंबांवर सोडण्याच्या त्रुटींबाबत सरकारला संवेदनशील करण्याचा आम्ही प्रयत्न करत आहोत. बहुतेक मुलांना बाह्य उपकरणांचा खर्च परवडत नाही आणि त्यांची श्रवणक्षमता पुन्हा हरवते. कार्यक्रमाचा मूळ उद्देश टिकून राहावा यासाठी सरकारी योजनेत आवश्यक बदल व्हावेत म्हणून आम्ही सक्रिय प्रयत्न करत आहोत.",
+  "We have made representations to authorities to implement a mandatory standardized protocol for early newborn hearing testing following the globally recognized 1-3-6 guideline—ensuring universal screening by 1 month of age, comprehensive diagnostic evaluation by 3 months, and the commencement of early intervention services by 6 months, we need support to be heard.": "जागतिक स्तरावर मान्य 1-3-6 मार्गदर्शक तत्त्वांनुसार नवजात बालकांच्या श्रवण तपासणीसाठी अनिवार्य प्रमाणित प्रोटोकॉल लागू करण्याची आम्ही मागणी केली आहे - 1 महिन्यापर्यंत तपासणी, 3 महिन्यांपर्यंत संपूर्ण निदान आणि 6 महिन्यांपर्यंत प्रारंभिक हस्तक्षेप. आमचा आवाज पोहोचण्यासाठी आम्हाला सहकार्याची गरज आहे.",
+});
+Object.assign(dictionaries.ta, {
+  "Advocacy": "கொள்கை ஆதரவு", "Closing gaps at the source": "மூலத்திலேயே இடைவெளிகளை சரிசெய்தல்", "Fixing Cochlear Implant Gaps of State and Central Government": "மாநில மற்றும் மத்திய அரசின் காக்லியர் இம்பிளாண்ட் திட்ட இடைவெளிகளை சரிசெய்தல்", "Universal Newborn Hearing Screening Protocols": "அனைவருக்குமான புதிதாகப் பிறந்த குழந்தை செவித்திறன் பரிசோதனை நெறிமுறைகள்", "Influence for Change": "மாற்றத்திற்கான செல்வாக்கு", "Read more": "மேலும் படிக்க", "Support this effort →": "இந்த முயற்சியை ஆதரிக்கவும் →", "Help us be heard →": "எங்கள் குரல் கேட்க உதவுங்கள் →", "Work with us →": "எங்களுடன் இணைந்து செயல்படுங்கள் →",
+  "This is an ongoing exercise where we need support of those who can influence decision makers to understand our mission and give momentum to our efforts.": "இது தொடர்ந்து நடைபெறும் முயற்சி. முடிவெடுப்பவர்களுக்கு எங்கள் நோக்கத்தைப் புரியவைத்து எங்கள் முயற்சிகளுக்கு வேகம் அளிக்கக்கூடியவர்களின் ஆதரவு எங்களுக்கு தேவை.",
+  "At Beyond Disability Foundation, we believe that sustainable change requires addressing systemic bottlenecks at the highest levels of governance, which is why our policy-level advocacy focuses directly on bridging the gaps that prevent government programs from delivering their intended benefits to children with disabilities. By actively engaging with policymakers, health authorities, and administrative bodies, we strive to transform welfare frameworks into robust, practical lifelines for underprivileged families. This is an ongoing exercise where we need support of those who can influence decision makers to understand our mission and give momentum to our efforts.": "பியாண்ட் டிஸ்அபிலிட்டி அறக்கட்டளையில், நிலையான மாற்றத்திற்கு ஆட்சியின் உயர்ந்த நிலைகளில் உள்ள அமைப்புசார் தடைகளைத் தீர்ப்பது அவசியம் என்று நாங்கள் நம்புகிறோம். மாற்றுத்திறனுள்ள குழந்தைகளுக்கு அரசுத் திட்டங்களின் பயன்கள் சென்றடைவதைத் தடுக்கும் இடைவெளிகளை நிரப்புவதில் எங்கள் கொள்கை ஆதரவு கவனம் செலுத்துகிறது. கொள்கை வகுப்பாளர்கள், சுகாதார அதிகாரிகள் மற்றும் நிர்வாக அமைப்புகளுடன் செயல்பட்டு, நலத்திட்டங்களை பின்தங்கிய குடும்பங்களுக்கான வலுவான நடைமுறை ஆதரவாக மாற்ற முயல்கிறோம். முடிவெடுப்பவர்களுக்கு எங்கள் நோக்கத்தைப் புரியவைத்து இந்த முயற்சிக்கு வேகம் அளிக்கக்கூடியவர்களின் ஆதரவு தேவை.",
+  "We are making effort to sensitize the government of the disadvantages of just finding the implants and leaving the implanted children to fund for themselves. Most of the children cannot afford accessories and become deaf again. We are actively trying to ensure that government make changes in the program which otherwise loses its purpose.": "இம்பிளாண்ட் மட்டும் வழங்கிவிட்டு, தேவையான செலவுகளை குடும்பங்களே ஏற்க வேண்டிய நிலையின் பாதிப்புகளை அரசுக்கு உணர்த்த முயற்சிக்கிறோம். பெரும்பாலான குழந்தைகளால் வெளிப்புற உபகரணங்களை வாங்க முடியாமல் மீண்டும் செவித்திறனை இழக்கின்றனர். திட்டத்தின் நோக்கம் வீணாகாமல் இருக்க அரசு தேவையான மாற்றங்களைச் செய்ய வேண்டும் என தொடர்ந்து முயற்சிக்கிறோம்.",
+  "We have made representations to authorities to implement a mandatory standardized protocol for early newborn hearing testing following the globally recognized 1-3-6 guideline—ensuring universal screening by 1 month of age, comprehensive diagnostic evaluation by 3 months, and the commencement of early intervention services by 6 months, we need support to be heard.": "உலகளவில் அங்கீகரிக்கப்பட்ட 1-3-6 வழிகாட்டுதலின்படி புதிதாகப் பிறந்த குழந்தைகளுக்கான கட்டாய செவித்திறன் பரிசோதனை நெறிமுறையை அமல்படுத்த அதிகாரிகளிடம் கோரியுள்ளோம் - 1 மாதத்திற்குள் பரிசோதனை, 3 மாதத்திற்குள் முழுமையான நோயறிதல் மற்றும் 6 மாதத்திற்குள் ஆரம்ப தலையீடு. எங்கள் கோரிக்கை கேட்கப்பட ஆதரவு தேவை.",
+});
+Object.assign(dictionaries.bn, {
+  "Advocacy": "নীতিগত প্রচার", "Closing gaps at the source": "সমস্যার উৎসেই ঘাটতি দূর করা", "Fixing Cochlear Implant Gaps of State and Central Government": "রাজ্য ও কেন্দ্রীয় সরকারের কক্লিয়ার ইমপ্ল্যান্ট কর্মসূচির ঘাটতি দূর করা", "Universal Newborn Hearing Screening Protocols": "সর্বজনীন নবজাতক শ্রবণ পরীক্ষার প্রোটোকল", "Influence for Change": "পরিবর্তনের জন্য প্রভাব", "Read more": "আরও পড়ুন", "Support this effort →": "এই উদ্যোগকে সমর্থন করুন →", "Help us be heard →": "আমাদের কথা পৌঁছে দিতে সাহায্য করুন →", "Work with us →": "আমাদের সঙ্গে কাজ করুন →",
+  "This is an ongoing exercise where we need support of those who can influence decision makers to understand our mission and give momentum to our efforts.": "এটি একটি চলমান উদ্যোগ। যারা সিদ্ধান্ত গ্রহণকারীদের আমাদের লক্ষ্য বুঝতে সাহায্য করতে এবং আমাদের প্রচেষ্টাকে গতি দিতে পারেন, তাঁদের সহযোগিতা আমাদের প্রয়োজন।",
+  "At Beyond Disability Foundation, we believe that sustainable change requires addressing systemic bottlenecks at the highest levels of governance, which is why our policy-level advocacy focuses directly on bridging the gaps that prevent government programs from delivering their intended benefits to children with disabilities. By actively engaging with policymakers, health authorities, and administrative bodies, we strive to transform welfare frameworks into robust, practical lifelines for underprivileged families. This is an ongoing exercise where we need support of those who can influence decision makers to understand our mission and give momentum to our efforts.": "বিয়ন্ড ডিসঅ্যাবিলিটি ফাউন্ডেশনে আমরা বিশ্বাস করি, স্থায়ী পরিবর্তনের জন্য শাসনের সর্বোচ্চ স্তরে থাকা পদ্ধতিগত বাধাগুলি দূর করা জরুরি। তাই প্রতিবন্ধী শিশুদের কাছে সরকারি কর্মসূচির কাঙ্ক্ষিত সুবিধা পৌঁছাতে যে ঘাটতিগুলি বাধা দেয়, আমাদের নীতিগত প্রচার সরাসরি সেগুলি পূরণের দিকে কেন্দ্রীভূত। নীতিনির্ধারক, স্বাস্থ্য কর্তৃপক্ষ ও প্রশাসনিক সংস্থার সঙ্গে সক্রিয়ভাবে কাজ করে আমরা কল্যাণ কাঠামোকে সুবিধাবঞ্চিত পরিবারের জন্য শক্তিশালী ও বাস্তব সহায়তায় রূপান্তর করার চেষ্টা করি। সিদ্ধান্ত গ্রহণকারীদের আমাদের লক্ষ্য বোঝাতে এবং প্রচেষ্টাকে গতি দিতে পারেন এমন মানুষের সহযোগিতা আমাদের প্রয়োজন।",
+  "We are making effort to sensitize the government of the disadvantages of just finding the implants and leaving the implanted children to fund for themselves. Most of the children cannot afford accessories and become deaf again. We are actively trying to ensure that government make changes in the program which otherwise loses its purpose.": "শুধু ইমপ্ল্যান্টের ব্যবস্থা করে পরে প্রয়োজনীয় খরচ পরিবারের ওপর ছেড়ে দেওয়ার অসুবিধা সম্পর্কে সরকারকে সচেতন করার চেষ্টা করছি। অধিকাংশ শিশু বাহ্যিক সরঞ্জামের খরচ বহন করতে পারে না এবং আবার শ্রবণক্ষমতা হারায়। কর্মসূচির উদ্দেশ্য যাতে ব্যর্থ না হয়, সে জন্য প্রয়োজনীয় সরকারি পরিবর্তন নিশ্চিত করতে আমরা সক্রিয়ভাবে কাজ করছি।",
+  "We have made representations to authorities to implement a mandatory standardized protocol for early newborn hearing testing following the globally recognized 1-3-6 guideline—ensuring universal screening by 1 month of age, comprehensive diagnostic evaluation by 3 months, and the commencement of early intervention services by 6 months, we need support to be heard.": "বিশ্বব্যাপী স্বীকৃত ১-৩-৬ নির্দেশিকা অনুযায়ী নবজাতকের প্রাথমিক শ্রবণ পরীক্ষার জন্য বাধ্যতামূলক মানসম্মত প্রোটোকল চালুর আবেদন করেছি - ১ মাসের মধ্যে পরীক্ষা, ৩ মাসের মধ্যে পূর্ণাঙ্গ নির্ণয় এবং ৬ মাসের মধ্যে প্রাথমিক হস্তক্ষেপ। আমাদের কথা শোনাতে সহযোগিতা প্রয়োজন।",
+});
+
 const originals = new WeakMap<Text, string>();
 const originalAttributes = new WeakMap<Element, Map<string, string>>();
 function translate(root: ParentNode, lang: Lang) {
-  const dictionary = dictionaries[lang] || {};
+  const locale = canonicalLocale(lang);
+  const dictionary = dictionaries[locale] || {};
   const missing = new Set<string>();
   const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   const list: Text[] = [];
@@ -720,9 +769,9 @@ function translate(root: ParentNode, lang: Lang) {
     if (!trim) continue;
     if (!originals.has(n)) originals.set(n, trim);
     const original = originals.get(n) || trim,
-      value = lang === "en" ? original : dictionary[original] || original;
+      value = locale === "en" ? original : dictionary[original] || original;
     if (
-      lang !== "en" &&
+      locale !== "en" &&
       !dictionary[original] &&
       /[A-Za-z]/.test(original) &&
       !original.includes("@") &&
@@ -750,9 +799,9 @@ function translate(root: ParentNode, lang: Lang) {
       if (!current) continue;
       if (!saved.has(name)) saved.set(name, current);
       const original = saved.get(name) || current;
-      if (lang !== "en" && !dictionary[original] && /[A-Za-z]/.test(original))
+      if (locale !== "en" && !dictionary[original] && /[A-Za-z]/.test(original))
         missing.add(original);
-      const value = lang === "en" ? original : dictionary[original] || original;
+      const value = locale === "en" ? original : dictionary[original] || original;
       if (current !== value) el.setAttribute(name, value);
     }
   }
@@ -761,6 +810,7 @@ function translate(root: ParentNode, lang: Lang) {
 const pendingTranslations: Record<string, Set<string>> = {};
 const translationCooldown: Record<string, number> = {};
 async function fillMissing(lang: Lang, texts: string[]) {
+  lang = canonicalLocale(lang);
   if (
     lang === "en" ||
     !texts.length ||
@@ -807,17 +857,18 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     [languages, setLanguages] = useState<LanguageOption[]>(defaultLanguages);
   const changeId = useRef(0);
   const setLanguage = (l: Lang) => {
-    if (l !== language) {
+    const locale = canonicalLocale(l);
+    if (locale !== canonicalLocale(language)) {
       changeId.current += 1;
       document.documentElement.classList.add("language-loading");
     }
-    translate(document.body, l);
-    setState(l);
-    localStorage.setItem("beyond-language", l);
-    document.documentElement.lang = l;
+    translate(document.body, locale);
+    setState(locale);
+    localStorage.setItem("beyond-language", locale);
+    document.documentElement.lang = locale;
   };
   useEffect(() => {
-    const saved = localStorage.getItem("beyond-language") || "en";
+    const saved = canonicalLocale(localStorage.getItem("beyond-language") || "en");
     fetch("/api/languages")
       .then((r) => r.json())
       .then(
@@ -827,15 +878,22 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         }) => {
           if (data.translations)
             for (const [locale, values] of Object.entries(data.translations)) {
-              dictionaries[locale] = {
+              const normalizedLocale = canonicalLocale(locale);
+              dictionaries[normalizedLocale] = {
                 ...values,
-                ...(dictionaries[locale] || {}),
+                ...(dictionaries[normalizedLocale] || {}),
               };
             }
           if (data.languages?.length) {
-            setLanguages(data.languages);
+            const normalizedLanguages = data.languages.map((item) => ({
+              ...item,
+              locale: canonicalLocale(item.locale),
+            })).filter((item, index, items) =>
+              items.findIndex((candidate) => candidate.locale === item.locale) === index,
+            );
+            setLanguages(normalizedLanguages);
             setLanguage(
-              data.languages.some((item) => item.locale === saved)
+              normalizedLanguages.some((item) => item.locale === saved)
                 ? saved
                 : "en",
             );

@@ -113,6 +113,7 @@ export function MotionExperience({ children }: { children: ReactNode }) {
 
         gsap.utils.toArray<HTMLElement>(".eyebrow span").forEach((line) => {
           gsap.from(line, {
+            autoAlpha: 0,
             scaleX: 0,
             transformOrigin: "left center",
             duration: 0.7,
@@ -133,6 +134,7 @@ export function MotionExperience({ children }: { children: ReactNode }) {
 
         gsap.utils.toArray<HTMLElement>(".stat > i, .service-card > i, .steps article > i, .timeline article > i").forEach((icon) => {
           gsap.from(icon, {
+            autoAlpha: 0,
             rotate: -14,
             scale: 0.65,
             duration: 0.65,
@@ -142,6 +144,12 @@ export function MotionExperience({ children }: { children: ReactNode }) {
         });
 
         gsap.utils.toArray<HTMLImageElement>(".page-hero img, .help-hero img, .problem img, .impact-map-section img").forEach((image) => {
+          gsap.from(image, {
+            autoAlpha: 0,
+            duration: 0.65,
+            ease: "power2.out",
+            scrollTrigger: { trigger: image, start: "top 94%", once: true },
+          });
           gsap.fromTo(
             image,
             { yPercent: -4, scale: 1.045 },
@@ -170,10 +178,11 @@ export function MotionExperience({ children }: { children: ReactNode }) {
         if (root.current?.querySelector(".impact-panel")) {
           gsap.fromTo(
             ".impact-panel",
-            { rotate: -1.5, y: 34 },
+            { rotate: -1.5, y: 34, autoAlpha: 0 },
             {
               rotate: 1,
               y: -18,
+              autoAlpha: 1,
               ease: "none",
               scrollTrigger: { trigger: ".journey", start: "top 88%", end: "bottom 24%", scrub: 0.75 },
             },
@@ -223,5 +232,5 @@ export function MotionExperience({ children }: { children: ReactNode }) {
     };
   }, [pathname]);
 
-  return <div ref={root} className="motion-root"><div className="motion-progress" aria-hidden="true"><div className="motion-progress__bar"/></div>{children}</div>;
+  return <div ref={root} className="motion-root"><div className="motion-progress" aria-hidden="true"><div className="motion-progress__bar"/></div><div key={pathname} className="motion-page">{children}</div></div>;
 }
