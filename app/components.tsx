@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css/core";
 import { useLanguage, type Lang } from "./i18n";
@@ -218,6 +219,54 @@ export function Button({
   );
 }
 
+export function ExpandableText({ title, children }: { title: string; children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const [overflowing, setOverflowing] = useState(false);
+  const copyRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const copy = copyRef.current;
+    if (!copy) return;
+    const measure = () => setOverflowing(copy.scrollHeight > copy.clientHeight + 1);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(copy);
+    return () => observer.disconnect();
+  }, [children]);
+
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const close = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", close);
+    return () => {
+      document.body.style.overflow = previous;
+      document.removeEventListener("keydown", close);
+    };
+  }, [open]);
+
+  return <>
+    <p ref={copyRef} className="clamped-copy">{children}</p>
+    {overflowing && <button className="content-read-more" type="button" onClick={() => setOpen(true)} aria-haspopup="dialog">
+      Read more <i className="fa-solid fa-arrow-right" aria-hidden="true" />
+    </button>}
+    {open && createPortal(
+      <div className="content-modal-backdrop" role="presentation" onMouseDown={() => setOpen(false)}>
+        <section className="content-modal" role="dialog" aria-modal="true" aria-labelledby="content-modal-title" onMouseDown={(event) => event.stopPropagation()}>
+          <button className="content-modal-close" type="button" aria-label="Close" onClick={() => setOpen(false)}><i className="fa-solid fa-xmark" /></button>
+          <p className="eyebrow"><span />Beyond Disability Foundation</p>
+          <h2 id="content-modal-title">{title}</h2>
+          <div className="content-modal-copy">{children}</div>
+        </section>
+      </div>,
+      document.body,
+    )}
+  </>;
+}
+
 export function Stats() {
   return (
     <div className="stats">
@@ -321,8 +370,7 @@ export function ServiceCards({ focus = false }: { focus?: boolean }) {
           <i className={`fa-solid ${x.icon}`} />
           <div>
             <h3>{x.title}</h3>
-            <p>{x.text}</p>
-            <Link href="/get-help">Learn More →</Link>
+            <ExpandableText title={x.title}>{x.text}</ExpandableText>
           </div>
         </article>
       ))}

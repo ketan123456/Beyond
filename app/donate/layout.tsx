@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Donate",
-  description: "Donate to fund cochlear implant accessories, medical interventions, rehabilitation and practical support for children with disabilities.",
+  description: "Donate to help children with disabilities access assistive technology, therapy, education and ongoing support.",
   alternates: { canonical: "/donate" },
 };
 

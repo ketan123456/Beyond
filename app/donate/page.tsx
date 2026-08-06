@@ -199,13 +199,31 @@ export default function Donate() {
       <InteriorHero
         image="/hero-donate.webp"
         eyebrow="Give with confidence"
-        title="Your donation can keep a child connected to sound"
-        description="Every contribution funds medical support, cochlear implant accessories, rehabilitation and practical assistance for children with disabilities.">
+        title="Your support becomes possibility"
+        description="Every contribution helps a child access assistive technology, therapy, education and a more independent future.">
         <a className="btn btn-gold" href="#donate-now">
           <i className="fa-solid fa-heart" />
           Donate securely
         </a>
       </InteriorHero>
+
+      <section className="content-section donate-intro">
+        <div className="section-title">
+          <p className="eyebrow"><span />Donate now</p>
+          <h2>Make a measurable, lasting difference</h2>
+          <p>
+            Your donation directly empowers children with disabilities by
+            funding life-changing medical interventions, cochlear implants, and
+            comprehensive rehabilitation through expert clinical care. We are
+            fully <strong>80G Certified</strong>, allowing individual donors to
+            claim 50% tax exemption under the Income Tax Act, and <strong>CSR
+            Eligible</strong> (under Schedule VII) for corporate partners seeking
+            transparent, high-impact healthcare initiatives. Every
+            contribution—big or small—makes a measurable, lasting difference in
+            a child&apos;s life.
+          </p>
+        </div>
+      </section>
 
       <section className="donate" id="donate-now">
         <div className="section-title">
@@ -213,11 +231,10 @@ export default function Donate() {
             <span />
             Secure giving
           </p>
-          <h2>Make a measurable, lasting difference</h2>
+          <h2>Choose how you would like to help</h2>
           <p>
-            We are 80G Certified, allowing eligible individual donors to claim
-            a 50% tax deduction, and CSR Eligible under Schedule VII. One-time
-            and monthly contributions are processed securely through Razorpay.
+            One-time and monthly contributions are processed securely through
+            Razorpay.
           </p>
         </div>
 
