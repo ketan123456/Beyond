@@ -28,13 +28,14 @@ export default function Home() {
               Hearing. Dignity. Inclusion.
             </p>
             <h1>
-              Giving voice to the silent and <em>strength to the vulnerable.</em>
+              Giving voice to the silent and{" "}
+              <em>strength to the vulnerable, and Inclusion to Everyone</em>
             </h1>
             <p className="lead">
-              Welcome to Beyond Disability Foundation. We transform lives
-              across physical, sensory, intellectual and developmental
-              disabilities, with a special focus on hearing impairment and
-              cochlear implant related support.
+              Welcome to Beyond Disability Foundation. We transform lives across
+              physical, sensory, intellectual and developmental disabilities,
+              with a special focus on hearing impairment and cochlear implant
+              related support.
             </p>
             <div className="actions">
               <Button href="/donate" icon="fa-heart">
@@ -90,14 +91,16 @@ export default function Home() {
               <span />
               Who we are
             </p>
-            <h2>Rooted in Kanpur. Driven by compassion. United by inclusion.</h2>
+            <h2>
+              Rooted in Kanpur. Driven by compassion. United by inclusion.
+            </h2>
           </div>
           <div>
             <p>
               Our work began with changemakers directly helping children and
               families in local communities. Today, IIT Kanpur alumni,
-              academicians, doctors, social workers and Rotary Club members
-              work together to bridge the gap between ability and opportunity.
+              academicians, doctors, social workers and Rotary Club members work
+              together to bridge the gap between ability and opportunity.
             </p>
             <a href="/about">
               Discover our mission <i className="fa-solid fa-arrow-right" />

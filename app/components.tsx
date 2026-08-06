@@ -139,7 +139,8 @@ export function Header({ active = "" }: { active?: string }) {
             <i className="fa-solid fa-envelope" /> info@beyonddisability.org
           </span>
           <span className="topbar-message">
-            Giving voice to the silent, strength to the vulnerable, and inclusion to everyone.
+            -Giving Voice to the Silent, Strength to the Vulnerable, and
+            Inclusion to Everyone
           </span>
         </div>
       </div>
@@ -182,13 +183,13 @@ export function Header({ active = "" }: { active?: string }) {
         </nav>
         <div className="nav-actions">
           <div data-no-translate>
-          <SelectControl
-            instanceId="desktop-language"
-            className="language"
-            value={language}
-            options={languageOptions}
-            onChange={(value) => setLanguage(value as Lang)}
-          />
+            <SelectControl
+              instanceId="desktop-language"
+              className="language"
+              value={language}
+              options={languageOptions}
+              onChange={(value) => setLanguage(value as Lang)}
+            />
           </div>
           <Link className="btn btn-gold compact" href="/donate">
             <i className="fa-solid fa-heart" aria-hidden="true" />
