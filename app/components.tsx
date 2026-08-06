@@ -138,7 +138,7 @@ export function Header({ active = "" }: { active?: string }) {
             <i className="fa-solid fa-envelope" /> info@beyonddisability.org
           </span>
           <span className="topbar-message">
-            Building an inclusive Uttar Pradesh, one family at a time.
+            Giving voice to the silent, strength to the vulnerable, and inclusion to everyone.
           </span>
         </div>
       </div>
@@ -279,18 +279,18 @@ function Stat({
 export const services = [
   {
     icon: "fa-ear-listen",
-    title: "Cochlear Life-Support",
-    text: "Providing critical external parts—cables, batteries and coils—to ensure the Gift of Hearing never fades.",
+    title: "Cochlear Implant Support",
+    text: "Financial assistance for costly external accessories, repairs and replacements so children do not slip back into silence.",
   },
   {
-    icon: "fa-laptop",
-    title: "Digital Empowerment",
-    text: "Equipping blind students with smartphones and laptops to unlock modern education.",
+    icon: "fa-comments",
+    title: "Therapy & Rehabilitation",
+    text: "Speech-language therapy and auditory training that help children process sound, communicate clearly and participate fully.",
   },
   {
-    icon: "fa-hand-holding-heart",
-    title: "Therapeutic Aid",
-    text: "Financial grants for specialized Autism, Speech and OT therapy for early intervention.",
+    icon: "fa-baby",
+    title: "Newborn Hearing Screening",
+    text: "Early screening and diagnostic support so hearing loss can be identified during the most important developmental years.",
   },
 ];
 
@@ -299,18 +299,18 @@ export function ServiceCards({ focus = false }: { focus?: boolean }) {
     ? [
         {
           icon: "fa-ear-deaf",
-          title: "Deaf & Mute",
-          text: "Empowering hearing-impaired children through cochlear support, therapy & education.",
+          title: "Hearing Support",
+          text: "Cochlear accessories, rehabilitation, early screening and family guidance for children with hearing loss.",
         },
         {
           icon: "fa-eye-low-vision",
-          title: "Blind",
-          text: "Enabling visually impaired students with assistive technology & resources.",
+          title: "Accessible Learning",
+          text: "Assistive gadgets and adaptive learning tools for blind children and learners with intellectual disabilities.",
         },
         {
           icon: "fa-brain",
-          title: "Mentally Challenged",
-          text: "Supporting children with autism and other cognitive challenges through therapy & care.",
+          title: "Mobility & Inclusion",
+          text: "School transport and individualized support for children with physical, sensory and developmental disabilities.",
         },
       ]
     : services;
@@ -346,8 +346,8 @@ export function Footer() {
         <div className="footer-brand">
           <Logo onDark />
           <p>
-            Removing barriers and creating pathways to independence for children
-            with disabilities and their families.
+            Giving voice to the silent, strength to the vulnerable, and inclusion
+            to everyone—with a special focus on children with hearing loss.
           </p>
           <div className="social">
             <a href="tel:+918000012345" aria-label="Call us">

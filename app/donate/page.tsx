@@ -199,8 +199,8 @@ export default function Donate() {
       <InteriorHero
         image="/hero-donate.webp"
         eyebrow="Give with confidence"
-        title="Your support becomes possibility"
-        description="Every contribution helps a child access assistive technology, therapy, education and a more independent future.">
+        title="Your donation can keep a child connected to sound"
+        description="Every contribution funds medical support, cochlear implant accessories, rehabilitation and practical assistance for children with disabilities.">
         <a className="btn btn-gold" href="#donate-now">
           <i className="fa-solid fa-heart" />
           Donate securely
@@ -213,10 +213,11 @@ export default function Donate() {
             <span />
             Secure giving
           </p>
-          <h2>Choose how you would like to help</h2>
+          <h2>Make a measurable, lasting difference</h2>
           <p>
-            One-time and monthly contributions are processed securely through
-            Razorpay.
+            We are 80G Certified, allowing eligible individual donors to claim
+            a 50% tax deduction, and CSR Eligible under Schedule VII. One-time
+            and monthly contributions are processed securely through Razorpay.
           </p>
         </div>
 

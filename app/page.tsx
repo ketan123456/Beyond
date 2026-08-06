@@ -11,8 +11,8 @@ import AppointmentForm from "./appointment-form";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Disability Support & Assistive Technology in Uttar Pradesh",
-  description: "Beyond Disability Foundation helps children access assistive technology, therapy, inclusive education and family support across Uttar Pradesh.",
+  title: "Giving Voice, Strength & Inclusion",
+  description: "Beyond Disability Foundation transforms lives across physical, sensory, intellectual and developmental disabilities, with special focus on hearing impairment and cochlear implant support.",
   alternates: { canonical: "/" },
 };
 const marqueePhrases=["GIVE HOPE","CHANGE A LIFE","EVERY CHILD MATTERS","EMPOWER DREAMS","INCLUSIVE FUTURE","MAKE A DIFFERENCE","SUPPORT ABILITIES","OPEN DOORS","SHARE KINDNESS","BUILD CONFIDENCE","CREATE OPPORTUNITIES","INSPIRE CHANGE","STRENGTHEN FAMILIES","UNLOCK POTENTIAL","DONATE TODAY","BE THE REASON"];
@@ -25,14 +25,16 @@ export default function Home() {
           <div className="hero-copy">
             <p className="eyebrow">
               <span />
-              Inclusive care. Lasting independence.
+              Hearing. Dignity. Inclusion.
             </p>
             <h1>
-              Every child deserves the tools to <em>thrive.</em>
+              Giving voice to the silent and <em>strength to the vulnerable.</em>
             </h1>
             <p className="lead">
-              We connect children with disabilities across Uttar Pradesh to
-              assistive technology, therapy, education and family support.
+              Welcome to Beyond Disability Foundation. We transform lives
+              across physical, sensory, intellectual and developmental
+              disabilities, with a special focus on hearing impairment and
+              cochlear implant related support.
             </p>
             <div className="actions">
               <Button href="/donate" icon="fa-heart">
@@ -86,16 +88,16 @@ export default function Home() {
           <div>
             <p className="eyebrow">
               <span />
-              What we believe
+              Who we are
             </p>
-            <h2>Disability should never decide a child&apos;s future.</h2>
+            <h2>Rooted in Kanpur. Driven by compassion. United by inclusion.</h2>
           </div>
           <div>
             <p>
-              Beyond Disability Foundation removes the practical barriers that
-              stand between children and a more independent life. We work
-              alongside families, specialists and community partners to make
-              essential support reachable, understandable and sustainable.
+              Our work began with changemakers directly helping children and
+              families in local communities. Today, IIT Kanpur alumni,
+              academicians, doctors, social workers and Rotary Club members
+              work together to bridge the gap between ability and opportunity.
             </p>
             <a href="/about">
               Discover our mission <i className="fa-solid fa-arrow-right" />
@@ -109,11 +111,12 @@ export default function Home() {
                 <span />
                 Our programmes
               </p>
-              <h2>Support designed around real lives</h2>
+              <h2>Support that keeps children connected</h2>
             </div>
             <p>
-              From first assessment to ongoing care, every programme responds to
-              a clear need and measurable outcome.
+              We sustain the gift of hearing through cochlear accessories,
+              rehabilitation, screening and practical family support, while
+              serving children across the wider spectrum of disability.
             </p>
           </div>
           <ServiceCards focus />
@@ -193,7 +196,7 @@ export default function Home() {
               <span />
               Be part of the change
             </p>
-            <h2>One generous decision can open a lifetime of possibilities.</h2>
+            <h2>Your support can keep a child from returning to silence.</h2>
           </div>
           <div className="actions">
             <Button href="/donate" icon="fa-heart">
