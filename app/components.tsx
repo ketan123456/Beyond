@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
@@ -118,6 +119,8 @@ export function Logo({ onDark = false }: { onDark?: boolean }) {
 
 export function Header({ active = "" }: { active?: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
   const { language, languages, setLanguage } = useLanguage();
   const languageOptions = languages.map((item) => ({ value: item.locale, label: item.native_name }));
   const links = [
@@ -128,6 +131,25 @@ export function Header({ active = "" }: { active?: string }) {
     ["Partner With Us", "/partner", "fa-handshake"],
     ["Resources", "/resources", "fa-book-open"],
   ];
+  useEffect(() => {
+    if (pathname !== "/") return;
+    if (window.sessionStorage.getItem("scroll-to-impact") !== "true") return;
+    window.scrollTo({ top: 0, behavior: "auto" });
+    let attempts = 0;
+    const timer = window.setInterval(() => {
+      const target = document.getElementById("impact-map");
+      attempts += 1;
+      if (!target && attempts < 30) return;
+      window.clearInterval(timer);
+      if (!target) return;
+      window.sessionStorage.removeItem("scroll-to-impact");
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 100);
+    return () => window.clearInterval(timer);
+  }, [pathname]);
   return (
     <header>
       <a className="skip-link" href="#main-content">Skip to main content</a>
@@ -177,7 +199,21 @@ export function Header({ active = "" }: { active?: string }) {
               className={active === label ? "active" : ""}
               href={href}
               key={label}
-              onClick={() => setMenuOpen(false)}>
+              onClick={(event) => {
+                setMenuOpen(false);
+                if (href !== "/#impact-map") return;
+                event.preventDefault();
+                if (pathname !== "/") {
+                  window.sessionStorage.setItem("scroll-to-impact", "true");
+                  router.push("/", { scroll: false });
+                  return;
+                }
+                window.history.replaceState(null, "", "/#impact-map");
+                document.getElementById("impact-map")?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }}>
               <span>{label}</span>
             </Link>
           ))}
@@ -271,37 +307,35 @@ export function ExpandableText({ title, children }: { title: string; children: R
 
 export function Stats() {
   return (
-    <div className="stats">
+    <div className="stats impact-stats">
       <Stat
-        icon="fa-baby"
+        icon="fa-child-reaching"
         value={
           <span className="number-with-icon">
-            <NumberTicker value={1} />
+            <NumberTicker value={500} />+
           </span>
         }
-        label="Month: Hearing Screening"
+        label="Kids Supported"
       />
       <Stat
-        icon="fa-stethoscope"
-        value={
-          <b>
-            <span className="number-with-icon">
-              <NumberTicker value={3} />
-            </span>
-          </b>
-        }
-        label="Months: Diagnosis"
-      />
-      <Stat
-        icon="fa-hands-holding-child"
+        icon="fa-location-dot"
         value={
           <span className="number-with-icon">
-            <NumberTicker value={6} />
+            <NumberTicker value={75} />
           </span>
         }
-        label="Months: Early Intervention"
+        label="Districts (U.P.)"
       />
-      <Stat icon="fa-certificate" value="80G" label="Tax Certified" />
+      <Stat
+        icon="fa-city"
+        value={
+          <span className="number-with-icon">
+            <NumberTicker value={10} />+
+          </span>
+        }
+        label="Impact Zones"
+      />
+      <Stat icon="fa-people-group" value="Thousands" label="Lives Touched" />
     </div>
   );
 }
@@ -317,7 +351,7 @@ function Stat({
   return (
     <div className="stat">
       <i className={`fa-solid ${icon}`} />
-      <div style={{display:"block"}}>
+      <div className="stat-copy">
         <b>{value}</b>
         <span>{label}</span>
       </div>
