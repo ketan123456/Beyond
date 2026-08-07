@@ -40,17 +40,9 @@ export default function Partner(){return (
         </ul>
       </div>
       <aside>
-        <i className="fa-solid fa-quote-left" />
-        <b style={{ fontSize: "14px" }}>
-          We understand the advantages of technology, new developments which are
-          still in nascent stage will change the lives of kids who are born deaf
-          or with serious audiological problems. In case there is some
-          discussion related to new technologies and there is a push from
-          government which can happen only if the medical fraternity and
-          organizations like us work together to move to evolving areas that can
-          give better results and are more affordable. The new areas on which we
-          look for help from experts in the field are-
-        </b>
+        <i className="fa-solid fa-lightbulb" />
+        <b>Where experts can help</b>
+        <p>Evaluate emerging evidence, improve affordability and help promising hearing technologies move toward responsible public adoption.</p>
       </aside>
     </section>
     <section id="associates" className="content-section">

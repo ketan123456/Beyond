@@ -23,6 +23,8 @@ input:-webkit-autofill, input:-webkit-autofill:active, input:-webkit-autofill:fo
 
 /* Firefox */
 input:-moz-autofill, select:-moz-autofill, textarea:-moz-autofill { box-shadow: 0 0 0 1000px #fff inset!important; -moz-text-fill-color: #000; color: #000!important; }
+.skip-link { position: fixed; z-index: 10000; top: 10px; left: 10px; padding: 10px 16px; border-radius: 8px; background: var(--site-navy,#152936); color: #fff; font-weight: 800; transform: translateY(-160%); transition: transform .2s ease; }
+.skip-link:focus { transform: translateY(0); }
 
 /* Remove iOS rounded appearance */
 input, select, textarea { border-radius: 6px; -webkit-border-radius: 6px; }
@@ -1866,6 +1868,8 @@ body:not(:has(.admin-dashboard)):not(:has(.admin-login)) main .btn-navy:hover { 
 /* Adaptive logo: keep a consistent responsive width and swap artwork by surface. */
 .logo { width: clamp(140px, 13vw, 180px); min-width: 0; flex: 0 0 auto; }
 .logo .logo-image { width: 150px !important; height: auto; display: block; object-fit: contain; }
+.nav .logo-image { max-height: 56px; }
+.footer-brand .logo-image { max-height: 68px; object-position: left center; }
 .logo .logo-wordmark { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .logo .logo-wordmark b { color: #082f57; font-size: 17px; font-weight: 900; letter-spacing: -.025em; line-height: 1; white-space: nowrap; }
 .logo .logo-wordmark small { color: #526f85; font-size: 8px; font-weight: 850; letter-spacing: .18em; line-height: 1; }
@@ -1938,6 +1942,82 @@ body:has(.admin-dashboard), body:has(.admin-login) { background: radial-gradient
 .admin-icon-btn.delete, .language-list .language-delete { color: var(--brand-pink)!important; }
 .admin-login-card .eyebrow{justify-content: center;}
 
+/* Keep the homepage message ticker as a compact transition strip. */
+.motion-marquee { width: 101%; margin-top: 48px!important; margin-left: -.5%!important; padding: 13px 0!important; transform: rotate(-.5deg); }
+.motion-marquee__track { gap: 18px; }
+.motion-marquee span { font-size: clamp(1.25rem,2.25vw,2.15rem); letter-spacing: -.035em; }
+.motion-marquee i { font-size: 14px; }
+.motion-marquee span i { margin-left: 18px; }
+@media(max-width:980px) {
+  .motion-marquee { margin-top: 30px!important; padding-block: 10px!important; }
+  .motion-marquee span { font-size: clamp(1.05rem,3.3vw,1.55rem); }
+}
+
+/* Restrained editorial type scale: retain hierarchy without oversized display text. */
+.hero h1 { font-size: clamp(2.75rem,4.1vw,4.1rem); }
+.gsap-ready .home-intro h2, .home-intro h2 { font-size: clamp(2.35rem,3.4vw,3.5rem); }
+.section-title h2, .section-heading h2 { font-size: clamp(1.8rem,2.8vw,2.75rem); }
+.interior-hero--plain h1 { font-size: clamp(2.2rem,3.8vw,3.35rem); }
+.journey h2, .home-cta h2, .appointment-copy h2 { font-size: clamp(1.9rem,3vw,2.8rem); }
+.gsap-ready .programs .service-card h3 { font-size: clamp(1.4rem,1.9vw,2rem); }
+.download-band h2, .application h2 { font-size: clamp(1.8rem,2.7vw,2.5rem); }
+@media(max-width:640px) {
+  .hero h1 { font-size: clamp(2.15rem,10vw,2.8rem); }
+  .gsap-ready .home-intro h2, .home-intro h2,
+  .interior-hero--plain h1 { font-size: clamp(2rem,8.5vw,2.45rem); }
+  .section-title h2, .section-heading h2,
+  .journey h2, .home-cta h2, .appointment-copy h2,
+  .download-band h2, .application h2 { font-size: clamp(1.7rem,7.5vw,2.1rem); }
+}
+
+/* Reference-led editorial type scale and banner-free interior pages. */
+body:not(:has(.admin-dashboard)):not(:has(.admin-login)) { font-size: 16px; line-height: 1.7; }
+.interior-hero.interior-hero--plain { min-height: 0; display: block; margin: 0; padding: clamp(64px,8vw,104px) 0 clamp(48px,6vw,76px); overflow: visible; background: linear-gradient(180deg,#f2fbfd 0,#fff 100%); color: var(--site-text); }
+.interior-hero--plain .interior-hero__content { width: min(1180px,calc(100% - 48px)); margin: auto; padding: 0; }
+.interior-hero--plain h1 { max-width: 940px; color: var(--site-text); font-size: clamp(2.6rem,5vw,4.25rem); line-height: 1.04; letter-spacing: -.05em; }
+.interior-hero--plain .interior-hero__content>p:not(.eyebrow) { max-width: 780px; margin-top: 22px; color: var(--site-muted); font-size: clamp(1rem,1.5vw,1.2rem); line-height: 1.75; }
+.interior-hero--plain .actions { margin-top: 28px; }
+.interior-hero--plain .btn-outline { border-color: var(--site-navy); background: transparent; color: var(--site-navy); }
+.interior-hero--plain .btn-outline:hover { border-color: var(--site-teal); background: var(--site-teal); color: #fff; }
+.section-title h2, .section-heading h2 { font-size: clamp(2rem,3.6vw,3.35rem); }
+.hero h1 { font-size: clamp(3.25rem,5vw,4.8rem); }
+.content-section .service-card h3, .resource-grid h3 { font-size: clamp(1.12rem,1.7vw,1.35rem); }
+.content-section .service-card p, .resource-grid p { font-size: .98rem; }
+.donation-pathway { width: min(1180px,calc(100% - 48px)); margin: 0 auto; padding: clamp(72px,8vw,104px) 0; }
+.donation-pathway__steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+.donation-pathway__steps article { position: relative; min-width: 0; padding: 30px; border: 1px solid var(--site-line); border-radius: 20px; background: #fff; box-shadow: 0 12px 32px #0a33520b; }
+.donation-pathway__steps article>span { position: absolute; top: 22px; right: 24px; color: #708894; font-size: 13px; font-weight: 900; letter-spacing: .1em; }
+.donation-pathway__steps article>i { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 14px; background: #e5faff; color: var(--site-teal); font-size: 22px; }
+.donation-pathway__steps h3 { margin: 22px 0 10px; color: var(--site-text)!important; font-size: 1.25rem; line-height: 1.3; opacity: 1!important; visibility: visible!important; }
+.donation-pathway__steps p { margin: 0; color: var(--site-muted); line-height: 1.7; }
+.donation-pathway__action { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 24px; padding: 22px 26px; border-radius: 18px; background: var(--site-navy); color: #fff; }
+.donation-pathway__action p { margin: 0; color: #d5e3e9; }
+.donation-pathway__action strong { color: var(--brand-lime); }
+.download-band { border: 1px solid var(--site-line); background: #fff!important; color: var(--site-text); box-shadow: 0 12px 32px #0a33520b; }
+.download-band h2 { color: var(--site-text); }
+.download-band .eyebrow { color: var(--site-teal); }
+.download-band .btn-outline, .download-band .btn-outline:hover { border-color: var(--site-navy)!important; background: transparent!important; color: var(--site-navy)!important; }
+.download-band .btn-outline i { color: var(--site-navy)!important; }
+.navy-strip { border: 1px solid var(--site-line); background: #fff!important; color: var(--site-text); box-shadow: 0 12px 32px #0a33520b; }
+.navy-strip h3, .navy-strip span { color: var(--site-text); }
+.navy-strip i { color: var(--site-teal); }
+
+/* Use the calmer brand cyan for the commitment icons; lime is too harsh on white. */
+.navy-strip i { color: var(--brand-cyan-dark)!important; }
+
+@media(max-width:767px) {
+  .interior-hero.interior-hero--plain { min-height: 0; padding: 48px 0 40px; align-items: initial; }
+  .interior-hero--plain .interior-hero__content { width: calc(100% - 32px); padding: 0; }
+  .interior-hero--plain h1 { font-size: clamp(2.2rem,10vw,3rem); line-height: 1.08; }
+  .interior-hero--plain .actions { display: flex; }
+  .interior-hero--plain .actions .btn { width: auto; }
+  .donation-pathway { width: calc(100% - 28px); padding-block: 58px; }
+  .donation-pathway__steps { grid-template-columns: 1fr; }
+  .donation-pathway__steps article { padding: 24px; }
+  .donation-pathway__action { align-items: stretch; flex-direction: column; padding: 22px; }
+  .donation-pathway__action .btn { width: 100%; justify-content: center; }
+}
+
 /* Every route and overlay begins with opacity before any movement. */
 .motion-page { animation: route-fade-in .48s cubic-bezier(.22,.8,.3,1) both; }
 .content-modal-backdrop { animation: overlay-fade-in .22s ease-out both; }
@@ -2009,4 +2089,30 @@ body:has(.admin-dashboard), body:has(.admin-login) { background: radial-gradient
   font-size: .7em;
   line-height: 1;
   transform: none;
+}
+
+/* Our Impact anchor clears the sticky topbar and navigation. */
+#impact-map { scroll-margin-top: 128px; }
+@media(max-width:767px) {
+  #impact-map { scroll-margin-top: 84px; }
+}
+@media(max-width:560px) {
+  #impact-map { scroll-margin-top: 72px; }
+}
+
+/* Final compact type overrides — intentionally last in the cascade. */
+.hero h1 { font-size: clamp(2.75rem,4.1vw,4.1rem); }
+.gsap-ready .home-intro h2, .home-intro h2 { font-size: clamp(2.35rem,3.4vw,3.5rem); }
+.section-title h2, .section-heading h2 { font-size: clamp(1.8rem,2.8vw,2.75rem); }
+.interior-hero--plain h1 { font-size: clamp(2.2rem,3.8vw,3.35rem); }
+.journey h2, .home-cta h2, .appointment-copy h2 { font-size: clamp(1.9rem,3vw,2.8rem); }
+.gsap-ready .programs .service-card h3 { font-size: clamp(1.4rem,1.9vw,2rem); }
+.download-band h2, .application h2 { font-size: clamp(1.8rem,2.7vw,2.5rem); }
+@media(max-width:640px) {
+  .hero h1 { font-size: clamp(2.15rem,10vw,2.8rem); }
+  .gsap-ready .home-intro h2, .home-intro h2,
+  .interior-hero--plain h1 { font-size: clamp(2rem,8.5vw,2.45rem); }
+  .section-title h2, .section-heading h2,
+  .journey h2, .home-cta h2, .appointment-copy h2,
+  .download-band h2, .application h2 { font-size: clamp(1.7rem,7.5vw,2.1rem); }
 }

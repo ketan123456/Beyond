@@ -105,10 +105,10 @@ export function Logo({ onDark = false }: { onDark?: boolean }) {
       aria-label="Beyond Disability home">
       <Image
         className="logo-image"
-        src={onDark ? "/logo1.jpeg" : "/logo1.jpeg"}
+        src={onDark ? "/logo-light.png" : "/logo.png"}
         alt="Beyond Disability Foundation"
-        width={150}
-        height={1024}
+        width={512}
+        height={onDark ? 258 : 307}
         priority={!onDark}
         sizes="(max-width: 600px) 140px, 180px"
       />
@@ -124,12 +124,13 @@ export function Header({ active = "" }: { active?: string }) {
     ["Home", "/", "fa-house"],
     ["About Us", "/about", "fa-circle-info"],
     ["Get Help", "/get-help", "fa-hand-holding-medical"],
-    ["Our Impact", "/#impact-map-title", "fa-chart-line"],
+    ["Our Impact", "/#impact-map", "fa-chart-line"],
     ["Partner With Us", "/partner", "fa-handshake"],
     ["Resources", "/resources", "fa-book-open"],
   ];
   return (
     <header>
+      <a className="skip-link" href="#main-content">Skip to main content</a>
       <div className="topbar">
         <div>
           <span>
@@ -272,37 +273,35 @@ export function Stats() {
   return (
     <div className="stats">
       <Stat
-        icon="fa-child-reaching"
+        icon="fa-baby"
         value={
           <span className="number-with-icon">
-            <NumberTicker value={500} />
-            <i className="fa-solid fa-plus" aria-label="plus" />
+            <NumberTicker value={1} />
           </span>
         }
-        label="Kids Supported"
+        label="Month: Hearing Screening"
       />
       <Stat
-        icon="fa-location-dot"
+        icon="fa-stethoscope"
         value={
           <b>
             <span className="number-with-icon">
-              <NumberTicker value={75} />
+              <NumberTicker value={3} />
             </span>
           </b>
         }
-        label="Districts (U.P.)"
+        label="Months: Diagnosis"
       />
       <Stat
-        icon="fa-city"
+        icon="fa-hands-holding-child"
         value={
           <span className="number-with-icon">
-            <NumberTicker value={10} />
-            <i className="fa-solid fa-plus" aria-label="plus" />
+            <NumberTicker value={6} />
           </span>
         }
-        label="Impact Zones"
+        label="Months: Early Intervention"
       />
-      <Stat icon="fa-people-group" value="Thousands" label="Lives Touched" />
+      <Stat icon="fa-certificate" value="80G" label="Tax Certified" />
     </div>
   );
 }
@@ -418,7 +417,7 @@ export function Footer() {
           <h4>Explore</h4>
           <Link href="/about">About our work</Link>
           <Link href="/get-help">Get support</Link>
-          <Link href="/#impact-map-title">Our impact</Link>
+          <Link href="/#impact-map">Our impact</Link>
           <Link href="/partner">CSR partnerships</Link>
         </div>
         <div>
@@ -466,21 +465,20 @@ export function PageShell({
   return (
     <>
       <Header active={active} />
-      <main>{children}</main>
+      <main id="main-content">{children}</main>
       <Footer />
     </>
   );
 }
 
 export function InteriorHero({
-  image,
   eyebrow,
   title,
   description,
   children,
   className = "",
 }: {
-  image: string;
+  image?: string;
   eyebrow: string;
   title: string;
   description: string;
@@ -488,16 +486,7 @@ export function InteriorHero({
   className?: string;
 }) {
   return (
-    <section className={`interior-hero ${className}`}>
-      <img
-        src={image}
-        alt=""
-        aria-hidden="true"
-        width={1536}
-        height={1024}
-        fetchPriority="high"
-      />
-      <div className="interior-hero__shade" />
+    <section className={`interior-hero interior-hero--plain ${className}`}>
       <div className="interior-hero__content">
         <p className="eyebrow"><span />{eyebrow}</p>
         <h1>{title}</h1>

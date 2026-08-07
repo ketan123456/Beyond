@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <>
       <Header active="Home" />
-      <main>
+      <main id="main-content">
         <section className="hero">
           <div className="hero-copy">
             <p className="eyebrow">
@@ -28,8 +28,7 @@ export default function Home() {
               Hearing. Dignity. Inclusion.
             </p>
             <h1>
-              Giving voice to the silent and{" "}
-              <em>strength to the vulnerable, and Inclusion to Everyone</em>
+              Giving voice. Building strength. <em>Creating inclusion.</em>
             </h1>
             <p className="lead">
               Welcome to Beyond Disability Foundation. We transform lives across
@@ -71,6 +70,7 @@ export default function Home() {
           </div>
         </section>
         <section
+          id="impact-map"
           className="impact-map-section"
           aria-labelledby="impact-map-title">
           <h2 id="impact-map-title" className="sr-only">
@@ -78,7 +78,7 @@ export default function Home() {
           </h2>
           <img
             src="/impact-map.webp"
-            alt="Impact map showing Beyond Disability support zones across Uttar Pradesh and expansion across 75 districts"
+            alt="Impact map showing Beyond Disability support across Uttar Pradesh"
             loading="lazy"
             decoding="async"
             width="1478"
@@ -187,26 +187,39 @@ export default function Home() {
             </blockquote>
             <div className="impact-metric">
               <strong>
-                <NumberTicker value={75} />
+                <NumberTicker value={6} />
               </strong>
-              <span>districts within our growing support network</span>
+              <span>months: the target for beginning early intervention</span>
             </div>
           </div>
+        </section>
+        <section className="donation-pathway" aria-labelledby="donation-pathway-title">
+          <div className="section-title">
+            <p className="eyebrow"><span />Why your donation matters</p>
+            <h2 id="donation-pathway-title">A cochlear implant is only the beginning</h2>
+            <p>When an external processor, cable, battery or coil fails, a child can lose access to sound again. Your donation helps families protect the progress made after surgery.</p>
+          </div>
+          <div className="donation-pathway__steps">
+            <article><span>01</span><i className="fa-solid fa-ear-listen"/><h3>A child needs continued hearing</h3><p>Surgery creates access to sound, but equipment and rehabilitation require ongoing support.</p></article>
+            <article><span>02</span><i className="fa-solid fa-hand-holding-heart"/><h3>Your donation funds the gap</h3><p>Contributions help provide accessories, repairs, speech therapy and auditory training.</p></article>
+            <article><span>03</span><i className="fa-solid fa-comments"/><h3>Support becomes communication</h3><p>Consistent hearing helps a child develop language, participate in school and connect with family.</p></article>
+          </div>
+          <div className="donation-pathway__action"><p><strong>80G Certified</strong> for eligible tax benefits. CSR eligible under Schedule VII.</p><Button href="/donate" icon="fa-heart">Help a child stay connected to sound</Button></div>
         </section>
         <section className="home-cta">
           <div>
             <p className="eyebrow">
               <span />
-              Be part of the change
+              Multiply the impact
             </p>
-            <h2>Your support can keep a child from returning to silence.</h2>
+            <h2>Bring expertise, influence or institutional support to the mission.</h2>
           </div>
           <div className="actions">
-            <Button href="/donate" icon="fa-heart">
-              Make a secure donation
+            <Button href="/partner" icon="fa-handshake">
+              Explore partnerships
             </Button>
-            <Button href="/partner" tone="outline" icon="fa-handshake">
-              Partner with us
+            <Button href="/resources" tone="outline" icon="fa-book-open">
+              Understand our advocacy
             </Button>
           </div>
         </section>
