@@ -761,7 +761,6 @@ main>section:not(.hero):not(.page-hero):not(.help-hero):not(.donate):not(.home-i
 .gsap-ready .hero-copy:after { content: ""; position: absolute; width: 180px; height: 180px; right: -70px; top: 12%; border: 1px solid #13767e38; border-radius: 43% 57% 66% 34%/45% 37% 63% 55%; animation: orbital-shape 9s linear infinite; pointer-events: none; }
 .gsap-ready .hero h1 { mix-blend-mode: multiply; }
 .gsap-ready .hero h1 em { position: relative; display: inline-block; }
-.gsap-ready .hero h1 em:after { content: ""; position: absolute; z-index: -1; left: -3%; right: -4%; bottom: .05em; height: .2em; background: var(--gold); transform: rotate(-2deg); border-radius: 999px; }
 .gsap-ready .hero-media { transform-style: preserve-3d; }
 .gsap-ready .hero-impact-card { animation: card-float 4.5s ease-in-out infinite; }
 .gsap-ready .stats { transform: rotate(-1deg); border: 1px solid #07376312; }
