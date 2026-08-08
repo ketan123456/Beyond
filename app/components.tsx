@@ -614,7 +614,7 @@ export function ApplyForm() {
         </label>
         <label>
           Support needed
-          <SelectControl instanceId="aid-category" name="category" value={category} onChange={setCategory} options={["Cochlear Life-Support","Digital Empowerment","Therapeutic Aid"].map(value=>({value,label:value}))}/>
+          <SelectControl instanceId="aid-category" name="category" value={category} onChange={setCategory} options={["Cochlear Life-Support","Digital Empowerment","Therapeutic Aid","School Transport Support"].map(value=>({value,label:value}))}/>
         </label>
         <label className="wide">
           Tell us what support is needed

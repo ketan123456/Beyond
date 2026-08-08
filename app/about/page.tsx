@@ -90,8 +90,8 @@ export default function About() {
           <h2>Keeping the gift of hearing alive</h2>
           <p>
             Our primary heartbeat at Beyond Disability Foundation lies with the
-            deaf and mute community, where we champion the belief that silence
-            should never be a barrier to a child's potential. While India sees 3
+            hearing-loss community, where we champion the belief that hearing
+            loss should never be a barrier to a child's potential. While India sees 3
             out of every 1000 children born deaf, the incredible advancement of
             medical technology now allows children born deaf to hear, as hearing
             is the vital gateway to language acquisition, cognitive growth, and
@@ -127,11 +127,10 @@ export default function About() {
           <p>
             Beyond our core focus on the deaf and mute community, our commitment
             to inclusivity drives us to extend hands-on help to children and
-            youth living with a wide spectrum of other physical, mental, and
+            youth living with a wide spectrum of other physical, mental and
             sensory challenges. Recognizing that every disability demands
-            customized solutions, we have actively worked to remove the everyday
-            barriers that prevent children with diverse needs from accessing
-            education, mobility, and self-reliance.
+            customized solutions, we work to remove barriers to education,
+            mobility and self-reliance.
           </p>
         </div>
         <div className="resource-grid">
@@ -143,7 +142,7 @@ export default function About() {
           <article>
             <i className="fa-solid fa-bus-simple" />
             <h3>School Commuting Support</h3>
-            <ExpandableText title="School Commuting Support">We fund and arrange safe transport solutions to help children with disabilities travel to and from their respective schools without hardship.</ExpandableText>
+            <ExpandableText title="School Commuting Support">We fund and arrange safe transport solutions to help children with disabilities travel to and from their schools without hardship.</ExpandableText>
           </article>
         </div>
         <div className="actions center-actions">
@@ -161,7 +160,7 @@ export default function About() {
           <h2>Creating systemic, long-lasting change</h2>
           <p>
             Beyond Disability Foundation is committed to expanding our reach,
-            deepening our specialized programs for the deaf and mute community,
+            deepening our specialized programs for children with hearing loss,
             and creating systemic, long-lasting change for children with
             disabilities across Uttar Pradesh and beyond.
           </p>

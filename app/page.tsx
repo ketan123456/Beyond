@@ -12,7 +12,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Giving Voice, Strength & Inclusion",
-  description: "Beyond Disability Foundation transforms lives across physical, sensory, intellectual and developmental disabilities, with special focus on hearing impairment and cochlear implant support.",
+  description: "Beyond Disability Foundation supports physical, sensory, intellectual and developmental disabilities, with special focus on hearing impairment and cochlear implant care.",
   alternates: { canonical: "/" },
 };
 const marqueePhrases=["GIVE HOPE","CHANGE A LIFE","EVERY CHILD MATTERS","EMPOWER DREAMS","INCLUSIVE FUTURE","MAKE A DIFFERENCE","SUPPORT ABILITIES","OPEN DOORS","SHARE KINDNESS","BUILD CONFIDENCE","CREATE OPPORTUNITIES","INSPIRE CHANGE","STRENGTHEN FAMILIES","UNLOCK POTENTIAL","DONATE TODAY","BE THE REASON"];
@@ -33,7 +33,7 @@ export default function Home() {
             <p className="lead">
               Welcome to Beyond Disability Foundation. We transform lives across
               physical, sensory, intellectual and developmental disabilities,
-              with a special focus on hearing impairment and cochlear implant
+              with special focus on hearing impairment and cochlear implant
               related support.
             </p>
             <div className="actions">
@@ -78,7 +78,7 @@ export default function Home() {
           </h2>
           <img
             src="/impact-map.webp"
-            alt="Impact map showing Beyond Disability support across Uttar Pradesh"
+            alt="Impact map showing hearing support across Uttar Pradesh"
             loading="lazy"
             decoding="async"
             width="1478"

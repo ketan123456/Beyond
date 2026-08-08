@@ -83,12 +83,16 @@ export default function Donate() {
       frequency === "monthly"
         ? "Preparing your monthly AutoPay mandate…"
         : "Preparing secure payment…",
+      
+      
     );
-    if (!amount || amount < 1) {
-      setStatus("Please choose an amount of at least ₹1.");
-      setIsProcessing(false);
-      return;
-    }
+    
+
+      if (!amount || amount < 1) {
+        setStatus("Please choose an amount of at least ₹1.");
+        setIsProcessing(false);
+        return;
+      }
 
     try {
       const recurring = frequency === "monthly";
@@ -213,7 +217,7 @@ export default function Donate() {
           <h2>Make a measurable, lasting difference</h2>
           <p>
             Your donation directly empowers children with disabilities by
-            funding life-changing medical interventions, cochlear implants, and
+            funding life-changing medical interventions, cochlear implants and
             comprehensive rehabilitation through expert clinical care. We are
             fully <strong>80G Certified</strong>, allowing individual donors to
             claim 50% tax exemption under the Income Tax Act, and <strong>CSR
