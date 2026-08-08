@@ -58,7 +58,8 @@ and environment secrets:
 - **Payments:** `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`
 - **Password-reset OTP email:** EmailJS variables (`EMAILJS_SERVICE_ID`,
   `EMAILJS_PUBLIC_KEY`, `EMAILJS_PRIVATE_KEY`, and
-  `EMAILJS_ADMIN_TEMPLATE_ID`) plus `ADMIN_NOTIFICATION_EMAIL`
+  `EMAILJS_ADMIN_TEMPLATE_ID`) plus `ADMIN_OTP_EMAIL` (falls back to
+  `ADMIN_NOTIFICATION_EMAIL` when omitted)
 - **Admin sign-in:** `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and a long random
   `ADMIN_SESSION_SECRET`
 

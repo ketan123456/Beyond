@@ -8,6 +8,7 @@ type ResetEnv = {
   EMAILJS_PRIVATE_KEY?: string;
   EMAILJS_PASSWORD_RESET_TEMPLATE_ID?: string;
   EMAILJS_ADMIN_TEMPLATE_ID?: string;
+  ADMIN_OTP_EMAIL?: string;
   ADMIN_NOTIFICATION_EMAIL?: string;
   ADMIN_SESSION_SECRET?: string;
   RESEND_API_KEY?: string;
@@ -112,10 +113,13 @@ export async function POST() {
 
   try {
     await ensureDatabaseSchema(bindings.DB);
-    const recipient = bindings.ADMIN_NOTIFICATION_EMAIL?.trim() || "";
+    const recipient =
+      bindings.ADMIN_OTP_EMAIL?.trim() ||
+      bindings.ADMIN_NOTIFICATION_EMAIL?.trim() ||
+      "";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)) {
       return Response.json(
-        { error: "No valid administrator notification email is configured." },
+        { error: "No valid administrator OTP email is configured." },
         { status: 503 },
       );
     }
