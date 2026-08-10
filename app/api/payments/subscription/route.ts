@@ -27,6 +27,13 @@ async function ensureSubscriptionTables(db: D1Database) {
   void db;
 }
 
+export function GET() {
+  return Response.json(
+    { ok: true },
+    { headers: { "cache-control": "no-store" } },
+  );
+}
+
 export async function POST(request: Request) {
   try {
     const { amount } = (await request.json()) as { amount: number };

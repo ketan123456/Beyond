@@ -11,6 +11,13 @@ async function ensurePaymentsTable(db: D1Database) {
   void db;
 }
 
+export function GET() {
+  return Response.json(
+    { ok: true },
+    { headers: { "cache-control": "no-store" } },
+  );
+}
+
 export async function POST(request: Request) {
   try {
     const { amount, frequency, method } = (await request.json()) as {

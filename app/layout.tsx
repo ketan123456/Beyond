@@ -57,6 +57,11 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://checkout.razorpay.com" />
         <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
+        <link
+          rel="preload"
+          href="https://checkout.razorpay.com/v1/checkout.js"
+          as="script"
+        />
       </head>
       <body className={`${geistSans.variable} antialiased`}>
         <script

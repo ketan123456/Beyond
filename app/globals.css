@@ -895,7 +895,7 @@ html:not([lang="en"]) .impact-panel blockquote { font-size: clamp(1.2rem,1.8vw,1
   .nav { gap: 10px; }
   .mobile-donate { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-width: 82px; height: 42px; margin-left: auto; padding: 0 15px; border-radius: 999px; background: linear-gradient(135deg,#ffd85a,#ffb815 58%,#ff9e45); color: #10223c; font-size: 12px; font-weight: 850; text-decoration: none; box-shadow: 0 9px 22px #f5b92835; transition: transform .22s ease,box-shadow .22s ease,filter .22s ease; }
   .mobile-donate:focus-visible, .mobile-donate:hover { color: #10223c; text-decoration: none; transform: translateY(-2px); filter: brightness(1.06); box-shadow: 0 13px 28px #f5b92848; outline: 3px solid #f5b92855; outline-offset: 2px; }
-  .mobile-language { position: relative; display: flex; align-items: center; justify-content: center; gap: 6px; min-width: 72px; height: 42px; margin-left: 0; border: 1px solid var(--line); border-radius: 999px; background: var(--sky); color: var(--ink); font-size: 11px; font-weight: 800; cursor: pointer; }
+  .mobile-language {padding:0 10px;  position: relative; display: flex; align-items: center; justify-content: center; gap: 6px; min-width: 72px; height: 42px; margin-left: 0; border: 1px solid var(--line); border-radius: 999px; background: var(--sky); color: var(--ink); font-size: 11px; font-weight: 800; cursor: pointer; }
   .mobile-language .fa-globe { color: #13767e; font-size: 15px; }
   .mobile-language .fa-chevron-down { font-size: 8px; }
   .mobile-language select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
@@ -1967,6 +1967,27 @@ body:has(.admin-dashboard), body:has(.admin-login) { background: radial-gradient
   .section-title h2, .section-heading h2,
   .journey h2, .home-cta h2, .appointment-copy h2,
   .download-band h2, .application h2 { font-size: clamp(1.7rem,7.5vw,2.1rem); }
+}
+
+/* Match the responsive Donate action to the desktop brand button. */
+@media(max-width:1024px) {
+  .mobile-donate,
+  .mobile-donate:hover,
+  .mobile-donate:focus-visible,
+  .mobile-donate:active {
+    border: 1px solid var(--brand-lime-dark)!important;
+    background: linear-gradient(135deg,#e8f95c,var(--brand-lime))!important;
+    color: var(--brand-charcoal)!important;
+    text-decoration: none!important;
+    box-shadow: none;
+    filter: none;
+  }
+  .mobile-donate:hover { transform: translateY(-1px); }
+  .mobile-donate > span,
+  .mobile-donate > i {
+    color: inherit!important;
+    text-decoration: none!important;
+  }
 }
 
 /* Compact impact strip: secondary information should not overpower the hero. */

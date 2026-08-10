@@ -58,6 +58,7 @@ function loadCheckout() {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
+    script.fetchPriority = "high";
     script.onload = () => resolve(true);
     script.onerror = () => { checkoutPromise = null; resolve(false); };
     document.head.appendChild(script);
@@ -73,7 +74,13 @@ export default function Donate() {
   const [status, setStatus] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
 
-  useEffect(() => { void loadCheckout(); }, []);
+  useEffect(() => {
+    void loadCheckout();
+    // Warm the Netlify functions before the donor clicks Pay. These requests
+    // do not create an order or subscription.
+    void fetch("/api/payments/order", { cache: "no-store" });
+    void fetch("/api/payments/subscription", { cache: "no-store" });
+  }, []);
 
   async function pay(selectedMethod = method) {
     if (isProcessing) return;
@@ -401,7 +408,7 @@ export default function Donate() {
             <i className="fa-solid fa-arrow-right" />
           </button>
 
-          <p className="center form-status" role="status">
+          <p className="center form-status" role="status" key={status}>
             {status}
           </p>
 
