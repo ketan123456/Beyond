@@ -12,6 +12,7 @@ export default function GetHelp() {
   return (
     <PageShell active="Get Help">
       <InteriorHero
+        className="mb-2"
         image="/hero-get-help.webp"
         eyebrow="We are here for you"
         title="Support starts with one simple step"
