@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
@@ -10,7 +10,7 @@ export function MotionExperience({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const previousPathname = useRef(pathname);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!root.current) return;
     if (previousPathname.current !== pathname) {
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -20,10 +20,6 @@ export function MotionExperience({ children }: { children: ReactNode }) {
     const isAdmin = pathname.startsWith("/admin");
     document.documentElement.classList.add("gsap-ready");
     document.documentElement.classList.toggle("admin-native-scroll", isAdmin);
-    if (!reduced) {
-      root.current.style.opacity = "0";
-      root.current.style.visibility = "hidden";
-    }
     if (reduced) return () => {
       document.documentElement.classList.remove("gsap-ready", "admin-native-scroll");
     };
@@ -64,11 +60,6 @@ export function MotionExperience({ children }: { children: ReactNode }) {
       lenis?.on("scroll", ScrollTrigger.update);
       const motionMedia = gsap.matchMedia();
       const context = gsap.context(() => {
-        gsap.fromTo(
-          root.current,
-          { autoAlpha: 0 },
-          { autoAlpha: 1, duration: 0.42, ease: "power2.out", clearProps: "opacity,visibility" },
-        );
         const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
         intro.from("header", { y: 32, autoAlpha: 0, duration: 1.5 });
 

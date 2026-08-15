@@ -67,13 +67,6 @@ export default async function RootLayout({
               "if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('motion-enabled')",
           }}
         />
-        <link rel="preconnect" href="https://checkout.razorpay.com" />
-        <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
-        <link
-          rel="preload"
-          href="https://checkout.razorpay.com/v1/checkout.js"
-          as="script"
-        />
       </head>
       <body className={`${geistSans.variable} antialiased`}>
         <script

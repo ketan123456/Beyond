@@ -412,6 +412,7 @@ Object.assign(hi, {
   "Payment service is not configured yet.": "भुगतान सेवा अभी उपलब्ध नहीं है।",
 });
 Object.assign(mr, {
+  "Hearing. Dignity. Inclusion.": "श्रवण. सन्मान. समावेश.",
   Donate: "देणगी द्या",
   "Inclusive care. Lasting independence.":
     "समावेशक काळजी. कायमस्वरूपी स्वावलंबन.",
@@ -752,6 +753,15 @@ Object.assign(dictionaries.bn, {
 
 const originals = new WeakMap<Text, string>();
 const originalAttributes = new WeakMap<Element, Map<string, string>>();
+function cleanTranslation(value: string) {
+  return value
+    .replace(/<\/?g\b[^>]*>/gi, "")
+    .replace(/<x\b[^>]*\/?\s*>/gi, "")
+    .replace(/&lt;\/?g\b.*?&gt;/gi, "")
+    .replace(/&lt;x\b.*?\/?&gt;/gi, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
 function translate(root: ParentNode, lang: Lang) {
   const locale = canonicalLocale(lang);
   const dictionary = dictionaries[locale] || {};
@@ -771,7 +781,9 @@ function translate(root: ParentNode, lang: Lang) {
     if (!trim) continue;
     if (!originals.has(n)) originals.set(n, trim);
     const original = originals.get(n) || trim,
-      value = locale === "en" ? original : dictionary[original] || original;
+      value = locale === "en"
+        ? original
+        : cleanTranslation(dictionary[original] || original);
     if (
       locale !== "en" &&
       !dictionary[original] &&
@@ -803,7 +815,9 @@ function translate(root: ParentNode, lang: Lang) {
       const original = saved.get(name) || current;
       if (locale !== "en" && !dictionary[original] && /[A-Za-z]/.test(original))
         missing.add(original);
-      const value = locale === "en" ? original : dictionary[original] || original;
+      const value = locale === "en"
+        ? original
+        : cleanTranslation(dictionary[original] || original);
       if (current !== value) el.setAttribute(name, value);
     }
   }

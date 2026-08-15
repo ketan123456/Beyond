@@ -5,6 +5,16 @@ const validLocale = (value: string) => /^[a-z]{2,3}(?:-[A-Z]{2})?$/.test(value);
 let providerBlockedUntil = 0;
 const memoryCache = new Map<string, string>();
 
+function cleanTranslation(value: string) {
+  return value
+    .replace(/<\/?g\b[^>]*>/gi, "")
+    .replace(/<x\b[^>]*\/?\s*>/gi, "")
+    .replace(/&lt;\/?g\b.*?&gt;/gi, "")
+    .replace(/&lt;x\b.*?\/?&gt;/gi, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
 function chunks(text: string) {
   const parts = text.match(/[^.!?।]+[.!?।]?\s*/gu) || [text];
   const result: string[] = [];
@@ -35,7 +45,7 @@ async function machineTranslate(text: string, locale: string) {
     const data = await response.json() as { responseStatus?: number; responseData?: { translatedText?: string } };
     const value = data.responseData?.translatedText?.trim();
     if (!value || (data.responseStatus && data.responseStatus !== 200)) throw new Error("Translation provider returned no translation");
-    translated.push(value);
+    translated.push(cleanTranslation(value));
   }
   return translated.join(" ");
 }
@@ -63,8 +73,9 @@ export async function POST(request: Request) {
         ? await db.prepare("SELECT value FROM translations WHERE locale=? AND key=?").bind(locale, text).first<{ value: string }>()
         : null;
       if (cached?.value) {
-        memoryCache.set(cacheKey, cached.value);
-        translations[text] = cached.value;
+        const value = cleanTranslation(cached.value);
+        memoryCache.set(cacheKey, value);
+        translations[text] = value;
         continue;
       }
       if (limited) continue;
