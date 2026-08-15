@@ -85,9 +85,10 @@ export async function POST(request: Request) {
       appointment_details: appointmentSummary,
       admin_email: bindings.ADMIN_NOTIFICATION_EMAIL || "",
     };
-    let emailSent = false;
+    let adminEmailSent = false;
+    let userEmailSent = false;
     try {
-      emailSent = await sendEmail(bindings.EMAILJS_ADMIN_TEMPLATE_ID || "", {
+      adminEmailSent = await sendEmail(bindings.EMAILJS_ADMIN_TEMPLATE_ID || "", {
         ...commonParams,
         to_name: "Beyond Disability Foundation Admin",
         to_email: bindings.ADMIN_NOTIFICATION_EMAIL || "",
@@ -97,15 +98,31 @@ export async function POST(request: Request) {
         message: appointmentSummary,
       });
     } catch (error) {
-      console.error("Appointment email delivery failed", error);
+      console.error("Appointment admin email delivery failed", error);
     }
+    try {
+      userEmailSent = await sendEmail(bindings.EMAILJS_USER_TEMPLATE_ID || "", {
+        ...commonParams,
+        to_name: values.name,
+        to_email: values.email,
+        recipient_email: values.email,
+        subject: `We received your appointment request — ${reference}`,
+        title: "Appointment Request Received",
+        message: appointmentSummary,
+      });
+    } catch (error) {
+      console.error("Appointment confirmation email delivery failed", error);
+    }
+    const emailSent = adminEmailSent || userEmailSent;
     return Response.json({
       ok: true,
       reference,
       emailSent,
+      adminEmailSent,
+      userEmailSent,
       emailWarning: emailSent
         ? undefined
-        : "Your appointment was saved, but the confirmation emails could not be delivered.",
+        : "Your appointment was saved, but email delivery is currently unavailable.",
     });
   } catch (error) {
     console.error("Appointment booking failed", error);

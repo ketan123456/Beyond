@@ -448,14 +448,14 @@ export function Footer() {
           <h4>Explore</h4>
           <Link href="/about">About our work</Link>
           <Link href="/get-help">Get support</Link>
-          <Link href="/#impact-map">Our impact</Link>
+          <Link href="/impact">Our impact</Link>
           <Link href="/partner">CSR partnerships</Link>
         </div>
         <div>
           <h4>Programmes</h4>
-          <Link href="/about#services">Hearing support</Link>
-          <Link href="/about#services">Digital access</Link>
-          <Link href="/about#services">Therapy assistance</Link>
+          <Link href="/programmes#cochlear-implant-continuity">Hearing support</Link>
+          <Link href="/programmes#accessible-learning">Digital access</Link>
+          <Link href="/programmes#therapy-rehabilitation">Therapy assistance</Link>
           <Link href="/resources">Resources</Link>
         </div>
         <div className="footer-contact">
@@ -660,7 +660,7 @@ export function ApplyForm() {
   );
 }
 
-export function PartnerForm() {
+export function PartnerForm({ mode = "partner" }: { mode?: "partner" | "volunteer" }) {
   const [status, setStatus] = useState("");
   const [submitting, setSubmitting] = useState(false);
   async function submit(e: FormEvent<HTMLFormElement>) {
@@ -670,7 +670,10 @@ export function PartnerForm() {
     setSubmitting(true);
     const form = e.currentTarget;
     try {
-      const payload = Object.fromEntries(new FormData(form));
+      const payload = {
+        ...Object.fromEntries(new FormData(form)),
+        enquiryType: mode,
+      };
       const res = await fetch("/api/partners", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -686,8 +689,10 @@ export function PartnerForm() {
       form.reset();
       setStatus("");
       await popupSuccess(
-        "CSR enquiry sent",
-        "Thank you. Our CSR team will contact you within two working days.",
+        mode === "volunteer" ? "Volunteer enquiry sent" : "CSR enquiry sent",
+        mode === "volunteer"
+          ? "Thank you. Our team will contact you within two working days."
+          : "Thank you. Our CSR team will contact you within two working days.",
       );
     } catch (error) {
       const message =
@@ -704,7 +709,7 @@ export function PartnerForm() {
     <form className="apply-form" onSubmit={submit}>
       <div className="form-grid">
         <label>
-          Company / Organisation
+          {mode === "volunteer" ? "Organisation / Individual" : "Company / Organisation"}
           <input name="company" required />
         </label>
         <label>
@@ -720,12 +725,12 @@ export function PartnerForm() {
           <input name="phone" type="tel" required />
         </label>
         <label className="wide">
-          How would you like to partner?
+          {mode === "volunteer" ? "How would you like to contribute?" : "How would you like to partner?"}
           <textarea name="message" rows={4} required />
         </label>
       </div>
       <button className="btn btn-gold" type="submit" disabled={submitting}>
-        {submitting ? "Sending…" : "Send CSR Enquiry"}
+        {submitting ? "Sending…" : mode === "volunteer" ? "Send Volunteer Enquiry" : "Send CSR Enquiry"}
       </button>
       <p className="form-status" role="status">
         {status}

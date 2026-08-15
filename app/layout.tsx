@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -47,14 +48,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const storedLanguage = cookieStore.get("beyond-language")?.value || "en";
+  const initialLanguage = /^[a-z]{2,3}(?:-[A-Z]{2})?$/.test(storedLanguage)
+    ? storedLanguage
+    : "en";
   return (
-    <html lang="en">
+    <html lang={initialLanguage} className={initialLanguage === "en" ? undefined : "language-loading"} suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('motion-enabled')",
+          }}
+        />
         <link rel="preconnect" href="https://checkout.razorpay.com" />
         <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
         <link
@@ -79,7 +91,7 @@ export default function RootLayout({
             areaServed: { "@type": "State", name: "Uttar Pradesh" },
           }) }}
         />
-        <LanguageProvider><MotionExperience>{children}<a className="floating-whatsapp" href="https://wa.me/918000012345?text=Hello%20Beyond%20Disability%2C%20I%20need%20assistance." target="_blank" rel="noreferrer" aria-label="Chat with Beyond Disability on WhatsApp"><img src="/whatsapp.svg" alt=""/></a></MotionExperience></LanguageProvider>
+        <LanguageProvider initialLanguage={initialLanguage}><MotionExperience>{children}<a className="floating-whatsapp" href="https://wa.me/918000012345?text=Hello%20Beyond%20Disability%2C%20I%20need%20assistance." target="_blank" rel="noreferrer" aria-label="Chat with Beyond Disability on WhatsApp"><img src="/whatsapp.svg" alt=""/></a></MotionExperience></LanguageProvider>
       </body>
     </html>
   );

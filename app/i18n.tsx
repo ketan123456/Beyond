@@ -3,12 +3,14 @@ import {
   createContext,
   useContext,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type ReactNode,
 } from "react";
 import { usePathname } from "next/navigation";
 import generatedTranslations from "./translations.generated.json";
+import { homeTranslations } from "./translations.home";
 export type Lang = string;
 export type LanguageOption = {
   locale: string;
@@ -633,10 +635,10 @@ const bho: Record<string, string> = {
   "Verification & Support": "सत्यापन आ सहायता",
 };
 const dictionaries: Record<string, Record<string, string>> = {
-  hi: { ...generatedTranslations.hi, ...hi },
-  mr: { ...generatedTranslations.mr, ...mr },
-  ta: { ...generatedTranslations.ta, ...ta },
-  bn: { ...generatedTranslations.bn, ...bn },
+  hi: { ...generatedTranslations.hi, ...homeTranslations.hi, ...hi },
+  mr: { ...generatedTranslations.mr, ...homeTranslations.mr, ...mr },
+  ta: { ...generatedTranslations.ta, ...homeTranslations.ta, ...ta },
+  bn: { ...generatedTranslations.bn, ...homeTranslations.bn, ...bn },
   bho,
 };
 Object.assign(dictionaries.hi, {
@@ -809,6 +811,25 @@ function translate(root: ParentNode, lang: Lang) {
 }
 const pendingTranslations: Record<string, Set<string>> = {};
 const translationCooldown: Record<string, number> = {};
+const LANGUAGE_STORAGE_KEY = "beyond-language";
+function savedLanguage() {
+  const cookie = document.cookie
+    .split("; ")
+    .find((value) => value.startsWith(`${LANGUAGE_STORAGE_KEY}=`))
+    ?.split("=")
+    .slice(1)
+    .join("=");
+  return canonicalLocale(
+    (cookie && decodeURIComponent(cookie)) ||
+      localStorage.getItem(LANGUAGE_STORAGE_KEY) ||
+      "en",
+  );
+}
+function storeLanguage(locale: Lang) {
+  const value = canonicalLocale(locale);
+  localStorage.setItem(LANGUAGE_STORAGE_KEY, value);
+  document.cookie = `${LANGUAGE_STORAGE_KEY}=${encodeURIComponent(value)}; path=/; max-age=31536000; SameSite=Lax`;
+}
 async function fillMissing(lang: Lang, texts: string[]) {
   lang = canonicalLocale(lang);
   if (
@@ -851,9 +872,9 @@ async function fillMissing(lang: Lang, texts: string[]) {
     }
   }
 }
-export function LanguageProvider({ children }: { children: ReactNode }) {
+export function LanguageProvider({ children, initialLanguage = "en" }: { children: ReactNode; initialLanguage?: Lang }) {
   const pathname = usePathname();
-  const [language, setState] = useState<Lang>("en"),
+  const [language, setState] = useState<Lang>(() => canonicalLocale(initialLanguage)),
     [languages, setLanguages] = useState<LanguageOption[]>(defaultLanguages);
   const changeId = useRef(0);
   const setLanguage = (l: Lang) => {
@@ -864,11 +885,17 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     }
     translate(document.body, locale);
     setState(locale);
-    localStorage.setItem("beyond-language", locale);
+    storeLanguage(locale);
     document.documentElement.lang = locale;
   };
+  useLayoutEffect(() => {
+    const locale = canonicalLocale(initialLanguage);
+    translate(document.body, locale);
+    document.documentElement.lang = locale;
+    if (locale !== "en") storeLanguage(locale);
+    document.documentElement.classList.remove("language-loading");
+  }, [initialLanguage]);
   useEffect(() => {
-    const saved = canonicalLocale(localStorage.getItem("beyond-language") || "en");
     fetch("/api/languages")
       .then((r) => r.json())
       .then(
@@ -885,6 +912,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
               };
             }
           if (data.languages?.length) {
+            const saved = savedLanguage();
             const normalizedLanguages = data.languages.map((item) => ({
               ...item,
               locale: canonicalLocale(item.locale),
@@ -897,10 +925,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
                 ? saved
                 : "en",
             );
-          } else setLanguage(saved);
+          } else setLanguage(savedLanguage());
         },
       )
-      .catch(() => setLanguage(saved));
+      .catch(() => setLanguage(savedLanguage()));
   }, []);
   useEffect(() => {
     let timer = 0,

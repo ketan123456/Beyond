@@ -105,7 +105,9 @@ export default function AdminLogin() {
     <main className="admin-login">
       <section className="admin-login-card">
         <Logo onDark />
-        
+        <div className="admin-login-icon" aria-hidden="true">
+          <i className={`fa-solid ${view === "login" ? "fa-user-shield" : view === "request" ? "fa-envelope" : "fa-key"}`} />
+        </div>
         <p className="eyebrow">Secure administration</p>
         <h1>{view === "login" ? "Admin Login" : "Reset Password"}</h1>
         <p>
@@ -127,7 +129,7 @@ export default function AdminLogin() {
 
         {view === "request" && (
           <div className="admin-reset-actions">
-            <button className="btn btn-gold" type="button" onClick={requestReset} disabled={submitting}><i className="fa-solid fa-paper-plane" /> {submitting ? "Sending code…" : "Send six-digit code"}</button>
+            <button className="btn btn-gold" type="button" onClick={() => void requestReset()} disabled={submitting}><i className="fa-solid fa-paper-plane" /> {submitting ? "Sending code…" : "Send six-digit code"}</button>
             <button className="admin-forgot-password" type="button" onClick={returnToLogin}>Back to sign in</button>
           </div>
         )}

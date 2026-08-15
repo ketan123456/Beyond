@@ -16,8 +16,9 @@ type Data = {
   refreshedAt: string;
 };
 type DataSection = "applications" | "partners" | "payments" | "appointments";
-type Section = DataSection | "languages";
-const statusOptions: Record<DataSection, string[]> = {
+type RecordSection = DataSection | "volunteers";
+type Section = RecordSection | "languages";
+const statusOptions: Record<RecordSection, string[]> = {
   applications: [
     "submitted",
     "reviewing",
@@ -27,13 +28,15 @@ const statusOptions: Record<DataSection, string[]> = {
     "supported",
   ],
   partners: ["new", "contacted", "meeting", "committed", "closed"],
+  volunteers: ["new", "contacted", "meeting", "committed", "closed"],
   payments: ["created", "paid", "failed", "refunded"],
   appointments: ["requested", "confirmed", "completed", "cancelled"],
 };
 
 export default function AdminDashboard({ adminName }: { adminName: string }) {
   const router = useRouter();
-  const [data, setData] = useState<Data | null>(null),
+  const [mounted, setMounted] = useState(false),
+    [data, setData] = useState<Data | null>(null),
     [section, setSection] = useState<Section>("applications"),
     [query, setQuery] = useState(""),
     [error, setError] = useState(""),
@@ -44,9 +47,12 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
     [selectedIds, setSelectedIds] = useState<number[]>([]),
     [signingOut, setSigningOut] = useState(false),
     [selected, setSelected] = useState<{
-      section: DataSection;
+      section: RecordSection;
       row: Row;
     } | null>(null);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const load = useCallback(async () => {
     setLoading(true);
     setError("");
@@ -80,7 +86,11 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
   }, [selected]);
   const rows = useMemo(() => {
     if (section === "languages") return [];
-    const items = data?.[section] || [];
+    const items = section === "volunteers"
+      ? (data?.partners || []).filter((row) => String(row.message || "").startsWith("[Volunteer enquiry]"))
+      : section === "partners"
+        ? (data?.partners || []).filter((row) => !String(row.message || "").startsWith("[Volunteer enquiry]"))
+        : data?.[section] || [];
     const needle = query.trim().toLowerCase();
     return needle
       ? items.filter((row) =>
@@ -104,7 +114,7 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
     const response = await fetch("/api/admin/data", {
       method: "PATCH",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ section, id, status }),
+      body: JSON.stringify({ section: section === "volunteers" ? "partners" : section, id, status }),
     });
     if (response.ok) await load();
     else setError("Status update failed.");
@@ -122,7 +132,7 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
       await popupError("Sign out failed", "Please try signing out again.");
     }
   }
-  async function deleteRecord(targetSection: DataSection, row: Row) {
+  async function deleteRecord(targetSection: RecordSection, row: Row) {
     const label = String(
       row.reference ||
         row.company ||
@@ -137,7 +147,7 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
       const response = await fetch("/api/admin/data", {
         method: "DELETE",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ section: targetSection, id: Number(row.id) }),
+        body: JSON.stringify({ section: targetSection === "volunteers" ? "partners" : targetSection, id: Number(row.id) }),
       });
       const body = await response.json().catch(() => ({}));
       if (!response.ok)
@@ -159,7 +169,7 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
       setDeleting(null);
     }
   }
-  async function deleteSelected(targetSection: DataSection) {
+  async function deleteSelected(targetSection: RecordSection) {
     if (!selectedIds.length) return;
     const confirmation = await confirmDelete(
       `Delete ${selectedIds.length} selected record${selectedIds.length === 1 ? "" : "s"}?`,
@@ -171,7 +181,7 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
       const response = await fetch("/api/admin/data", {
         method: "DELETE",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ section: targetSection, ids: selectedIds }),
+        body: JSON.stringify({ section: targetSection === "volunteers" ? "partners" : targetSection, ids: selectedIds }),
       });
       const body = await response.json().catch(() => ({}));
       if (!response.ok)
@@ -194,6 +204,15 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
     } finally {
       setBulkDeleting(false);
     }
+  }
+  if (!mounted) {
+    return (
+      <div className="admin-hydration-shell" role="status" aria-live="polite">
+        <i className="fa-solid fa-shield-halved" aria-hidden="true" />
+        <b>Loading Admin Control Centre</b>
+        <span>Preparing secure dashboard controls…</span>
+      </div>
+    );
   }
   return (
     <>
@@ -246,14 +265,14 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
           <b>
             {data?.partners.filter((x) => x.status !== "closed").length ?? "—"}
           </b>
-          <span>Open partner leads</span>
+          <span>Open partner &amp; volunteer enquiries</span>
         </article>
       </div>
       <section className="admin-workspace">
         <div className="admin-toolbar">
           <div className="admin-tabs">
             {(
-              ["applications", "partners", "payments", "appointments", "languages"] as Section[]
+              ["applications", "partners", "volunteers", "payments", "appointments", "languages"] as Section[]
             ).map((item) => (
               <button
                 key={item}
@@ -263,7 +282,8 @@ export default function AdminDashboard({ adminName }: { adminName: string }) {
                   setQuery("");
                   setSelectedIds([]);
                 }}>
-                {item}
+                <i className={`fa-solid ${item === "applications" ? "fa-file-heart" : item === "partners" ? "fa-handshake" : item === "volunteers" ? "fa-people-group" : item === "payments" ? "fa-indian-rupee-sign" : item === "appointments" ? "fa-calendar-check" : "fa-language"}`} />
+                {item === "applications" ? "Support Applications" : item === "partners" ? "Partnerships" : item === "volunteers" ? "Volunteers" : item === "payments" ? "Donations" : item === "appointments" ? "Appointments" : "Languages"}
               </button>
             ))}
           </div>
@@ -340,7 +360,7 @@ function AdminTable({
   onView,
   onDelete,
 }: {
-  section: DataSection;
+  section: RecordSection;
   rows: Row[];
   updating: number | null;
   deleting: number | null;
@@ -365,10 +385,11 @@ function AdminTable({
   return (
     <>
       <div className="admin-bulk-actions">
-        <span>
+        <span className={selectedIds.length ? "has-selection" : ""}>
+          <i className={`fa-solid ${selectedIds.length ? "fa-circle-check" : "fa-list-check"}`} />
           {selectedIds.length
             ? `${selectedIds.length} selected`
-            : "Select records to delete together"}
+            : "Select one or more records below for bulk actions"}
         </span>
         <button
           className="btn admin-bulk-delete"
@@ -384,18 +405,21 @@ function AdminTable({
         <thead>
           <tr>
             <th className="admin-select-cell">
-              <input
-                type="checkbox"
-                aria-label="Select all visible records"
-                checked={allSelected}
-                onChange={(event) =>
-                  onSelectionChange(
-                    event.target.checked
-                      ? [...new Set([...selectedIds, ...rowIds])]
-                      : selectedIds.filter((id) => !rowIds.includes(id)),
-                  )
-                }
-              />
+              <label className="admin-select-all">
+                <input
+                  type="checkbox"
+                  aria-label="Select all visible records"
+                  checked={allSelected}
+                  onChange={(event) =>
+                    onSelectionChange(
+                      event.target.checked
+                        ? [...new Set([...selectedIds, ...rowIds])]
+                        : selectedIds.filter((id) => !rowIds.includes(id)),
+                    )
+                  }
+                />
+                <span>Select all</span>
+              </label>
             </th>
             {section === "applications" ? (
               <>
@@ -405,9 +429,9 @@ function AdminTable({
                 <th>Documents</th>
                 <th>Status</th>
               </>
-            ) : section === "partners" ? (
+            ) : section === "partners" || section === "volunteers" ? (
               <>
-                <th>Organisation</th>
+                <th>Partner / Volunteer</th>
                 <th>Contact</th>
                 <th>Message</th>
                 <th>Status</th>
@@ -432,7 +456,7 @@ function AdminTable({
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={Number(row.id)}>
+            <tr key={Number(row.id)} className={selectedIds.includes(Number(row.id)) ? "is-selected" : ""}>
               <td className="admin-select-cell">
                 <input
                   type="checkbox"
@@ -464,7 +488,7 @@ function AdminTable({
                     <span className="status-chip">Stored securely</span>
                   </td>
                 </>
-              ) : section === "partners" ? (
+              ) : section === "partners" || section === "volunteers" ? (
                 <>
                   <td>
                     <b>{row.company}</b>
@@ -542,7 +566,7 @@ function RecordModal({
   onClose,
   onDelete,
 }: {
-  selected: { section: DataSection; row: Row };
+  selected: { section: RecordSection; row: Row };
   documents: Row[];
   deleting: boolean;
   onClose: () => void;
@@ -561,7 +585,7 @@ function RecordModal({
           ["Request details", row.details],
           ["Submitted", row.created_at],
         ]
-      : section === "partners"
+      : section === "partners" || section === "volunteers"
         ? [
             ["Organisation", row.company],
             ["Contact person", row.contact_name],

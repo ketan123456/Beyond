@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
@@ -10,7 +10,7 @@ export function MotionExperience({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const previousPathname = useRef(pathname);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!root.current) return;
     if (previousPathname.current !== pathname) {
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -20,6 +20,10 @@ export function MotionExperience({ children }: { children: ReactNode }) {
     const isAdmin = pathname.startsWith("/admin");
     document.documentElement.classList.add("gsap-ready");
     document.documentElement.classList.toggle("admin-native-scroll", isAdmin);
+    if (!reduced) {
+      root.current.style.opacity = "0";
+      root.current.style.visibility = "hidden";
+    }
     if (reduced) return () => {
       document.documentElement.classList.remove("gsap-ready", "admin-native-scroll");
     };
@@ -66,34 +70,43 @@ export function MotionExperience({ children }: { children: ReactNode }) {
           { autoAlpha: 1, duration: 0.42, ease: "power2.out", clearProps: "opacity,visibility" },
         );
         const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
-        intro.from("header", { y: -26, autoAlpha: 0, duration: 0.5 });
+        intro.from("header", { y: 32, autoAlpha: 0, duration: 1.5 });
 
         if (root.current?.querySelector(".hero")) {
           intro
-            .from(".hero-copy .eyebrow", { x: -24, autoAlpha: 0, duration: 0.55 }, "<.1")
-            .from(".hero-copy h1", { y: 42, autoAlpha: 0, duration: 0.8 }, "<.08")
-            .from(".hero-copy .lead", { y: 24, autoAlpha: 0, duration: 0.6 }, "<.18")
-            .from(".hero-copy .actions .btn", { y: 18, scale: 0.94, autoAlpha: 0, stagger: 0.09, duration: 0.5 }, "<.12")
-            .from(".hero-trust span", { x: -16, autoAlpha: 0, stagger: 0.08, duration: 0.45 }, "<.08")
-            .from(".hero-media", { xPercent: 4, scale: 1.025, autoAlpha: 0, duration: 0.9 }, "<-.25")
-            .from(".hero-impact-card", { y: 30, rotate: 3, autoAlpha: 0, duration: 0.6 }, "<.35");
+            .from(".hero-copy .eyebrow", { y: 32, autoAlpha: 0, duration: 1.5 }, "<.1")
+            .from(".hero-copy h1", { y: 32, autoAlpha: 0, duration: 1.5 }, "<.08")
+            .from(".hero-copy .lead", { y: 32, autoAlpha: 0, duration: 1.5 }, "<.18")
+            .from(".hero-copy .actions .btn", { y: 32, autoAlpha: 0, stagger: 0.09, duration: 1.5 }, "<.12")
+            .from(".hero-trust span", { y: 32, autoAlpha: 0, stagger: 0.08, duration: 1.5 }, "<.08")
+            .from(".hero-media", { y: 32, autoAlpha: 0, duration: 1.5 }, "<-.25")
+            .from(".hero-impact-card", { y: 32, autoAlpha: 0, duration: 1.5 }, "<.35");
         } else {
           intro
-            .from("main > section:first-child h1", { y: 34, autoAlpha: 0, duration: 0.7 }, "<.05")
-            .from("main > section:first-child p, main > section:first-child b", { y: 18, autoAlpha: 0, stagger: 0.08, duration: 0.5 }, "<.15");
+            .from("main > section:first-child h1", { y: 32, autoAlpha: 0, duration: 1.5 }, "<.05")
+            .from("main > section:first-child p, main > section:first-child b", { y: 32, autoAlpha: 0, stagger: 0.08, duration: 1.5 }, "<.15");
         }
 
         ScrollTrigger.batch(
-          "main > section:not(.hero):not(.programs), .footer-banner, .footer-grid",
+          "main > section:not(.hero) > *, .programs > .section-heading, .programs > .card-grid",
           {
-            start: "top 91%",
+            start: "top 93%",
             once: true,
-            onEnter: (elements) =>
+            onEnter: (elements) => {
               gsap.fromTo(
                 elements,
-                { y: 46, autoAlpha: 0 },
-                { y: 0, autoAlpha: 1, duration: 0.75, stagger: 0.1, ease: "power3.out", clearProps: "transform,opacity,visibility" },
-              ),
+                { y: 32, autoAlpha: 0 },
+                {
+                  y: 0,
+                  autoAlpha: 1,
+                  duration: 1.5,
+                  stagger: 0.075,
+                  ease: "power3.out",
+                  clearProps: "transform,opacity,visibility",
+                },
+              );
+              elements.forEach((element) => element.classList.add("motion-revealed"));
+            },
           },
         );
 
@@ -102,12 +115,14 @@ export function MotionExperience({ children }: { children: ReactNode }) {
           {
             start: "top 94%",
             once: true,
-            onEnter: (elements) =>
+            onEnter: (elements) => {
               gsap.fromTo(
                 elements,
-                { y: 28, scale: 0.97, autoAlpha: 0 },
-                { y: 0, scale: 1, autoAlpha: 1, duration: 0.58, stagger: 0.075, ease: "back.out(1.25)", clearProps: "transform,opacity,visibility" },
-              ),
+                { y: 32, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 1.5, stagger: 0.075, ease: "power3.out", clearProps: "transform,opacity,visibility" },
+              );
+              elements.forEach((element) => element.classList.add("motion-revealed"));
+            },
           },
         );
 
@@ -220,7 +235,13 @@ export function MotionExperience({ children }: { children: ReactNode }) {
       };
     };
 
-    void startMotion();
+    void startMotion().catch(() => {
+      document.documentElement.classList.remove("motion-enabled");
+      if (root.current) {
+        root.current.style.removeProperty("opacity");
+        root.current.style.removeProperty("visibility");
+      }
+    });
 
     return () => {
       disposed = true;
@@ -228,6 +249,8 @@ export function MotionExperience({ children }: { children: ReactNode }) {
       lenis?.destroy();
       removeEventListener("scroll", onScroll);
       if (frame) cancelAnimationFrame(frame);
+      root.current?.style.removeProperty("opacity");
+      root.current?.style.removeProperty("visibility");
       document.documentElement.classList.remove("gsap-ready", "admin-native-scroll");
     };
   }, [pathname]);

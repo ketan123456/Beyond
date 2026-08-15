@@ -1,11 +1,8 @@
 import { env } from "../../../lib/server/runtime";
+import { ensureDatabaseSchema } from "../../../db/runtime-schema";
 
 const allowedTypes = new Set(["application/pdf", "image/jpeg", "image/png"]);
 const maxFileSize = 8 * 1024 * 1024;
-
-async function ensureApplicationTables(db: D1Database) {
-  void db;
-}
 
 export async function POST(request: Request) {
   try {
@@ -39,7 +36,7 @@ export async function POST(request: Request) {
         { status: 503 },
       );
     }
-    await ensureApplicationTables(bindings.DB);
+    await ensureDatabaseSchema(bindings.DB);
 
     const reference = `BD-${Date.now().toString(36).toUpperCase()}`;
     const inserted = await bindings.DB.prepare("INSERT INTO applications (reference,name,phone,district,category,details,status) VALUES (?,?,?,?,?,?,?) RETURNING id")
@@ -49,7 +46,10 @@ export async function POST(request: Request) {
     for (const { type, file } of files as { type: string; file: File }[]) {
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
       const key = `applications/${reference}/${type}-${safeName}`;
-      await bindings.DOCUMENTS.put(key, file.stream(), { httpMetadata: { contentType: file.type } });
+      // The portable S3/R2 adapter needs a hashable body. File streams from
+      // multipart FormData are flowing streams in Node, so use the already
+      // size-limited byte buffer to keep uploads reliable across runtimes.
+      await bindings.DOCUMENTS.put(key, await file.arrayBuffer(), { httpMetadata: { contentType: file.type } });
       await bindings.DB.prepare("INSERT INTO documents (application_id,type,storage_key,filename,content_type,size_bytes,review_status) VALUES (?,?,?,?,?,?,?)")
         .bind(inserted.id, type, key, file.name, file.type, file.size, "pending").run();
     }

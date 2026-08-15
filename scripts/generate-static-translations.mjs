@@ -16,7 +16,6 @@ const add = (value) => {
   const text = value.replace(/\s+/g, " ").trim();
   if (
     text &&
-    /^[A-Z]/.test(text) &&
     /[A-Za-z]/.test(text) &&
     !text.includes("@") &&
     !/^https?:|^\/|^[A-Za-z0-9_-]+$/.test(text)
@@ -52,6 +51,14 @@ for (const file of files) {
 
 const sourcePhrases = [...phrases].sort();
 const languages = ["hi", "mr", "ta", "bn"];
+if (process.argv.includes("--inventory-only")) {
+  const current = JSON.parse(fs.readFileSync("app/translations.generated.json", "utf8"));
+  const missing = sourcePhrases.filter((phrase) =>
+    languages.some((locale) => !current[locale]?.[phrase]),
+  );
+  console.log(JSON.stringify({ total: sourcePhrases.length, missing }, null, 2));
+  process.exit(0);
+}
 const generated = {};
 const marker = (index) => `ZXQMARKER${String.fromCharCode(65 + index)}`;
 
