@@ -1,123 +1,93 @@
 import type { Metadata } from "next";
-import { Button, InteriorHero, PageShell, PartnerForm } from "../components";
+import { ExpandableText, InteriorHero, PageShell, PartnerForm } from "../components";
 
-export const metadata: Metadata = { title: "Partner With Us", description: "Partner on future hearing technologies, medical care, advocacy and high-impact disability programmes.", alternates: { canonical: "/partner" } };
+export const metadata: Metadata = {
+  title: "Partner With Us",
+  description: "Collaborate with Beyond Disability Foundation on responsible research and accessible innovations in hearing care.",
+  alternates: { canonical: "/partner" },
+};
 
-export default function Partner(){return (
-  <PageShell active="Partner With Us">
+const interests = [
+  {
+    icon: "fa-dna",
+    title: "Gene Therapy and CRISPR-Based Research",
+    text: "Exploring emerging scientific approaches that may address certain genetic causes of hearing loss.",
+  },
+  {
+    icon: "fa-microscope",
+    title: "Stem Cell Therapy and Hair Cell Regeneration",
+    text: "Supporting responsible research into the repair or regeneration of damaged cells within the inner ear.",
+  },
+  {
+    icon: "fa-brain",
+    title: "Advanced Auditory and Brainstem Implant Technologies",
+    text: "Encouraging innovation in auditory brainstem implants and other solutions for individuals who may not benefit from conventional hearing devices or cochlear implants.These technologies are evolving and may remain experimental or suitable only for specific clinical conditions. Our role is to connect expertise, encourage evidence-based dialogue and help ensure that future innovations become safer, more affordable and more accessible.",
+  },
+];
+
+export default function PartnerPage() {
+  return <PageShell active="Partner With Us">
     <InteriorHero
-      image="/hero-partner.webp"
-      eyebrow="Partner with us"
-      title="Build the future of hearing and inclusion"
-      description="Medical experts, researchers, policymakers, organizations and patrons can help turn evolving ideas into affordable, life-changing solutions.">
-      <a href="#csr-enquiry" className="btn btn-gold">
-        <i className="fa-solid fa-handshake" />
-        Start a partnership
-      </a>
-      <Button href="/csr-brochure.pdf" tone="outline" icon="fa-file-arrow-down">
-        Download brochure
-      </Button>
+      eyebrow="Partner With Us"
+      title="Advancing the Future of Hearing Care"
+      description="Emerging hearing technologies have the potential to transform diagnosis, treatment and rehabilitation for children with severe or profound hearing loss.">
+      <a href="#partner-enquiry" className="btn btn-gold"><i className="fa-solid fa-flask" />Partner for Innovation</a>
+      <a href="#partner-enquiry" className="btn btn-outline"><i className="fa-solid fa-envelope" />Contact Our Team</a>
     </InteriorHero>
-    <section className="csr">
-      <div>
-        <p className="eyebrow">
-          <span />
-          Future technologies
-        </p>
-        <h2>Help promising science reach children</h2>
-        <p>
-          New developments may transform the lives of children born deaf or with
-          serious audiological conditions. Progress requires the medical
-          fraternity, government and organizations like ours to move together
-          toward better, more affordable results.
-        </p>
-        <ul>
-          <li>Gene Therapy and CRISPR-based Gene Editing</li>
-          <li>Stem Cell Therapy</li>
-          <li>Hair Cell Regeneration</li>
-          <li>Soft Brainstem Implants</li>
-          <li>Auditory Brainstem Implants (ABIs)</li>
-        </ul>
+
+    <section className="content-section partner-introduction">
+      <div className="section-title">
+        <p className="eyebrow"><span />Collaboration for progress</p>
+        <h2>Progress happens when expertise comes together</h2>
+        <p>Responsible research and practical collaboration can help emerging hearing technologies become safer, more affordable and more accessible.</p>
       </div>
-      <aside>
-        <i className="fa-solid fa-lightbulb" />
-        <b>Where experts can help</b>
-        <p>Evaluate emerging evidence, improve affordability and help promising hearing technologies move toward responsible public adoption.</p>
+      <div className="partner-introduction__copy">
+        <article>
+          <i className="fa-solid fa-wave-square" />
+          <div><h3>Transforming hearing care</h3><p>Emerging hearing technologies have the potential to transform diagnosis, treatment and rehabilitation for children with severe or profound hearing loss. However, meaningful progress requires collaboration among medical professionals, researchers, technology innovators, government bodies and nonprofit organisations.</p></div>
+        </article>
+        <article>
+          <i className="fa-solid fa-people-group" />
+          <div><h3>Building responsible partnerships</h3><p>Beyond Disability Foundation welcomes partnerships that can help evaluate new developments, promote responsible research, support awareness and advocate for safe, accessible and affordable hearing-care solutions.</p></div>
+        </article>
+      </div>
+    </section>
+
+    <section className="content-section partner-interest-section">
+      <div className="section-title">
+        <p className="eyebrow"><span />Areas of Interest</p>
+        <h2>Exploring the future responsibly</h2>
+      </div>
+      <div className="resource-grid partner-interest-grid">
+        {interests.map((interest) => <article key={interest.title}>
+          <i className={`fa-solid ${interest.icon}`} />
+          <h3>{interest.title}</h3>
+          <ExpandableText title={interest.title}>{interest.text}</ExpandableText>
+        </article>)}
+      </div>
+      <aside className="partner-research-note">
+        <i className="fa-solid fa-circle-info" />
+        <p>These technologies are evolving and may remain experimental or suitable only for specific clinical conditions. Our role is to connect expertise, encourage evidence-based dialogue and help ensure that future innovations become safer, more affordable and more accessible.</p>
       </aside>
     </section>
-    <section id="associates" className="content-section">
-      <div className="section-title">
-        <p className="eyebrow">
-          <span />
-          Our associates
-        </p>
-        <h2>Medical expertise beside every family</h2>
-        <p>
-          Our journey and impact would not be possible without the unwavering
-          support, expertise, and collaboration of our esteemed medical
-          associates who stand shoulder-to-shoulder with us in our mission to
-          empower children with disabilities. By partnering with leading medical
-          professionals across Uttar Pradesh, we ensure that every
-          child—especially those in our deaf and mute community requiring
-          complex interventions like cochlear implants—receives world-class
-          clinical guidance, compassionate care, and expert evaluations.
-        </p>
+
+    <section className="home-cta partner-innovation-cta">
+      <div>
+        <p className="eyebrow"><span />Create impact together</p>
+        <h2>Are you working in hearing care?</h2>
+        <p>Are you a researcher, doctor, healthcare institution or technology innovator working in hearing care? Let us explore how we can create impact together.</p>
       </div>
-      <div className="partner-benefits associates-grid">
-        <span>
-          <i className="fa-solid fa-user-doctor" />
-          Dr. abc
-        </span>
-        <span>
-          <i className="fa-solid fa-stethoscope" />
-          Dr. xyz
-        </span>
+      <div className="actions">
+        <a href="#partner-enquiry" className="btn btn-gold"><i className="fa-solid fa-flask" />Partner for Innovation</a>
+        <a href="#partner-enquiry" className="btn btn-outline"><i className="fa-solid fa-envelope" />Contact Our Team</a>
       </div>
     </section>
-    <section id="supporters" className="content-section supporters-section">
-      <div className="section-title">
-        <p className="eyebrow">
-          <span />
-          Our supporters
-        </p>
-        <h2>Partners powering our mission</h2>
-        <p>
-          Behind every transformed life is a network of dedicated partners,
-          organizations, and generous patrons. We extend our deepest gratitude
-          to our supporters who make our medical interventions, rehabilitation,
-          and child empowerment initiatives possible across Uttar Pradesh.
-        </p>
-      </div>
-      <div className="partner-benefits supporters-grid">
-        <span>
-          <i className="fa-solid fa-people-group" />
-          Rotary Club of Kanpur Greater
-        </span>
-        <span>
-          <i className="fa-solid fa-hand-holding-heart" />
-          Suresh M Parikh Charitable Trust
-        </span>
-        <span>
-          <i className="fa-solid fa-building" />
-          Transcont Finvest Pvt Ltd
-        </span>
-        <span>
-          <i className="fa-solid fa-industry" />
-          Selzer Innovex Pvt. Ltd.
-        </span>
-      </div>
-    </section>
-    <section id="csr-enquiry" className="application">
-      <p className="eyebrow">
-        <span />
-        Work with us
-      </p>
-      <h2>Start a partnership conversation</h2>
-      <p>
-        Tell us about your expertise, organization and the impact you want to
-        create.
-      </p>
+
+    <section id="partner-enquiry" className="application partner-enquiry-section">
+      <p className="eyebrow"><span />Start a conversation</p>
+      <h2>Tell us about your expertise and idea.</h2>
+      <p>Share how you would like to collaborate with Beyond Disability Foundation.</p>
       <PartnerForm />
     </section>
-  </PageShell>
-);}
+  </PageShell>;
+}

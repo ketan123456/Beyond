@@ -143,6 +143,9 @@ const hi: Record<string, string> = {
   "Privacy Policy": "गोपनीयता नीति",
 };
 Object.assign(hi, {
+  "Our Work": "हमारा कार्य",
+  "Our Associates": "हमारे सहयोगी",
+  "Our Supporters": "हमारे समर्थक",
   "At Beyond Disability Foundation, we believe that every individual deserves the opportunity to learn, grow, participate, and thrive—regardless of physical, sensory, developmental, or cognitive challenges.":
     "बियॉन्ड डिसएबिलिटी फाउंडेशन में हमारा विश्वास है कि शारीरिक, संवेदी, विकासात्मक या संज्ञानात्मक चुनौतियों के बावजूद हर व्यक्ति को सीखने, बढ़ने, भाग लेने और आगे बढ़ने का अवसर मिलना चाहिए।",
   "Our mission is to empower persons with disabilities and their families by promoting inclusion, accessibility, education, awareness, and equal opportunities. We work to support individuals with hearing impairment, visual impairment, autism spectrum disorder, and other disabilities, helping them lead independent, dignified, and fulfilling lives.":
@@ -412,6 +415,9 @@ Object.assign(hi, {
   "Payment service is not configured yet.": "भुगतान सेवा अभी उपलब्ध नहीं है।",
 });
 Object.assign(mr, {
+  "Our Work": "आमचे कार्य",
+  "Our Associates": "आमचे सहयोगी",
+  "Our Supporters": "आमचे समर्थक",
   "Hearing. Dignity. Inclusion.": "श्रवण. सन्मान. समावेश.",
   Donate: "देणगी द्या",
   "Inclusive care. Lasting independence.":
@@ -463,6 +469,9 @@ Object.assign(mr, {
   Banks: "बँका",
 });
 Object.assign(ta, {
+  "Our Work": "எங்கள் பணி",
+  "Our Associates": "எங்கள் கூட்டாளிகள்",
+  "Our Supporters": "எங்கள் ஆதரவாளர்கள்",
   Donate: "நன்கொடை",
   "Inclusive care. Lasting independence.":
     "உள்ளடக்கிய பராமரிப்பு. நீடித்த சுதந்திரம்.",
@@ -514,6 +523,9 @@ Object.assign(ta, {
   Banks: "வங்கிகள்",
 });
 Object.assign(bn, {
+  "Our Work": "আমাদের কাজ",
+  "Our Associates": "আমাদের সহযোগীরা",
+  "Our Supporters": "আমাদের সমর্থকেরা",
   Donate: "দান করুন",
   "Inclusive care. Lasting independence.":
     "অন্তর্ভুক্তিমূলক যত্ন। স্থায়ী স্বাধীনতা।",

@@ -24,6 +24,13 @@ function getClient() {
   const accessKeyId = process.env.S3_ACCESS_KEY_ID?.trim();
   const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY?.trim();
   if (!endpoint || !region || !accessKeyId || !secretAccessKey) return undefined;
+  if (
+    endpoint.includes("s3.example.com") ||
+    accessKeyId === "your_s3_access_key" ||
+    secretAccessKey === "your_s3_secret_key"
+  ) {
+    return undefined;
+  }
   client ??= new S3Client({
     endpoint,
     region,

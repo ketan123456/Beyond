@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import AppointmentForm from "./appointment-form";
 import { Button, ExpandableText, Footer, Header, HeroSlider } from "./components";
 
 export const metadata: Metadata = {
@@ -18,12 +19,12 @@ const programmes = [
   {
     icon: "fa-ear-listen",
     title: "Cochlear Implant Continuity",
-    text: "Support for essential accessories, maintenance and the continuing care needed after the first intervention.",
+    text: "We provide financial assistance to underprivileged families for essential external components, accessories, repairs and replacements—helping children maintain uninterrupted access to sound.",
   },
   {
     icon: "fa-comments",
     title: "Therapy & Rehabilitation",
-    text: "Speech, auditory and rehabilitation support that helps turn access into communication and participation.",
+    text: "We support speech-language therapy and auditory-verbal training, helping children understand sounds, develop communication skills and participate more confidently in everyday life.",
   },
   {
     icon: "fa-baby",
@@ -346,6 +347,11 @@ export default function Home() {
               confidentiality.
             </small>
           </div>
+        </section>
+
+        <section id="appointment" className="appointment-section" aria-labelledby="appointment-heading">
+          <h2 id="appointment-heading" className="sr-only">Book an appointment</h2>
+          <AppointmentForm />
         </section>
 
         <section className="home-cta home-cta--final">

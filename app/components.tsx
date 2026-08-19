@@ -12,17 +12,22 @@ import SelectControl from "./select-control";
 import Image from "next/image";
 import { NumberTicker } from "./components/magicui/number-ticker";
 
-export const heroImage = "/beyond-hero.webp";
-
 const heroSlides = [
   {
-    src: heroImage,
-    alt: "Children learning together with inclusive assistive technology",
+    src: "/1000147718.jpg",
+    alt: "A child with a cochlear implant smiling during a supported learning session",
   },
-  
   {
-    src: "/hero-therapy-support.webp",
-    alt: "A child taking part in a supportive speech therapy session",
+    src: "/1000147720.jpg",
+    alt: "A child with a cochlear implant learning with a therapist and family member",
+  },
+  {
+    src: "/1000147722.jpg",
+    alt: "A girl with a cochlear implant participating in hearing therapy",
+  },
+  {
+    src: "/1000147724.jpg",
+    alt: "A child with a cochlear implant sharing a joyful moment with a family member",
   },
 ];
 export function HeroSlider() {
@@ -56,8 +61,8 @@ export function HeroSlider() {
                   alt={slide.alt}
                   loading={index === 0 ? "eager" : "lazy"}
                   fetchPriority={index === 0 ? "high" : "low"}
-                  width={1672}
-                  height={941}
+                  width={1600}
+                  height={525}
                 />
               </div>
             </SplideSlide>
@@ -123,10 +128,11 @@ export function Header({ active = "" }: { active?: string }) {
   const links = [
     ["Home", "/", "fa-house"],
     ["About Us", "/about", "fa-circle-info"],
-    ["Get Help", "/get-help", "fa-hand-holding-medical"],
-    ["Our Impact", "/#impact-map", "fa-chart-line"],
+    ["Our Work", "/programmes", "fa-hands-holding-child"],
     ["Partner With Us", "/partner", "fa-handshake"],
-    ["Resources", "/resources", "fa-book-open"],
+    ["Advocacy", "/advocacy", "fa-bullhorn"],
+    ["Our Associates", "/associates", "fa-user-doctor"],
+    ["Our Supporters", "/supporters", "fa-hand-holding-heart"],
   ];
   useEffect(() => {
     if (pathname !== "/") return;
@@ -232,6 +238,57 @@ export function Header({ active = "" }: { active?: string }) {
         </div>
       </div>
     </header>
+  );
+}
+
+const aboutSections = [
+  ["our-story", "Our Story"],
+  ["our-vision", "Our Vision"],
+  ["our-mission", "Our Mission"],
+  ["our-focus", "Our Focus"],
+  ["our-team", "Team"],
+] as const;
+
+export function AboutSectionNav() {
+  const [activeSection, setActiveSection] = useState("our-story");
+
+  useEffect(() => {
+    let frame = 0;
+    const updateActiveSection = () => {
+      frame = 0;
+      const marker = window.innerHeight * 0.42;
+      let current: string = aboutSections[0][0];
+      for (const [id] of aboutSections) {
+        const section = document.getElementById(id);
+        if (section && section.getBoundingClientRect().top <= marker) current = id;
+      }
+      setActiveSection(current);
+    };
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateActiveSection);
+    };
+    updateActiveSection();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  return (
+    <nav className="about-section-nav" aria-label="About Us sections">
+      {aboutSections.map(([id, label]) => (
+        <a
+          key={id}
+          href={`#${id}`}
+          className={activeSection === id ? "active" : ""}
+          aria-current={activeSection === id ? "location" : undefined}>
+          {label}
+        </a>
+      ))}
+    </nav>
   );
 }
 
@@ -446,17 +503,17 @@ export function Footer() {
         </div>
         <div>
           <h4>Explore</h4>
-          <Link href="/about">About our work</Link>
+          <Link href="/about">About Us</Link>
+          <Link href="/programmes">Our Work</Link>
           <Link href="/get-help">Get support</Link>
-          <Link href="/impact">Our impact</Link>
-          <Link href="/partner">CSR partnerships</Link>
+          <Link href="/partner">Partner With Us</Link>
         </div>
         <div>
-          <h4>Programmes</h4>
-          <Link href="/programmes#cochlear-implant-continuity">Hearing support</Link>
-          <Link href="/programmes#accessible-learning">Digital access</Link>
-          <Link href="/programmes#therapy-rehabilitation">Therapy assistance</Link>
-          <Link href="/resources">Resources</Link>
+          <h4>Our Network</h4>
+          <Link href="/advocacy">Advocacy</Link>
+          <Link href="/associates">Our Associates</Link>
+          <Link href="/supporters">Our Supporters</Link>
+          <Link href="/resources">Reports & Resources</Link>
         </div>
         <div className="footer-contact">
           <h4>Contact</h4>
