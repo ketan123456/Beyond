@@ -55,13 +55,11 @@ export default function Home() {
               Hearing. Dignity. Inclusion.
             </p>
             <h1>
-              Giving voice. Building strength. <em>Creating inclusion.</em>
+              From Hearing to Speaking. From Learning to <em>Belonging.</em>
             </h1>
             <p className="lead">
-              Welcome to Beyond Disability Foundation. We transform lives across
-              physical, sensory, intellectual and developmental disabilities,
-              with special focus on hearing impairment and cochlear implant
-              related support.
+              Beyond Disability helps children continue their journey through
+              hearing support, therapy, rehabilitation and inclusive education.
             </p>
             <div className="actions">
               <Button href="/donate" icon="fa-heart">
@@ -349,8 +347,13 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="appointment" className="appointment-section" aria-labelledby="appointment-heading">
-          <h2 id="appointment-heading" className="sr-only">Book an appointment</h2>
+        <section
+          id="appointment"
+          className="appointment-section"
+          aria-labelledby="appointment-heading">
+          <h2 id="appointment-heading" className="sr-only">
+            Book an appointment
+          </h2>
           <AppointmentForm />
         </section>
 

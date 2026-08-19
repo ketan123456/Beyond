@@ -17,18 +17,18 @@ const heroSlides = [
     src: "/1000147718.jpg",
     alt: "A child with a cochlear implant smiling during a supported learning session",
   },
-  {
-    src: "/1000147720.jpg",
-    alt: "A child with a cochlear implant learning with a therapist and family member",
-  },
-  {
-    src: "/1000147722.jpg",
-    alt: "A girl with a cochlear implant participating in hearing therapy",
-  },
-  {
-    src: "/1000147724.jpg",
-    alt: "A child with a cochlear implant sharing a joyful moment with a family member",
-  },
+  // {
+  //   src: "/1000147720.jpg",
+  //   alt: "A child with a cochlear implant learning with a therapist and family member",
+  // },
+  // {
+  //   src: "/1000147722.jpg",
+  //   alt: "A girl with a cochlear implant participating in hearing therapy",
+  // },
+  // {
+  //   src: "/1000147724.jpg",
+  //   alt: "A child with a cochlear implant sharing a joyful moment with a family member",
+  // },
 ];
 export function HeroSlider() {
   return (
@@ -47,8 +47,8 @@ export function HeroSlider() {
           pauseOnHover: true,
           pauseOnFocus: true,
           resetProgress: false,
-          arrows: true,
-          pagination: true,
+          arrows: false,
+          pagination: false,
           lazyLoad: "nearby",
           reducedMotion: { speed: 0, rewindSpeed: 0, autoplay: "pause" },
         }}>
@@ -68,7 +68,7 @@ export function HeroSlider() {
             </SplideSlide>
           ))}
         </SplideTrack>
-        <div className="splide__arrows hero-slider-arrows">
+        {/* <div className="splide__arrows hero-slider-arrows">
           <button
             className="splide__arrow splide__arrow--prev"
             type="button"
@@ -81,7 +81,7 @@ export function HeroSlider() {
             aria-label="Next story">
             <i className="fa-solid fa-arrow-right" aria-hidden="true" />
           </button>
-        </div>
+        </div> */}
       </Splide>
       <div className="hero-impact-card">
         <i className="fa-solid fa-hands-holding-child" />

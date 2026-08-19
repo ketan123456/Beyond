@@ -485,7 +485,7 @@ header { background: #ffffffa8; border-color: #ffffffc9; box-shadow: 0 10px 32px
 .btn.compact { border-radius: 999px!important; padding: 8px 18px; }
 .menu-toggle { border-radius: 50%; background: #ffffffbd; border-color: #fff; box-shadow: var(--liquid-shadow); }
 .help-hero, .hero, .page-hero { background: linear-gradient(125deg,#ffffffd9 0,#ffffffb5 42%,#dff8f5a8 100%); border: 1px solid #ffffffd8; box-shadow: var(--liquid-shadow); backdrop-filter: blur(16px) saturate(135%); -webkit-backdrop-filter: blur(16px) saturate(135%); }
-.hero-media::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(110deg,#ffffff36,transparent 30%,#8be5dd18); }
+/* .hero-media::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(110deg,#ffffff36,transparent 30%,#8be5dd18); } */
 .application, .contact-strip, .csr, .documents>div, .donate-box, .partner-benefits, .payment-grid aside, .payment-grid>div, .problem, .stats, .steps, .trust, details { background: var(--glass); border: 1px solid var(--glass-border); box-shadow: var(--liquid-shadow),inset 0 1px 0 #fff; backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); }
 .service-card { position: relative; overflow: hidden; background: linear-gradient(145deg,#ffffffe6,#f5fbffb8); border: 1px solid #ffffffdf; border-radius: 22px; box-shadow: var(--liquid-shadow),inset 0 1px 0 #fff; backdrop-filter: blur(16px); }
 .service-card::after { content: ""; position: absolute; width: 100px; height: 100px; right: -42px; top: -48px; border-radius: 50%; background: linear-gradient(135deg,#4edbd055,#8b6aee44); transition: transform .35s ease; }
@@ -534,7 +534,7 @@ main { background: transparent; }
 .help-hero, .hero, .page-hero { background: linear-gradient(125deg,#0c2744ed 0,#132d4ade 43%,#203957b5 100%); border-color: #ffffff24; }
 .help-hero p, .hero-copy .lead, .hero-copy>b, .page-hero p { color: #d3e4f3; }
 .eyebrow { color: #ffc94c; }
-.hero-media::after { background: linear-gradient(90deg,#0c274466,transparent 32%,#5de2d30d); }
+/* .hero-media::after { background: linear-gradient(90deg,#0c274466,transparent 32%,#5de2d30d); } */
 main>section { color: #eaf4ff; }
 .csr p, .documents p, .service-card p, details p { color: #c8d9ea; }
 .application, .contact-strip, .csr, .documents>div, .donate-box, .partner-benefits, .payment-grid aside, .payment-grid>div, .problem, .stats, .steps, .trust, details { background: linear-gradient(145deg,#173453d9,#102845c7); border-color: #ffffff25; box-shadow: var(--liquid-shadow),inset 0 1px 0 #ffffff17; }
